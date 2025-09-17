@@ -1,0 +1,316 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  .sec-{{ id }} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+  }
+
+  @media(max-width: 600px) {
+    .sec-{{ id }} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+.sec-{{ id }}{
+  .wrapper-{{ id }} {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--Spacing-Container-lg, 24px);
+      @media(max-width: 600px){
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+      }
+  }
+  .--image-wrapper {
+    position: relative;
+  }
+  .--image-wrapper img{
+    width: 100%;
+  }
+  .--text-content-block {
+    background: #394C57;
+    color: var(--Content-Inverted-main, #F3F4F6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--Spacing-Container-lg, 24px);
+    text-align: center;
+    gap: 0;
+
+}
+h2.--section-heading {
+    color: inherit;
+    text-align: center;
+    font-family: var(--font-family-Heading, Gotham);
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 32px; /* 114.286% */
+    letter-spacing: -0.84px;
+    text-transform: uppercase;  
+    color: inherit;
+    margin-block: 0 var(--Spacing-Container-lg);
+    em{
+      display: block;
+      font-style: normal;
+      @media(max-width: 768px) {
+        display: unset;
+      }
+    }    
+}
+.--content {
+    font-family: var(--font-family-Body, Gotham);
+    font-size: var(--Font-Size-Paragraph-Medium, 14px);
+    line-height: var(--Line-Height-Paragraph-Medium, 20px);
+    margin-block: 0 var(--Spacing-Container-xl);
+}
+.--button-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--Spacing-Container-md);
+    @media(max-width: 768px) {
+        width: 100%;      
+    }
+}
+a.--external-link {
+    {% comment %} display: block;
+    color: var(--Content-Base-main, #1F2937);
+    text-align: center;
+    font-family: var(--font-family-Heading, Gotham);
+    font-size: var(--Font-Size-UI-Controls-Control-Button-Regular, 18px);
+    font-style: normal;
+    font-weight: 700;
+    line-height: var(--Line-Height-UI-Controls-Control-Button-Regular, 18px);
+    letter-spacing: 0.072px;
+    text-transform: uppercase;
+    padding: var(--Spacing-Container-sm, 16px) var(--Spacing-Container-lg, 40px);
+    background: var(--Background-base, #FFF); {% endcomment %}
+}
+a.--external-link.button {
+  @media(max-width: 600px){
+    color: var(--Content-Base-main, #1F2937);
+    font-size: 14px;
+    line-height: 1;
+    background: #fff;
+  }
+}
+
+
+}
+
+
+
+
+</style>
+
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      <div class="--first-image --image-wrapper">
+        <a class="absolute-link" href="{{ section.settings.first_image_url }}"></a>
+        <picture>
+          <source media="(max-width:600px)" srcset="{{ section.settings.first_image | image_url: width: 400 }}">
+          <source media="(max-width:2000px)" srcset="{{ section.settings.first_image | image_url:width: 600 }}">
+          <img src="{{ section.settings.first_image | image_url }}">
+        </picture>
+      </div>
+      <div class="--text-content-block">
+        <h2 class="--section-heading">{{ section.settings.title }}</h2>
+        <div class="--content">{{ section.settings.content }}</div>
+        <div class="--button-wrapper">
+            {% if section.settings.first_button_label != blank %}
+                <a class="--external-link button" href="{{ section.settings.first_button_url }}">{{ section.settings.first_button_label }}</a>
+            {% endif %}    
+            {% if section.settings.second_button_label != blank %}
+                <a class="--external-link button" href="{{ section.settings.second_button_url }}">{{ section.settings.second_button_label }}</a>
+            {% endif %}    
+        </div>
+      </div>
+      <div class="--second-image --image-wrapper">
+        <a class="absolute-link" href="{{ section.settings.second_image_url }}"></a>
+        <picture>
+          <source media="(max-width:600px)" srcset="{{ section.settings.second_image | image_url: width: 400 }}">
+          <source media="(max-width:2000px)" srcset="{{ section.settings.second_image | image_url:width: 600 }}">
+          <img src="{{ section.settings.second_image | image_url }}">
+        </picture>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image Text Grid v2",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Title",
+      "default": "New Season: new look"
+    },
+    {
+      "type": "textarea",
+      "id": "content",
+      "label": "Content",
+      "default": "Curved facades, shadow lines, and modernist repetition results in a collection where form and comfort coexist — built for city days that move from morning meetings to late dinners."
+    },
+
+    {
+      "type": "image_picker",
+      "id": "first_image",
+      "label": "Select First Image"
+    },
+    {
+      "type": "url",
+      "id": "first_image_url",
+      "label": "Select First Image Url"
+    },
+    {
+      "type": "image_picker",
+      "id": "second_image",
+      "label": "Select Second Image"
+    },
+    {
+      "type": "url",
+      "id": "second_image_url",
+      "label": "Select Second Image Url"
+    },
+    {
+      "type": "text",
+      "id": "first_button_label",
+      "label": "First Button Label",
+      "default": "First Button Label",
+    },
+    {
+      "type": "url",
+      "id": "first_button_url",
+      "label": "First Button Url"
+    },
+    {
+      "type": "text",
+      "id": "second_button_label",
+      "label": "Second Button Label",
+      "default": "Second Button Label"
+    },
+    {
+      "type": "url",
+      "id": "second_button_url",
+      "label": "Second Button Url"
+    },
+
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 64
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 36
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Image Text Grid v2"
+    }
+  ]
+}
+{% endschema %}

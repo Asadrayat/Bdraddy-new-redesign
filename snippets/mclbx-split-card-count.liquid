@@ -1,0 +1,37 @@
+{% if collection.metafields.custom.color_varient == true %}
+  {% assign variantarray = 0 %}
+  {% if collection.metafields.custom.is_sale_collection == true %}
+    {% for product in collection.products %}
+      {% if product.compare_at_price > product.price %}
+        {% assign product_colors = product.options_with_values | where: 'name', 'Color' | first %}
+
+        {% for color in product_colors.values %}
+          {% assign color_variants = product.variants | where: 'option1', color | where: 'available', true %}
+
+          {% assign variant_found = false %}
+          <!-- Flag to ensure only one variant is selected per color -->
+          {% for variant in color_variants %}
+            {% if variant.compare_at_price > variant.price %}
+              {% assign variantarray = variantarray | plus: 1 %}
+              {% assign variant_found = true %}
+
+              <!-- Set the flag to true once a variant is found -->
+              {% break %}
+              <!-- Break the inner loop once a matching variant is found -->
+            {% endif %}
+          {% endfor %}
+
+          {% if variant_found %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+
+  {% else %}
+    {% for product in collection.products %}
+      {% assign product_colors = product.options_with_values | where: 'name', 'Color' | first %}
+      {% assign variantarray = variantarray | plus: product_colors.values.size %}
+    {% endfor %}
+  {% endif %}
+{% endif %}
+<span style="display: none;">variant-count: {{ variantarray }}</span>

@@ -1,0 +1,79 @@
+{% if localization.country.iso_code == 'US' %}
+  {% liquid
+    assign cartTotalPrice = cart.total_price | divided_by: 100.0
+    assign rangeToValue = cartTotalPrice | divided_by: free_shipping | times: 100
+    if rangeToValue > 100
+      assign rangeToValue = 100
+    endif
+    assign rangeToValue = rangeToValue | append: '%'
+  %}
+
+  <style>
+    .mcart-range-slider {
+      height: 6px;
+      width: 100%;
+      /* border-radius: 20px; */
+      background: #E8E8E8;
+      box-sizing: border-box;
+      position: relative;
+      transition: .3s;
+      /* overflow: hidden; */
+      display: block !important;
+    }
+    .mcart-range-slider:before{
+      position: absolute;
+      content: "";
+      width: {{rangeToValue}};
+      height: 100%;
+      background: #1f2937;
+      transition: .3s;
+      /* border-radius: 20px; */
+    }
+    .mcart-range-title{
+       color: #1f2937;
+       font-size: 12px;
+       font-style: normal;
+       font-weight: 200;
+       font-family: var(--font-body-family);
+       line-height: 16px;
+       letter-spacing: 1px;
+       text-transform: uppercase;
+      text-align: left;
+       display: flex;
+       gap: 5px;
+       padding: 24px 0;
+       margin: 0;
+       align-items: center;
+       @media(max-width: 768px) {
+         margin: 0;
+         align-items: start;
+         font-size: 10px;
+       }
+    }
+    .mcart-range-title span{
+       color: #1f2937;
+       font-family: var(--font-body-family);
+       font-size: 12px;
+       @media(max-width: 768px) {
+         font-size: 10px;
+       }
+    }
+  </style>
+
+  <div class="mcart-range-slider"></div>
+  <h2 class="mcart-range-title">
+    {% if free_shipping == 0 -%}
+      {{ settings.cart__free_shepping_text }}
+    {%- else %}
+      {% if cartTotalPrice >= free_shipping %}
+        {% render 'all-icons', name: 'campus' %}Congratulations. You will receive free shipping at checkout.
+      {% else %}
+        {% # render 'all-icons', name: 'circle' %}
+        <span
+          >Spend <span>{{ free_shipping | minus: cartTotalPrice | times: 100 | money }}</span> more to reach Free
+          Shipping</span
+        >
+      {% endif %}
+    {% endif %}
+  </h2>
+{% endif %}

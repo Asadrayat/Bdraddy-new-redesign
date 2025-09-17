@@ -1,0 +1,239 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  .sec-{{ id }} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+    max-width: 100%;
+    overflow: hidden;
+  }
+  .sec-{{ id }} {
+    .image__wrap {
+        max-width: calc(100% - (100% / 3));
+        position: relative;
+        @media(max-width: 1200px) {
+            max-width: 100%;        
+        }            
+    }
+    img {
+       object-fit: cover;
+    }
+    h2,p {
+        margin: 0;
+        }
+        .--content {
+            border: 1px solid #D4C3AB;
+            background: #E5DBCC;
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            padding: var(--Spacing-Section-Vertical-Padding, 64px) var(--Spacing-Container-xxl, 48px);
+            flex-direction: column;
+            {% comment %} align-items: center; {% endcomment %}
+            gap: var(--Spacing-Container-xl, 32px);
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translate(50%, -50%);
+            @media(max-width: 1200px) {
+                position: relative;
+                top: unset;
+                right: unset;
+                transform: none;     
+                padding: 32px 0;       
+                border: 1px solid transparent;
+                background: transparent;             
+            }
+        }
+        .--richtext * {
+            margin: 0 0 16px;
+            color: var(--Content-Base-main, #1F2937);
+        }
+    .wrapper-{{ id }} {
+        display: flex;
+        justify-content: start;
+        @media(max-width: 1200px) {
+            display: flex;
+            justify-content: center;        
+        }    
+    }
+    .wrapper-{{ id }}.image__last {
+        display: flex;
+        justify-content: flex-end;
+        @media(min-width: 1200px) {
+            .--content {
+                right: unset;
+                left: 0;
+                transform: translate(-50%, -50%);        
+            }
+        }
+    }
+  }
+  @media(max-width: 600px) {
+    .sec-{{ id }} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+</style>
+
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }} {% unless section.settings.img_first %}image__last{% endunless %}">
+      {% unless section.settings.img == blank %}
+        <div class="image__wrap">
+          <picture>
+            <source media="(max-width:600px)" srcset="{{ section.settings.img_m | image_url: width: 600 }}">
+            <source media="(max-width:1600px)" srcset="{{ section.settings.img | image_url: width: 1600 }}">
+            <source media="(max-width:2000px)" srcset="{{ section.settings.img | image_url: width: 2000 }}">
+            <img src="{{ section.settings.img | image_url: width: section.settings.img.width }}" fetchpriority="high" loading="lazy">
+          </picture>
+          <div class="--content">
+            <h2>{{ section.settings.title }}</h2>
+            <div class="--richtext">{{ section.settings.rte }}</div>
+          </div>
+        </div>
+      {% endunless %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Float Content",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "img_first",
+      "label": "Image First",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "img",
+      "label": "Image Desktop"
+    },
+    {
+      "type": "image_picker",
+      "id": "img_m",
+      "label": "Image Mobile"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "rte",
+      "label": "description"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "Float Content"
+    }
+  ]
+}
+{% endschema %}

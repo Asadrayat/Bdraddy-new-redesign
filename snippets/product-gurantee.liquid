@@ -1,0 +1,60 @@
+
+<p class="--delivery-message text">Get this by <span class="--delivery-date">{% render 'dynamic-delivery' %}</span></p>
+{% if block.settings.label != blank %}
+  <div data-gurantee-btn class="shipping__link">
+    {{ block.settings.label -}}
+    <span>{% render 'all-icons', name: 'right_chevron' %}</span>
+  </div>
+{% endif %}
+
+<div class="product__gurantee_drawer ">
+   <div class="pa_tab__title">
+    {% if block.settings.title != blank %}
+      <div class="pa__title active" data-order="1">
+        <p>{{ block.settings.title }}</p>
+      </div>
+    {% endif %}
+  </div>
+  {% if block.settings.rte != blank %}
+    <div class="pa__content first">{{ block.settings.rte }}</div>
+  {% endif %}
+  {% comment %} <div class="table__of_content-ps">
+    <div class="pa__title">
+      <h3 class="ps__table_title">{{ 'Shipping Options' }}</h3>
+    </div>
+    <table>
+      <tbody>
+        <tr class="--row">
+          <td class="--title">{{ block.settings.r1c1 }}</td>
+          <td class="--eta">{{ block.settings.r1c2 }}</td>
+          <td class="--fee">{{ block.settings.r1c3 }}</td>
+        </tr>
+
+        <tr class="--row">
+          <td class="--title">{{ block.settings.r2c1 }}*</td>
+          <td class="--eta">{{ block.settings.r2c2 }} Days&nbsp;</td>
+          <td class="--fee">{{ block.settings.r2c3 }}</td>
+        </tr>
+
+        <tr class="--row">
+          <td class="--title">{{ block.settings.r3c1 }}</td>
+          <td class="--eta">2 {{ block.settings.r3c2 }}</td>
+          <td class="--fee">${{ block.settings.r3c3 }}</td>
+        </tr>
+
+        <tr class="--row">
+          <td class="--title">{{ block.settings.r4c1 }}</td>
+          <td class="--eta">{{ block.settings.r4c2 }}</td>
+          <td class="--fee">{{ block.settings.r4c3 }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 class="ps__table_title bottom">{{ '*Free shipping offer applies to economy shipping methods only' }}</h3>
+  </div>  {% endcomment %}
+  {% comment %} Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. {% endcomment %}
+  <div class="pg-icon__close">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M17 7L7 17M7 7L17 17" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</div>

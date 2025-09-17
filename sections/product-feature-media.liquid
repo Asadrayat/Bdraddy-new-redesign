@@ -1,0 +1,85 @@
+{% style %}
+  #shopify-section-{{section.id}} {
+    box-sizing: border-box;
+    padding-block: {{section.settings.padding_block_desktop}};
+
+    .pfm-wrapper img{
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      aspect-ratio: 9/4;
+      object-position: top;
+
+      @media(max-width: 768px) {
+        aspect-ratio: unset;
+      }
+    }
+  }
+{% endstyle %}
+
+<div class="{% if section.settings.full_width_section %}full-width{% else %}page-width{% endif %}">
+  <div class="pfm-wrapper">
+    {% liquid
+      assign image = section.settings.image
+      assign image_mobile = section.settings.image_mobile
+      if image_mobile == blank
+        assign image_mobile = section.settings.image
+      endif
+    %}
+
+    {% unless image == blank %}
+      <picture>
+        <source srcset="{{ image_mobile | image_url: width: image_mobile.width }}" media="(max-width: 768px)">
+        <source srcset="{{ image | image_url: width: image.width }}" media="(min-width: 769px)">
+        {{ image | image_url: width: image.width | image_tag }}
+      </picture>
+    {% endunless %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product Featured Media",
+  "class": "sticky--selector",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width_section",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Select Image (Desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Select Image (Mobile)"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "text",
+      "id": "padding_block_desktop",
+      "label": "Padding Block",
+      "default": "40px 80px",
+      "info": "0px 0px; means top 0px and bottom 0px"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing (Mobile)"
+    },
+    {
+      "type": "text",
+      "id": "padding_block_mobile",
+      "label": "Padding Block",
+      "default": "24px 24px",
+      "info": "0px 0px; means top 0px and bottom 0px"
+    }
+  ]
+}
+{% endschema %}

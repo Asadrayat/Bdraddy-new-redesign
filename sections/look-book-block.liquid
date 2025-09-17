@@ -1,0 +1,384 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  #shopify-section-{{id}} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+  }
+
+  @media(max-width: 768px) {
+    #shopify-section-{{id}} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+  .wrapper-{{ id }}{
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    grid-column-gap: 32px;
+    grid-row-gap: 16px;
+  }
+  .block-item{
+    position: relative;
+  }
+  .image-text-media img, .image-block img{
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .image-text-block{
+    padding: 80px 80px 0 80px;
+  }
+  .text-block{
+    padding: 16px 0;
+    text-align: center;
+  }
+  .text-block h4{
+    font-family: var(--font-family-Heading, Gotham);
+    font-size: var(--Font-Size-UI-Controls-Contextual-Tagline-large, 18px);
+    font-weight: 700;
+    line-height: var(--Line-Height-UI-Controls-Contextual-Tagline-large, 24px);
+    letter-spacing: 1.08px;
+    color: currentColor;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+  }
+  .text-block h2{
+    font-family: var(--font-family-Heading, Gotham);
+    font-size: 24px;
+    line-height: 32px;
+    color: currentColor;
+    font-weight: 700;
+    margin: 0;
+  }
+  .block-item a{
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+
+
+  .text-bg-block{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    max-width: 600px;
+    width: 90%;
+    z-index: 1;
+  }
+  .text-bg-block h4{
+    font-family: var(--font-family-Heading, Gotham);
+    font-size: var(--Font-Size-UI-Controls-Contextual-Tagline-large, 18px);
+    font-weight: 700;
+    line-height: var(--Line-Height-UI-Controls-Contextual-Tagline-large, 24px);
+    letter-spacing: 1.08px;
+    text-transform: uppercase;
+    color: currentColor;
+    text-align: right;
+    margin: 0 0 12px;
+  }
+  .sign-block{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .sign-block img{
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    object-fit: cover;
+  }
+
+
+  @media screen and (max-width: 768px){
+    .wrapper-{{ id }}{
+        grid-template-columns: repeat(1,minmax(0,1fr));
+        grid-column-gap: 16px;
+        grid-row-gap: 16px;
+    }
+    .image-text-block{
+        padding: 20px 20px 0 20px;
+    }
+    .text-block{
+        padding: 10px 0;
+    }
+    .bg-text-block{
+        min-height: 500px;
+    }
+ }
+</style>
+
+
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      {% for block in section.blocks %}
+        {% case block.type %}
+            {% when 'image' %}
+                <div class="block-item image-block">
+                    {% if block.settings.image %}
+                        {{ block.settings.image | image_url: width: block.settings.image.width | image_tag }}
+                    {% endif %}
+                    <a href="{{ block.settings.link | default: '#' }}"></a>
+                </div>
+            {% when 'image_text' %}
+                <div class="block-item image-text-block image-text-block-{{ block.id }}">
+                    {% if block.settings.image %}
+                        <div class="image-text-media">
+                            {{ block.settings.image | image_url: width: block.settings.image.width | image_tag }}
+                        </div>
+                    {% endif %}
+                    <div class="text-block">
+                        {% if block.settings.subtitle != blank %}
+                            <h4>{{ block.settings.subtitle }}</h4>
+                        {% endif %}
+                        {% if block.settings.title != blank %}
+                            <h2>{{ block.settings.title }}</h2>
+                        {% endif %}
+                    </div>
+                    <a href="{{ block.settings.link | default: '#' }}"></a>
+                {% style %}
+                  .image-text-block-{{ block.id }}{
+                    background: {{ block.settings.color_bg }};
+                    color: {{ block.settings.color }};
+                  }
+                {% endstyle %}
+                </div>
+            {% when 'text_bg' %}
+                <div class="block-item bg-text-block bg-text-block-{{ block.id }}">
+                    <div class="text-bg-block">
+                        {% if block.settings.text != blank %}
+                            <h4>{{ block.settings.text }}</h4>
+                        {% endif %}
+                        {% if block.settings.signature %}
+                        <div class="sign-block"> 
+                            {{ block.settings.signature | image_url: width: block.settings.signature.width | image_tag }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <a href="{{ block.settings.link | default: '#' }}"></a>
+                    {% style %}
+                    .bg-text-block-{{ block.id }}{
+                        background: {{ block.settings.color_bg }};
+                        color: {{ block.settings.color }};
+                    }
+                    {% endstyle %}
+                </div>
+        {% endcase %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+    
+{% schema %}
+  {
+    "name": "Look Book Block",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "full_width",
+        "label": "Full Width Section",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Section Spacing Desktop"
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Top",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Bottom",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Top",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Bottom",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Section Spacing Mobile"
+      },
+      {
+        "type": "range",
+        "id": "margin_top_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Top",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Bottom",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "padding_top_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Top",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Bottom",
+        "default": 0
+      }
+    ],
+    "blocks": [
+      {
+        "type": "image",
+        "name": "Image",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          }
+        ]
+      },
+      {
+        "type": "image_text",
+        "name": "Image Text",
+        "settings": [
+          { 
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Sub Title"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "color",
+            "id": "color_bg",
+            "label": "Background Color",
+            "default": "#1f2937"
+          },
+          {
+            "type": "color",
+            "id": "color",
+            "label": "Text Color",
+            "default": "#FFF"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          }
+        ]
+      },
+      {
+        "type": "text_bg",
+        "name": "Text with Background",
+        "settings": [
+          { 
+            "type": "image_picker",
+            "id": "signature",
+            "label": "Signature"
+          },
+          {
+            "type": "text",
+            "id": "text",
+            "label": "text"
+          },
+          {
+            "type": "color",
+            "id": "color_bg",
+            "label": "Background Color",
+            "default": "#1f2937"
+          },
+          {
+            "type": "color",
+            "id": "color",
+            "label": "Text Color",
+            "default": "#FFF"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Look Book Block"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,40 @@
+{%- assign metafield_title_list = product.metafields.custom.feature_performance_attribute.value -%}
+
+<div
+  class="pa__child_content icons__texts pd__icons__texts pd__icons__texts--{{ block.settings.alignment_icons }} cai__pa__child_content --product-attribute-list-icon-wrapper"
+>
+  {% for attribute in product.metafields.custom.feature_performance_attribute.value %}
+    {% for feature in shop.metaobjects.fabric_features.values %}
+      {% if attribute == feature.title %}
+        <div class="icon__with_text-wrap">
+          <span class="icon">
+            <img
+              src="{{ feature.icon | image_url: width: 50 }}"
+              width="24"
+              height="24"
+              alt="{{ feature.title }}"
+              loading="lazy"
+            >
+          </span>
+          <div>{{ feature.title }}</div>
+        </div>
+      {% endif %}
+    {% endfor %}
+    {% for feature in shop.metaobjects.fabric_features_2.values %}
+      {% if attribute == feature.title %}
+        <div class="icon__with_text-wrap">
+          <span class="icon">
+            <img
+              src="{{ feature.icon | image_url: width: 50 }}"
+              width="24"
+              height="24"
+              alt="{{ feature.title }}"
+              loading="lazy"
+            >
+          </span>
+          <div>{{ feature.title }}</div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+</div>

@@ -1,0 +1,991 @@
+{% liquid
+  assign id = section.id
+%}
+
+{% assign allowed_templates = section.settings.template_names %}
+{% assign allowed_templates_array = section.settings.template_names | split: ',' %}
+{% assign template_colors = section.settings.template_colors %}
+{% assign enable_transparent = section.settings.enable_transparent %}
+{% assign enable_sticky = section.settings.enable_sticky %}
+
+{% liquid
+  assign logo_lg = section.settings.image
+  assign logo_lg_width = section.settings.logo_width
+  assign logo_sm = section.settings.image_m
+  assign logo_sm_width = section.settings.logo_width_m
+  if logo_sm == blank
+    assign logo_sm = logo_lg
+  elsif logo_lg == blank
+    assign logo_lg = logo_sm
+  endif
+%}
+
+{% liquid
+  assign sticky_logo_lg = section.settings.sticky_logo
+  assign sticky_logo_lg_width = section.settings.logo_width
+  assign sticky_logo_sm = section.settings.sticky_logo
+  assign sticky_logo_sm_width = section.settings.logo_width_m
+  if sticky_logo_sm == blank
+    assign sticky_logo_sm = sticky_logo_lg
+  elsif sticky_logo_lg == blank
+    assign sticky_logo_lg = sticky_logo_sm
+  endif
+%}
+
+{% assign split_position = section.settings.split_pos | default: 0 %}
+{% assign menu_links = section.settings.menu.links %}
+{% assign first_part_size = menu_links.size | minus: split_position %}
+
+{% liquid
+  assign allowed_invert = section.settings.invert_logo | split: ','
+  assign current_suffix = request.path
+  assign current_template = template.name
+  assign colors = template_colors
+  assign template_color = '#FFFFFF'
+
+  if enable_transparent or enable_sticky
+    assign color_entries = colors | split: ', '
+
+    for entry in color_entries
+      assign parts = entry | split: '#'
+      assign template_key = parts[0] | strip
+      assign color_value = parts[1] | strip
+
+      if template_key == current_template or template_key == current_suffix
+        assign template_color = '#' | append: color_value
+        break
+      endif
+    endfor
+  endif
+%}
+
+{% assign women_page = false %}
+{% assign sport_page = false %}
+{% if request.path contains 'women' or request.path contains 'ladies' %}
+  {% assign women_page = true %}
+{% elsif request.path contains 'sport' or request.path contains 'performance' or request.path contains 'cool' %}
+  {% assign sport_page = true %}
+{% endif %}
+
+{% assign mini_navs = section.blocks | where: 'type', 'mini_nav_mbl' %}
+
+<link rel="stylesheet" href="{{ 'component-search.css' | asset_url }}" media="print" onload="this.media='all'">
+{%- if settings.predictive_search_enabled -%}
+  <link rel="stylesheet" href="{{ 'component-price.css' | asset_url }}" media="print" onload="this.media='all'">
+{%- endif -%}
+
+<style>
+   .sec-{{ id }} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+    /* border-bottom: 1px solid #D1D5DB; */
+  }
+
+  @media(max-width: 1250px) {
+     .sec-{{ id }} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+
+  .sec-{{ id }} .page-width{
+    /* max-width: 2000px; */
+  }
+
+  .regular__logo, .sticky__logo{
+    width: {{ section.settings.logo_width }}px;
+    height: auto;
+  }
+  .regular__logo svg, .sticky__logo svg{
+    display: block;
+    width: 100%;
+  }
+  .regular__logo:not(.only__icon-svg-logo) svg, .sticky__logo:not(.only__icon-svg-logo) svg{
+    height: 100%;
+  }
+  {% if template.name == 'collection' %}
+    .fixed__header{
+      animation: none !important;
+      transition: none !important;
+    }
+  
+  {% endif %}
+  @media screen and (min-width: 1251px){
+    {% if allowed_templates_array contains template.name
+      or allowed_templates_array contains current_suffix
+   %}
+    #MainContent .shopify-section:first-child{
+      margin-top: -78px;
+    }
+    {% endif %}
+   {% if allowed_invert contains template.name
+      or allowed_invert contains current_suffix
+   %}
+      .inverted-logo img{
+        filter: invert(1);
+      }
+    {% endif %}
+  }
+  @media screen and (max-width: 1250px){
+    .sec-{{ id }} .page-width{
+      padding: 0 10px;
+    }
+    .regular__logo, .sticky__logo{
+      width: {{ section.settings.logo_width_m }}px;
+      height: auto;
+    }
+    .regular__logo svg, .sticky__logo svg{
+      display: block;
+      width: 100%;
+      {% comment %} height: auto; {% endcomment %}
+    }
+  }
+</style>
+
+<style>
+  .wrapper-{{ id }} {
+    display: grid;
+    align-items: center;
+  }
+
+  /* Logo Center Layout */
+  {% if section.settings.enable_split and split_position > 0 and split_position < menu_links.size and section.settings.logo_pos == "center" %}
+    .wrapper-{{ id }} {
+      grid-template-areas: "nav logo icons";
+      grid-template-columns: 1fr auto 1fr;
+    }
+
+    .wrapper-{{ id }} > a[site-logo] {
+      grid-area: logo;
+      justify-self: center;
+    }
+
+    .wrapper-{{ id }} > .site__nav {
+      grid-area: nav;
+      justify-self: start;
+    }
+
+    .wrapper-{{ id }} > .site__nav-icons {
+      grid-area: icons;
+      justify-self: end;
+    }
+
+  /* Logo Left Layout */
+  {% elsif section.settings.logo_pos == "left" %}
+    .wrapper-{{ id }} {
+      grid-template-areas: "logo nav icons";
+      grid-template-columns: auto 1fr auto;
+    }
+
+    .wrapper-{{ id }} > a[site-logo] {
+      grid-area: logo;
+      justify-self: start;
+    }
+
+    .wrapper-{{ id }} > .site__nav {
+      grid-area: nav;
+      justify-self: center;
+    }
+
+    .wrapper-{{ id }} > .site__nav-icons {
+      grid-area: icons;
+      justify-self: end;
+    }
+  {% endif %}
+
+  /* Responsive adjustments */
+  @media (max-width: 1250px) {
+    .wrapper-{{ id }} {
+      grid-template-areas: "nav logo icons";
+      grid-template-columns: 1fr auto 1fr;
+    }
+
+    .wrapper-{{ id }} > a[site-logo] {
+      grid-area: logo;
+      justify-self: center;
+    }
+
+    .wrapper-{{ id }} > .site__nav {
+      grid-area: nav;
+      justify-self: start;
+    }
+
+    .wrapper-{{ id }} > .site__nav-icons {
+      grid-area: icons;
+      justify-self: end;
+    }
+
+    .wrapper-{{ id }} > a[site-logo],
+    .wrapper-{{ id }} > .site__nav,
+    .wrapper-{{ id }} > .site__nav-icons {
+      /* justify-self: center; */
+    }
+    {% if mini_navs.size > 0 %}
+      .site__header{
+        padding-bottom: 0 !important;
+      }
+      .site__header > div.page-width{
+        padding-bottom: 10px !important;
+      }
+      .fixed__header .site__header .sticky__sm-nav{
+        display: none;
+      }
+    {% endif %}
+  }
+
+  {% if request.path contains 'sport' or request.path contains 'performance' or request.path contains 'cool' %}
+    {% unless request.path contains 'women' or request.path contains 'ladies' %}
+      .not__transparent, .fixed__header {
+        background: #1F2937 !important;
+      }
+      .not__transparent .site__header,
+      .fixed__header .site__header {
+        color: #FFF !important;
+      }
+      .site__nav-wrapper > li:hover > a {
+        color: #009d4a !important;
+      }
+    {% endunless %}
+  {% endif %}
+
+</style>
+
+<style>
+  .no__sticky .site__header {
+    color: {{ template_color }};
+  }
+</style>
+
+<div
+  data-template="{{ template.name }}"
+  data-suffix="{{ request.path }}"
+  data-allowed="{{ allowed_templates }}"
+  data-transparent="{{ enable_transparent }}"
+  data-sticky="{{ enable_sticky }}"
+  class="sec-{{ id }} site__header"
+>
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }} site__header-wrapper {% if section.settings.logo_pos == 'center' %}site__logo-center{% elsif section.settings.logo_pos == 'left' %}site__logo-left{% endif %}">
+      <div class="header__drawer-container hide__lg">
+        <a header-drawer-opener href="#">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M3 12H15M3 6H21M3 18H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Menu</span>
+        </a>
+        {% comment %}
+          <div class="header__account">
+            <a account-drawer href="/account">{% render 'header-icons', name: 'account' %}</a>
+          </div>
+        {% endcomment %}
+        {% render 'new-header-drawer',
+          section: section,
+          id: id,
+          logo_lg: logo_lg,
+          logo_lg_width: logo_lg_width,
+          logo_sm: logo_sm,
+          logo_sm_width: logo_sm_width
+        %}
+      </div>
+      <a
+        class="site__main-logo {% if allowed_invert contains current_template or allowed_invert contains current_suffix %}inverted-logo{% endif %}"
+        site-logo
+        href="/"
+      >
+        {% unless logo_sm and logo_lg %}
+          <h2>{{ shop.name }}</h2>
+        {% elsif women_page %}
+          <div class="regular__logo  regular__logo-svg">
+            {% render 'template-based-logos', name: 'women-dark' %}
+          </div>
+          <div class="regular__logo only__icon-svg-logo">
+            {% render 'template-based-logos', name: 'butterfly' %}
+          </div>
+        {% elsif sport_page %}
+          <div class="regular__logo sport_page_regular_logo">
+            {% render 'template-based-logos', name: 'sport-dark' %}
+          </div>
+        {% elsif section.settings.image_svg != blank %}
+          <div class="regular__logo regular__logo-svg">
+            {{ section.settings.image_svg }}
+          </div>
+          <div class="regular__logo only__icon-svg-logo">
+            {% render 'template-based-logos', name: 'draddy-dark' %}
+          </div>
+        {% else %}
+          <picture>
+            <source media="(min-width: 744px)" srcset="{{ logo_lg | image_url: width: logo_lg_width }}">
+            {{ logo_sm | image_url: width: logo_sm_width | image_tag: class: 'regular__logo', loading: 'lazy' }}
+          </picture>
+        {% endunless %}
+      </a>
+      {% if allowed_templates_array contains template.name
+        or allowed_templates_array contains current_suffix
+        and section.settings.enable_transparent
+        and sticky_logo_sm
+        or sticky_logo_lg
+        or section.settings.sticky_logo_svg != blank
+        or women_page
+        or sport_page
+      %}
+        <a
+          class="site__main-logo-sticky {% if allowed_invert contains current_template or allowed_invert contains current_suffix %}inverted-logo{% endif %}"
+          site-logo
+          href="/"
+        >
+          {% unless sticky_logo_sm and sticky_logo_lg %}
+            <h2>{{ shop.name }}</h2>
+          {% elsif women_page %}
+            <div class="sticky__logo">
+              {% render 'template-based-logos', name: 'women-white' %}
+            </div>
+          {% elsif sport_page %}
+            <div class="sticky__logo sport_page_sticky_logo">
+              {% render 'template-based-logos', name: 'sport-white' %}
+            </div>
+          {% elsif section.settings.sticky_logo_svg != blank %}
+            <div class="sticky__logo sticky__logo-svg">
+              {{ section.settings.sticky_logo_svg }}
+            </div>
+            <div class="sticky__logo only__icon-svg-logo">
+              {% render 'template-based-logos', name: 'draddy-white' %}
+            </div>
+          {% else %}
+            <picture>
+              <source media="(min-width: 744px)" srcset="{{ sticky_logo_lg | image_url: width: sticky_logo_lg_width }}">
+              {{
+                sticky_logo_sm
+                | image_url: width: sticky_logo_sm_width
+                | image_tag: class: 'sticky__logo', loading: 'lazy'
+              }}
+            </picture>
+          {% endunless %}
+        </a>
+      {% endif %}
+      <nav class="site__nav hide__sm">
+        {% if section.settings.enable_split
+          and split_position > 0
+          and split_position < menu_links.size
+          and section.settings.logo_pos == 'center'
+        %}
+          {% render 'desktop-menu', section: section, id: id, first_part_size: first_part_size %}
+        {% else %}
+          {% render 'desktop-menu', section: section, id: id %}
+        {% endif %}
+      </nav>
+      <div class="site__nav-icons">
+        {% if section.settings.enable_split
+          and split_position > 0
+          and split_position < menu_links.size
+          and section.settings.logo_pos == 'center'
+        %}
+          <nav class="site__nav hide__sm">
+            {% render 'desktop-menu-right', section: section, id: id, first_part_size: first_part_size %}
+          </nav>
+        {% endif %}
+        {% comment %}
+          <div class="header__currency hide__sm">
+            {% render 'currency-switcher' %}
+          </div>
+        {% endcomment %}
+        <div class="header__search-inner hide__sm">
+          {% render 'header-search', input_id: 'Search-In-Modal' %}
+        </div>
+        <div class="header__account hide__sm">
+          <a account-drawer--- href="/account">{% render 'header-icons', name: 'account' %}</a>
+        </div>
+        <div class="header__cart">
+          <a
+            id="cart-icon-bubble"
+            class="new-header-cart-icon"
+            aria-label="header cart icon"
+            cart-drawer
+            href="{{ routes.cart_url }}"
+          >
+            {%- render 'header-icons', name: 'bag' -%}
+            {% if cart != empty %}
+              <span>{{ cart.item_count }}</span>
+            {% endif %}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  
+  {% if mini_navs.size > 0 %}
+    {% render 'sticky-nav', section: section, mini_navs: mini_navs %}
+  {% endif %}
+
+  <div class="header__search-sm hide__lg">
+    {% render 'header-search-sm', input_id: 'Search-In-Modal' %}
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<script>
+    $( document ).ready(function() {
+      $("span.expand-icon-container").click(function(e) {
+        e.preventDefault();
+        var toClose = $("#mobile-navigation ul").not($(this).parents("ul"));
+        toClose.slideUp();
+        toClose.parent().removeClass("open");
+        if(!$(this).parent().next().is(":visible")) {
+          var toOpen = $(this).parent().next()
+          toOpen.slideDown();
+          toOpen.parent().not(".open").addClass("open");
+        }
+        e.stopPropagation();
+      });
+  });
+</script>
+
+{%- if request.page_type == 'index' -%}
+  {% assign potential_action_target = request.origin | append: routes.search_url | append: '?q={search_term_string}' %}
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "name": {{ shop.name | json }},
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {{ potential_action_target | json }},
+        "query-input": "required name=search_term_string"
+      },
+      "url": {{ request.origin | append: page.url | json }}
+    }
+  </script>
+{%- endif -%}
+
+<script src="{{ 'header-js.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "New Header",
+  "class": "section-header header-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Logo Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_m",
+      "label": "Logo Image(Mobile)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_transparent",
+      "label": "Enable Transparent Header",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "sticky_logo",
+      "label": "Transparent Header Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "sticky_logo_m",
+      "label": "Transparent Header Logo(Mobile)"
+    },
+    {
+      "type": "header",
+      "content": "SVG Logos"
+    },
+    {
+      "type": "html",
+      "id": "image_svg",
+      "label": "Logo Image(SVG)"
+    },
+    {
+      "type": "html",
+      "id": "sticky_logo_svg",
+      "label": "Transparent Header Logo(SVG)"
+    },
+    {
+      "type": "select",
+      "id": "logo_pos",
+      "label": "Desktop Logo Position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Logo Width",
+      "default": 150
+    },
+    {
+      "type": "range",
+      "id": "logo_width_m",
+      "min": 50,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Logo Width(Mobile)",
+      "default": 150
+    },
+    {
+      "type": "textarea",
+      "id": "template_names",
+      "label": "Template Names Where Transparent Nav Will be Applied",
+      "info": "Enter template names separated by commas (e.g., index,product,collection,cart)"
+    },
+    {
+      "type": "textarea",
+      "id": "template_colors",
+      "label": "Transparent Template Colors",
+      "info": "Enter template names#color separated by commas (e.g., index#fff,product#fff,collection#000,cart#000)"
+    },
+    {
+      "type": "textarea",
+      "id": "invert_logo",
+      "label": "Template Names Where Invert Logo will be applied(Mobile)",
+      "info": "Enter page handles separated by commas (e.g., index,product,collection,cart)"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky",
+      "label": "Enable Sticky Header",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_split",
+      "label": "Enable Nav Splitting On Desktop"
+    },
+    {
+      "type": "number",
+      "id": "split_pos",
+      "label": "Spliting Position"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "mega-menu",
+      "name": "Mega Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "For item"
+        },
+        {
+          "type": "header",
+          "content": "Collection list"
+        },
+        {
+          "type": "header",
+          "content": "Collection 1"
+        },
+        {
+          "type": "collection",
+          "id": "collection_1",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Featured image"
+        },
+        {
+          "type": "header",
+          "content": "Collection 2"
+        },
+        {
+          "type": "collection",
+          "id": "collection_2",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Featured image"
+        },
+        {
+          "type": "header",
+          "content": "Collection 3"
+        },
+        {
+          "type": "collection",
+          "id": "collection_3",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Featured image"
+        },
+        {
+          "type": "header",
+          "content": "Collection 4"
+        },
+        {
+          "type": "collection",
+          "id": "collection_4",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_4",
+          "label": "Featured image"
+        },
+        {
+          "type": "header",
+          "content": "Collection 5"
+        },
+        {
+          "type": "collection",
+          "id": "collection_5",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_5",
+          "label": "Featured image"
+        },
+        {
+          "type": "header",
+          "content": "Bottom Bar"
+        },
+        {
+          "type": "header",
+          "content": "Bottom Bar Item"
+        },
+        {
+          "type": "text",
+          "id": "title_1",
+          "label": "Title"
+        },
+        {
+          "type": "url",
+          "id": "link_1",
+          "label": "Link"
+        },
+        {
+          "type": "header",
+          "content": "Bottom Bar Item"
+        },
+        {
+          "type": "text",
+          "id": "title_2",
+          "label": "Title"
+        },
+        {
+          "type": "url",
+          "id": "link_2",
+          "label": "Link"
+        },
+        {
+          "type": "header",
+          "content": "Bottom Bar Item"
+        },
+        {
+          "type": "text",
+          "id": "title_3",
+          "label": "Title"
+        },
+        {
+          "type": "url",
+          "id": "link_3",
+          "label": "Link"
+        },
+        {
+          "type": "header",
+          "content": "Bottom Bar Item"
+        },
+        {
+          "type": "text",
+          "id": "title_4",
+          "label": "Title"
+        },
+        {
+          "type": "url",
+          "id": "link_4",
+          "label": "Link"
+        },
+        {
+          "type": "header",
+          "content": "Bottom Bar Item"
+        },
+        {
+          "type": "text",
+          "id": "title_5",
+          "label": "Title"
+        },
+        {
+          "type": "url",
+          "id": "link_5",
+          "label": "Link"
+        },
+        {
+          "type": "header",
+          "content": "Bottom Bar Item"
+        },
+        {
+          "type": "text",
+          "id": "title_6",
+          "label": "Title"
+        },
+        {
+          "type": "url",
+          "id": "link_6",
+          "label": "Link"
+        },
+        {
+          "type": "header",
+          "content": "Bottom Bar Item"
+        },
+        {
+          "type": "text",
+          "id": "title_7",
+          "label": "Title"
+        },
+        {
+          "type": "url",
+          "id": "link_7",
+          "label": "Link"
+        }
+      ]
+    },
+    {
+      "type": "mini_nav_mbl",
+      "name": "Mini Nav(Mobile)",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    },
+    {
+      "type": "image_mega_menu",
+      "name": "Image Mega Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "For item"
+        },
+        {
+          "type": "header",
+          "content": "Menu Item"
+        },
+        {
+          "type": "text",
+          "id": "title_1",
+          "label": "Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link_1",
+          "label": "Link"
+        },
+        {
+          "type": "header",
+          "content": "Menu Item"
+        },
+        {
+          "type": "text",
+          "id": "title_2",
+          "label": "Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link_2",
+          "label": "Link"
+        },
+        {
+          "type": "header",
+          "content": "Menu Item"
+        },
+        {
+          "type": "text",
+          "id": "title_3",
+          "label": "Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link_3",
+          "label": "Link"
+        },
+        {
+          "type": "header",
+          "content": "Menu Item"
+        },
+        {
+          "type": "text",
+          "id": "title_4",
+          "label": "Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_4",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link_4",
+          "label": "Link"
+        }
+      ]
+    }
+   ],
+  "presets": [
+    {
+      "name": "New Header"
+    }
+  ]
+}
+{% endschema %}

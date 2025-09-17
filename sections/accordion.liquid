@@ -1,0 +1,310 @@
+{{ 'accordion.css' | asset_url | stylesheet_tag }}
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  .section-container--{{ id }}{
+    margin-top: {{ section.settings.margin_top | append:'px' }};
+    margin-bottom: {{ section.settings.margin_bottom | append:'px' }};
+    padding-top: {{ section.settings.padding_top | append:'px' }};
+    padding-bottom: {{ section.settings.padding_bottom | append:'px' }};
+    background-color: {{ section.settings.bg-color }};
+    overflow: hidden;
+  }
+  @media screen and (max-width: 768px){
+    .section-container--{{ id }}{
+      margin-top: {{ section.settings.margin_top_mobile | append:'px' }};
+      margin-bottom: {{ section.settings.margin_bottom_mobile | append:'px'  }};
+      padding-top: {{ section.settings.padding_top_mobile | append:'px' }};
+      padding-bottom: {{ section.settings.padding_bottom_mobile | append:'px' }};
+    }
+  }
+</style>
+<section class="section-container--{{ id }} accordion__container_draddy">
+  <div class="section-wrapper--{{ id }} {% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="main">
+      <div class="info">
+        <h2 class="--section-title">{{ section.settings.heading }}</h2>
+      </div>
+      <div class="accordion-wrapper">
+        <div class="accordion-wrapper-first--abc accordion-wrapper--custom">
+          {% for block in section.blocks %}
+            {% if block.type == 'item' %}
+              <div class="draddy_accordion--custom">
+                <div class="draddy_acr-title">
+                  <h4 class="draddy_faq-question">{{ block.settings.title }}</h4>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
+                    <path d="M19.6419 10.4714L16.7507 10.0146C16.3542 6.96429 13.9288 4.5424 10.8775 4.15089L10.4187 1.24822C10.3863 1.04224 10.2087 0.890625 9.99975 0.890625C9.79078 0.890625 9.61373 1.04224 9.58081 1.24822L9.12197 4.15239C6.07715 4.54939 3.65876 6.96778 3.26176 10.0126L0.357597 10.4714C0.151617 10.5039 0 10.6814 0 10.8904C0 11.0993 0.151617 11.2764 0.357597 11.3093L3.26027 11.7682C3.65228 14.82 6.07416 17.2448 9.12396 17.6413L9.58081 20.5325C9.61323 20.7385 9.79078 20.8901 9.99975 20.8901C10.2087 20.8901 10.3858 20.7385 10.4187 20.5325L10.8755 17.6428C13.9323 17.2513 16.3612 14.8224 16.7527 11.7657L19.6424 11.3088C19.8484 11.2764 20 11.0988 20 10.8899C20 10.6809 19.8479 10.5044 19.6419 10.4714ZM15.8719 9.87594L11.6775 9.21311L11.0162 5.02917C13.4874 5.4531 15.443 7.40567 15.8719 9.87594ZM15.9597 10.8969C15.9597 10.9422 15.9592 10.9876 15.9582 11.033L11.2406 11.7786C11.0591 11.8076 10.9169 11.9497 10.888 12.1312L10.1424 16.8488C10.097 16.8498 10.0516 16.8503 10.0062 16.8503C9.95636 16.8503 9.90698 16.8498 9.85711 16.8483L9.11149 12.1307C9.08257 11.9492 8.94042 11.8071 8.75888 11.7781L4.05376 11.0345C4.05277 10.9886 4.05177 10.9427 4.05177 10.8964C4.05177 10.846 4.05227 10.7956 4.05376 10.7452L8.75838 10.0016C8.93993 9.97269 9.08207 9.83055 9.11099 9.64901L9.85462 4.94439C9.90499 4.94289 9.95486 4.94239 10.0057 4.94239C10.0521 4.94239 10.098 4.94289 10.1439 4.94439L10.8875 9.64951C10.9164 9.83105 11.0586 9.97319 11.2401 10.0021L15.9577 10.7477C15.9592 10.7971 15.9597 10.847 15.9597 10.8969ZM9.99975 4.0302L10.0102 4.09503C10.0087 4.09503 10.0077 4.09503 10.0062 4.09503C10.0007 4.09503 9.99526 4.09503 9.98978 4.09503L9.99975 4.0302ZM8.98332 5.03117L8.32248 9.21261L4.14104 9.87344C4.56946 7.40917 6.51854 5.46009 8.98332 5.03117ZM3.13957 10.8904L3.20491 10.8799V10.8964V10.9004L3.13957 10.8904ZM4.13855 11.9068L8.32248 12.5681L8.98531 16.7625C6.51505 16.3336 4.56248 14.3781 4.13855 11.9068ZM9.99975 17.7506L9.99127 17.6982H10.0057H10.0077L9.99975 17.7506ZM11.0137 16.7645L11.677 12.5676L15.8739 11.9043C15.45 14.3816 13.4909 16.3406 11.0137 16.7645ZM16.8076 10.8989C16.8076 10.8984 16.8076 10.8974 16.8076 10.8969C16.8076 10.8919 16.8076 10.8869 16.8076 10.8824L16.8599 10.8909L16.8076 10.8989Z" fill="black"/>
+                  </svg>
+                </div>
+                <div class="draddy_acr-content">
+                    {{ block.settings.text }}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% comment %} Check the script in global.js {% endcomment %}
+
+<script>
+    // Accordion Setup
+  class Accordioncustom {
+    constructor(accordion = '', newOptions) {
+      let options = {
+        initOpenIndex: 1,
+        closeAll: true,
+        duration: 400,
+        activeClass: 'active',
+        globalClose: true,
+        isFirstAccordion: false,
+      };
+      this.options = { ...options, ...newOptions };
+      this.accordions = document.querySelectorAll(accordion);
+
+      this.accordions.forEach((accordion, index) => {
+        this.initAccordion(accordion, index);
+      });
+    }
+
+    initAccordion(accordion, accordionIndex) {
+      const tabItemsArray = Array.from(accordion.children);
+
+      if (this.options.initOpenIndex > tabItemsArray.length) {
+        this.options.initOpenIndex = tabItemsArray.length;
+      }
+
+      tabItemsArray.forEach((tabElement, index) => {
+        let item = this.getAccordionItems(tabElement);
+        this.contentInitialHeight(item[1]);
+
+        if (index === this.options.initOpenIndex - 1 && this.options.isFirstAccordion) {
+          this.InitialOpen(item);
+        } else {
+          this.close(item);
+        }
+
+        item[0].addEventListener('click', () => {
+          this.toggle(tabItemsArray, item);
+        });
+      });
+    }
+
+    getAccordionItems(accordion) {
+      let title = accordion.children[0];
+      let content = accordion.children[1];
+      return [title, content];
+    }
+
+    contentInitialHeight(content) {
+      content.style.height = '0px';
+      content.style.overflow = 'hidden';
+    }
+
+    InitialOpen(item) {
+      this.setActiveClass(item);
+      this.open(item);
+    }
+
+    open(item) {
+      let content = item[1];
+      this.transition(content);
+      content.style.height = `${content.scrollHeight}px`;
+    }
+
+    close(item) {
+      let content = item[1];
+      content.style.height = '0px';
+    }
+
+    toggle(tabItemsArray, item) {
+      const isOpen = item[1].style.height !== '0px';
+
+      if (this.options.globalClose) {
+        document.querySelectorAll('.draddy_accordion--custom').forEach((tabItem) => {
+          let itemToClose = this.getAccordionItems(tabItem);
+          this.close(itemToClose);
+          this.removeActiveClass(itemToClose);
+        });
+      } else {
+        tabItemsArray.forEach((tabItem) => {
+          let itemToClose = this.getAccordionItems(tabItem);
+          this.close(itemToClose);
+          this.removeActiveClass(itemToClose);
+        });
+      }
+
+      if (!isOpen) {
+        this.setActiveClass(item);
+        this.open(item);
+      }
+    }
+
+    transition(el) {
+      el.style.transition = `all ${this.options.duration}ms ease`;
+    }
+
+    setActiveClass(item) {
+      item[1].parentElement.classList.add(this.options.activeClass);
+    }
+
+    removeActiveClass(item) {
+      item[1].parentElement.classList.remove(this.options.activeClass);
+    }
+  }
+
+
+    // Initialize accordions
+  new Accordioncustom('.accordion-wrapper-first--abc', {
+    initOpenIndex: 1,
+    duration: 700,
+    activeClass: 'active',
+    globalClose: true,
+    isFirstAccordion: true,
+  });
+
+</script>
+{% schema %}
+{
+  "name": "Accordion",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "FAQ"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "bg-color",
+      "label": "Background Color"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Mobile Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Top (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Bottom (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Top  (Mobile)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Bottom  (Mobile)",
+      "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Item",
+      "type": "item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Accordion"
+    }
+  ]
+}
+{% endschema %}

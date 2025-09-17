@@ -1,0 +1,38 @@
+{% style %}
+  #shopify-section-{{section.id}} {
+    box-sizing: border-box;
+    padding-block: {{section.settings.padding_block_desktop}};
+
+    .pfm-wrapper img{
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      aspect-ratio: 9/4;
+      object-position: top;
+
+      @media(max-width: 768px) {
+        aspect-ratio: unset;
+      }
+    }
+  }
+{% endstyle %}
+
+<div class="">
+  <div class="pfm-wrapper">
+    {% liquid
+      assign image = section.settings.image
+      assign image_mobile = section.settings.image_mobile
+      if image_mobile == blank
+        assign image_mobile = section.settings.image
+      endif
+    %}
+
+    {% unless image == blank %}
+      <picture>
+        <source srcset="{{ image_mobile | image_url: width: image_mobile.width }}" media="(max-width: 768px)">
+        <source srcset="{{ image | image_url: width: image.width }}" media="(min-width: 769px)">
+        {{ image | image_url: width: image.width | image_tag }}
+      </picture>
+    {% endunless %}
+  </div>
+</div>

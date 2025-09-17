@@ -1,0 +1,74 @@
+<style>
+  .pinfo-breadcumb-wrapper{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .pinfo-breadcumb-wrapper a{
+    color:  #4B5563;
+    font-size: 14px;
+    line-height: 22px;
+    transition: all 0.3s;
+  }
+  .pinfo-breadcumb-wrapper a:hover{
+    text-decoration: underline;
+  }
+  .pinfo-collection{
+    margin: 32px 0 0;
+  }
+  .pinfo-collection a{
+    color: #1F2937;
+    font-family: var(--font-family-Heading, Gotham);
+    font-size: var(--Font-Size-UI-Controls-Contextual-Tagline-large, 18px);
+    font-style: normal;
+    font-weight: 700;
+    line-height: var(--Line-Height-UI-Controls-Contextual-Tagline-large, 24px);
+    letter-spacing: 1.08px;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: 8%;
+    text-underline-offset: 28%;
+    text-underline-position: from-font;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  @media screen and (max-width: 768px){
+    .pinfo-breadcumb-wrapper a{
+      font-size: 13px;
+      line-height: 20px;
+    }
+    .pinfo-collection{
+      margin: 16px 0 0;
+    }
+    .pinfo-collection a{
+      font-size: 14px;
+      line-height: 18px;
+    }
+  }
+</style>
+
+<div class="{{  class }} pinfo-breadcrumb {% if block.settings.enable_mb %}mb{% endif %}">
+  <div class="pinfo-breadcumb-wrapper">
+    <a href="/">Home</a>
+    {% comment %}
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M11.1547 3.33333L5.24062 12.2103" stroke="#4B5563" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    {% endcomment %}
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 12 12" fill="none">
+      <path d="M4.5 2.5L8 6L4.5 9.5" stroke="#4B5563" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <a href="{{ product.url }}">{{ product.title | escape }}</a>
+  </div>
+  {% if collection %}
+    <div class="pinfo-collection">
+      <a href="{{ collection.url }}">{{ collection.title }}</a>
+    </div>
+  {% else %}
+    <div class="pinfo-collection">
+      <a href="/collections/best-sellers">Best Seller</a>
+    </div>
+  {% endif %}
+</div>

@@ -1,0 +1,37 @@
+{% if product.tags contains 'EMBROIDER' and product.selected_or_first_available_variant.available %}
+  <style>
+      .--custom-embroidery-message-wrapper{
+        border: 1px solid black;
+        padding: 10px;
+        margin-block: 10px 30px;
+        width: 100%;
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    .--icon-wrapper {
+        svg {
+          width: 80px;
+          height: auto;
+        }
+    }
+    p{
+      margin-block: 0px;
+      line-height: 1.5em;
+      text-align: left;
+    }
+      }
+  </style>
+  <div class="--custom-embroidery-message-wrapper">
+    <div class="--icon-wrapper">
+      {% render 'all-icons', name: 'sewing' %}
+    </div>
+
+    <div>
+      {{ settings.embroidery_message_pdp }}
+      {% comment %} <p>DECORATED ITEM</p>
+      <p>
+        Please note that decorated items are made to order and require additional processing before shipping. Place your order today to receive it within 2 weeks. Additionally, decorated items are final sale and may not be returned or exchanged.
+      </p> {% endcomment %}
+    </div>
+  </div>
+{% endif %}

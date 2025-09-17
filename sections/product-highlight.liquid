@@ -1,0 +1,313 @@
+{%- liquid
+  assign id = section.id
+%}
+
+<style>
+      .sec-{{ id }} {
+        box-sizing: border-box;
+        margin-top: {{section.settings.margin_top | append: 'px'}};
+        margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+        padding-top: {{section.settings.padding_top | append: 'px'}};
+        padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+        background: {{ section.settings.bg }}
+      }
+
+      @media(max-width: 600px) {
+        .sec-{{ id }} {
+          margin-top: {{section.settings.margin_top_m | append: 'px'}};
+          margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+          padding-top: {{section.settings.padding_top_m | append: 'px'}};
+          padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+        }
+      }
+
+
+    .sec-{{ id }}{
+
+  .heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      /* margin-bottom: var(--Spacing-Container-lg, 40px); */
+  }
+   .heading   h2 {
+      letter-spacing: -0.96px;
+      margin-block: 0;
+  }
+      a.--collection-url {
+      color: var(--Content-Base-main, #1F2937);
+      text-align: center;
+      font-family: var(--font-family-Control, "Archivo Expanded");
+      font-size: 13px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 13px;
+      text-decoration-line: underline;
+      text-decoration-style: solid;
+      text-decoration-skip-ink: none;
+      text-decoration-thickness: auto;
+      text-underline-offset: auto;
+      text-underline-position: from-font;
+      text-transform: uppercase;
+        @media(max-width: 768px){
+          display: block;
+        }
+  }
+
+
+
+        .content-{{ id }} {
+            display: grid;
+            grid-template-columns: repeat(2,minmax(0,1fr));
+            margin-block: var(--Spacing-Container-lg, 40px);
+          @media(max-width:768px){
+            grid-template-columns: minmax(0,1fr);
+          }
+        }
+  img.ph__img.small-hide.medium-hide {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+  }
+
+        .swiper.swiper-{{ section.id }} {
+          max-width: 400px;
+        }
+        .card__wrap {
+          display: flex;
+          width: 100%;
+          height: 100%;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+      }
+
+      .swiper-pagination {
+        display: block;
+        bottom: 2.5px !important;
+        @media(max-width: 768px){
+          display: none;
+        }
+        .swiper-pagination-bullet {
+          width: 12px;
+          height: 4px;
+          background: #B0B0B0;
+          border-radius: 24px;
+          opacity: 1;
+          transition: .4s all ease-in-out;
+        }
+        .swiper-pagination-bullet.swiper-pagination-bullet-active {
+          width: 40px;
+          height: 4px;
+          background: #000;
+        }
+      }
+
+
+    }
+</style>
+
+<div class="sec-{{ id }}" id="{{ section.settings.nav_id }}">
+  <div class="wrapper-{{ section.id }} {% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="heading">
+      {% unless section.settings.title == blank %}
+        <h2>{{ section.settings.title }}</h2>
+      {% endunless %}
+
+      {% unless section.settings.col_label == blank %}
+        <a class="--collection-url medium-hide small-hide" href="{{ section.settings.collection.url }}">
+          {{- section.settings.col_label -}}
+        </a>
+      {% endunless %}
+    </div>
+    <div class="content-{{ id }}">
+      <div class="ph__image-wrap">
+        {% if section.settings.img %}
+          {{
+            section.settings.img
+            | image_url: width: section.settings.img.width
+            | image_tag: class: 'ph__img small-hide medium-hide'
+          }}
+        {% else %}
+          {{ 'hero-apparel-1' | placeholder_svg_tag: class: 'ph__img small-hide medium-hide' }}
+        {% endif %}
+      </div>
+      <div class="card__wrap">
+        <div class="swiper swiper-{{ section.id }}">
+          <div class="swiper-wrapper">
+            {% for product in section.settings.collection.products limit: 4 %}
+              <div class="swiper-slide">
+                {% render 'product-card-new-v1', product: product %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+    </div>
+    {% unless section.settings.col_label == blank %}
+      <a class="--collection-url large-up-hide " href="{{ section.settings.collection.url }}">
+        {{- section.settings.col_label -}}
+      </a>
+    {% endunless %}
+  </div>
+</div>
+<script>
+  swiperSlider["{{ id }}"] = {};
+
+   swiperSlider["{{ id }}"].slider = new Swiper(".swiper-{{ section.id }}", {
+     slidesPerView: 1.2,
+     spaceBetween: 16,
+     // allowTouchMove: false,
+     pagination: {
+        el: ".wrapper-{{ id }} .swiper-pagination",
+        clickable: true,
+      },
+     breakpoints: {
+       768: {
+         slidesPerView: 1,
+         spaceBetween: 40,
+       }
+     },
+   });
+</script>
+{% schema %}
+{
+  "name": "Product Highlight",
+  "settings": [
+    {
+      "type": "text",
+      "id": "nav_id",
+      "label": "Navigation ID"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "bg",
+      "label": "Background Color",
+      "default": "#F4EBDB"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Young Sportsters"
+    },
+    {
+      "type": "image_picker",
+      "id": "img",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "col_label",
+      "label": "Collection Label",
+      "default": "SHOP THE Collection"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Highlight"
+    }
+  ]
+}
+{% endschema %}

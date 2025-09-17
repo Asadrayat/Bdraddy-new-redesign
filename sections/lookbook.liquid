@@ -1,0 +1,627 @@
+{%- style -%}
+  #shopify-section-{{section.id}} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+  .lbn-container.belongsToNav .lbn-media img{
+    transition: all 0.4s ease-in-out;
+  }
+  .lbn-container.belongsToNav:hover .lbn-media img{
+    transform: scale(1.05);
+  }
+  .swiper-{{ section.id }}{
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .lookbook-new{
+    position: relative;
+  }
+
+  .lbn-media{
+    font-size: 0;
+    line-height: 0;
+  }
+  .lbn-media img{
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    /* aspect-ratio: 5/4; */
+  }
+  .lbn-media-mbl{
+    display: none;
+  }
+  .lbn-product--content {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      justify-content: center;
+  }
+  .lbn-price--wrapper {
+      display: flex;
+      align-items: center;
+      gap: var(--Spacing-Container-xs, 12px);
+  }
+  .lbn-product--title{
+    color: var(--Content-Base-main, #1F2937);
+    margin: 0;
+    color: var(--Content-Base-main, #1F2937);
+    font-family: var(--font-family-Body, Gotham);
+    font-size: var(--Font-Size-Paragraph-Medium, 14px);
+    font-style: normal;
+    font-weight: 400;
+    line-height: var(--Line-Height-Paragraph-Medium, 22px);
+  }
+  .lbn-product--price{
+    color: var(--Content-Base-main, #1F2937);
+    margin: 0;
+    font-family: var(--font-family-Body, "Sainte Colombe");
+    font-size: var(--Font-Size-Paragraph-Small, 14px);
+    font-style: normal;
+    font-weight: 400;
+    line-height: var(--Line-Height-Paragraph-Small, 20px); /* 142.857% */
+  }
+  .lbn-product-col--title{
+    color: var(--Content-Base-main, #1F2937);
+    /* text-align: center; */
+    font-family: var(--font-family-Control, "Archivo Expanded");
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 13px; /* 100% */
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: auto;
+    text-underline-offset: 2px;
+    text-underline-position: from-font;
+    text-transform: uppercase;
+    margin: 0;
+    /* transition: all 0.4s ease-in-out; */
+  }
+
+  .lbn-content1-btn svg, .lbn-content2 svg{
+    transition: all 0.1s ease-in-out;
+  }
+  .lbn-content1.active svg, .lbn-content2.active svg{
+    width: 24px;
+    height: 24px;
+    transition: all 0.1s ease-in-out;
+  }
+  .lbn-product-col--title{
+    position: relative;
+  }
+
+  .lbn-product-col--title::after{
+    position: absolute;
+    content: "";
+    bottom: -1px;
+    left: 0;
+    width: 0%;
+    height: 1px;
+    background: #1F2937;    
+  }
+  .lbn-product-col--title:hover {
+    text-decoration: none;
+  }
+  .lbn-product-col--title:hover::after {
+    width: 100%;
+    transition: width 0.4s ease-in-out;
+  }
+  @media screen and (max-width: 768px) {
+    #shopify-section-{{section.id}} {
+      padding-top: {{ section.settings.padding_top | times: 0.5 | round: 0 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.5 | round: 0 }}px;
+    }
+
+    .lbn-media img{
+
+    }
+    .lbn-media-mbl{
+      display: block;
+    }
+    .lbn-media-desktop{
+      display: none;
+    }
+  }
+{%- endstyle -%}
+
+<div class="lbn-container belongsToNav" id="{{ section.settings.sec_id  | downcase }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="lbn-wrapper swiper-{{ section.id }}">
+      <div class="swiper-wrapper">
+        {% for block in section.blocks %}
+          <lookbook-new class="swiper-slide lookbook-{{ forloop.index }}">
+            <div class="lbn-media lbn-media-desktop">
+              {{ block.settings.image | image_url: width: block.settings.image.width | image_tag }}
+            </div>
+            <div class="lbn-media lbn-media-mbl">
+              {{ block.settings.image_mbl | image_url: width: block.settings.image_mbl.width | image_tag }}
+            </div>
+            {% unless block.settings.product1 == blank %}
+              {% assign product = all_products[block.settings.product1] %}
+              <div class="lbn-content1 active">
+                <button class="lbn-content1-btn " data-btn-lookbook>
+                  {% render 'all-icons', name: 'focus' %}
+                </button>
+                <div class="lbn-product-card1 active" data-card-lookbook>
+                  <a href="{{ product.url }}">
+                    {% unless product.featured_image == blank %}
+                      {{ product.featured_image | image_url: width: 150 | image_tag: loading: 'lazy' }}
+                    {% endunless %}
+                  </a>
+                  <div class="lbn-product--content">
+                    <a href="{{ product.url }}">
+                      <span class="lbn-product--title">{{ product.title }}</span>
+                    </a>
+                    <div class="lbn-price--wrapper">
+                      <span class="lbn-product--price">{{ product.price | money }}</span>
+                      {% if block.settings.btn_text1 != blank %}
+                        <a href="{{ product.url }}" class="lbn-product-col--title">
+                          {{- block.settings.btn_text1 -}}
+                        </a>
+                      {%- endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endunless %}
+            {% unless block.settings.product2 == blank %}
+              {% assign product = all_products[block.settings.product2] %}
+              <div class="lbn-content2">
+                <button class="lbn-content2-btn" data-btn-lookbook>
+                  {% render 'all-icons', name: 'focus' %}
+                </button>
+                <div class="lbn-product-card2" data-card-lookbook>
+                  <a href="{{ product.url }}">
+                    {% unless product.featured_image == blank %}
+                      {{ product.featured_image | image_url: width: 150 | image_tag: loading: 'lazy' }}
+                    {% endunless %}
+                  </a>
+                  <div class="lbn-product--content">
+                    <a href="{{ product.url }}">
+                      <span class="lbn-product--title">{{ product.title }}</span>
+                    </a>
+                    <div class="lbn-price--wrapper">
+                      <span class="lbn-product--price">{{ product.price | money }}</span>
+                      {% if block.settings.btn_text2 != blank -%}
+                        <a href="{{ product.url }}" class="lbn-product-col--title ">
+                          {{- block.settings.btn_text2 -}}
+                        </a>
+                      {%- endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endunless %}
+          </lookbook-new>
+          <style>
+            .lookbook-{{ forloop.index }} {
+              .lbn-content1{
+                position: absolute;
+                padding: 10px;
+                top: {{block.settings.top1 | append: '%'}};
+                left: {{block.settings.left1 | append: '%'}};
+                @media(max-width: 768px){
+                  position: static;
+                  padding: 0px;
+                }
+              }
+              .lbn-content2{
+                position: absolute;
+                padding: 10px;
+                top: {{block.settings.top2 | append: '%'}};
+                left: {{block.settings.left2 | append: '%'}};
+                @media(max-width: 768px){
+                  position: static;
+                  padding: 00px;
+                }
+              }
+              .lbn-content1-btn{
+                display: block;
+                border: none;
+                /* width: 30px;
+                height: 30px;
+                background: #727272;
+                border: 4px solid white;
+                border-radius: 15px; */
+                box-sizing: border-box;
+                /* padding: 0;
+                z-index: 2;
+                color: white;
+                font-size: 16px; */
+                cursor: pointer;
+                @media(max-width: 768px){
+                  position: absolute;
+                  top: {{block.settings.top1_mbl | append: '%'}};
+                  left: {{block.settings.left1_mbl | append: '%'}};
+                }
+              }
+              .lbn-content2-btn{
+                display: block;
+                border: none;
+                /* width: 30px;
+                height: 30px;
+                background: #727272;
+                border: 4px solid white;
+                border-radius: 15px; */
+                box-sizing: border-box;
+                /* padding: 0;
+                z-index: 2;
+                color: white;
+                font-size: 16px; */
+                cursor: pointer;
+                @media(max-width: 768px){
+                  position: absolute;
+                  top: {{block.settings.top2_mbl | append: '%'}};
+                  left: {{block.settings.left2_mbl | append: '%'}};
+                }
+              }
+              .lbn-product-card1{
+                max-width: 400px;
+                min-width: 350px;
+                text-decoration: none;
+                display: flex;
+                /* flex-direction: column;
+                width: 140px; */
+                width: max-content;
+                height: max-conent;
+                box-sizing: border-box;
+                overflow: hidden;
+                position: absolute;
+                visibility: hidden;
+                background: #EEE7DD;
+                padding: 10px 10px;
+                transform: scale(0);
+                /* text-align: center; */
+                transition: all 0.4s;
+                gap: 10px;
+                {% if block.settings.top1 > 50  %}
+                  bottom: 78%;
+                {% else %}
+                  top: 0%;
+                {% endif %}
+                {% if block.settings.left1 > 50  %}
+                  right: 78%;
+                {% else %}
+                  left: 78%;
+                {% endif %}
+                z-index: 1;
+                @media(max-width: 768px){
+                  top: 3%;
+                  left: 3%;
+                  max-width: 94%;
+                  min-width: 94%;
+                }
+                img{
+                  width: 100%;
+                  height: auto;
+                  max-width: 75px;
+                  min-width: 75px;
+                  aspect-ratio: 8/9;
+                }
+                /* span{
+                  font-size: 14px;
+                  display: block;
+                  color: black;
+                  padding: 0;
+                  margin: 0;
+                } */
+              }
+              .lbn-product-card2{
+                max-width: 400px;
+                min-width: 350px;
+                text-decoration: none;
+                display: flex;
+                /* flex-direction: column;
+                width: 140px; */
+                width: max-content;
+                height: max-content;
+                box-sizing: border-box;
+                overflow: hidden;
+                position: absolute;
+                transform: scale(0);
+                /* text-align: center; */
+                transition: all 0.4s;
+                background: #EEE7DD;
+                padding: 10px 10px;
+                /* text-align: center; */
+                gap: 10px;
+                {% if block.settings.top2 > 50  %}
+                  bottom: 78%;
+                {% else %}
+                  top: 78%;
+                {% endif %}
+                {% if block.settings.left2 > 50  %}
+                  right: 78%;
+                {% else %}
+                  left: 78%;
+                {% endif %}
+                z-index: 1;
+                @media(max-width: 768px){
+                  top: 3%;
+                  left: 3%;
+                  max-width: 94%;
+                  min-width: 94%;
+                }
+                img{
+                  width: 100%;
+                  height: auto;
+                  max-width: 75px;
+                  min-width: 75px;
+                  aspect-ratio: 8/9;
+
+                }
+                /* span{
+                  font-size: 14px;
+                  display: block;
+                  color: black;
+                  padding: 0;
+                  margin: 0;
+                } */
+              }
+
+
+              .lbn-content1 {
+                .lbn-product-card1.active {
+                  visibility: visible;
+                  transform: scale(1);
+                  transition: all 0.4s;
+                }
+                .lbn-content1-btn{
+                  /* background: #212B36; */
+                }
+              }
+              .lbn-product-card2.active{
+                visibility: visible;
+                transform: scale(1);
+                transition: all 0.4s;
+                .lbn-content2-btn{
+                  /* background: #212B36; */
+                }
+              }
+            }
+          </style>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", e => {
+    const lookBookSwiper = (callback) => {
+      new Swiper(".swiper-{{ section.id }}", {
+        slidesPerView: 1,
+        spaceBetween: 10,
+        breakpoints: {
+          100: {
+            slidesPerView: 1,
+            spaceBetween: 0,
+          },
+          768: {
+            slidesPerView: 1,
+            spaceBetween: 10,
+          },
+          1024: {
+            slidesPerView: 1,
+            spaceBetween: 10,
+          },
+        },
+      })
+      if (callback && typeof callback === 'function') {
+        callback(); // Execute the callback function if provided
+      }
+    }
+    lookBookSwiper(() => {
+      const lookbookCardBtns = document.querySelectorAll("[data-btn-lookbook]")
+      const lookbookCards = document.querySelectorAll("[data-card-lookbook]")
+      lookbookCardBtns.forEach(lookbookCardBtn => {
+        const lookbookCardParent = lookbookCardBtn.parentElement;
+        const lookbookCard = lookbookCardParent.querySelector("[data-card-lookbook]")
+        console.log(lookbookCard)
+        lookbookCardBtn.addEventListener("click", (e) => {
+
+          lookbookCards.forEach(lcb => {
+            lcb.classList.remove("active")
+            lcb.parentElement.classList.remove("active")
+          })
+          lookbookCardParent.classList.add("active")
+          lookbookCard.classList.add("active")
+          console.log(lookbookCards)
+        })
+      })
+    })
+  })
+</script>
+
+{% schema %}
+{
+  "name": "Lookbook New",
+  "settings": [
+    {
+      "type": "text",
+      "id": "sec_id",
+      "label": "Section ID"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": true
+    },
+    {
+    "type": "header",
+    "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Icon Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mbl",
+          "label": "Icon Image ( Mobile )"
+        },
+        {
+          "type": "header",
+          "content": "Point 1"
+        },
+        {
+          "type": "product",
+          "id": "product1",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "btn_text1",
+          "label": "Button Text1"
+        },
+        {
+          "type": "header",
+          "content": "Desktop Position"
+        },
+        {
+          "type": "range",
+          "id": "top1",
+          "label": "Position Top",
+          "default": 30,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%"
+        },
+        {
+          "type": "range",
+          "id": "left1",
+          "label": "Position Left",
+          "default": 30,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%"
+        },
+        {
+          "type": "header",
+          "content": "Mobile Position"
+        },
+        {
+          "type": "range",
+          "id": "top1_mbl",
+          "label": "Position Top",
+          "default": 30,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%"
+        },
+        {
+          "type": "range",
+          "id": "left1_mbl",
+          "label": "Position Left",
+          "default": 30,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%"
+        },
+        {
+          "type": "header",
+          "content": "Point 2"
+        },
+        {
+          "type": "product",
+          "id": "product2",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "btn_text2",
+          "label": "Button Text2"
+        },
+        {
+          "type": "header",
+          "content": "Desktop Position"
+        },
+        {
+          "type": "range",
+          "id": "top2",
+          "label": "Position Top",
+          "default": 70,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%"
+        },
+        {
+          "type": "range",
+          "id": "left2",
+          "label": "Position Left",
+          "default": 70,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%"
+        },
+        {
+          "type": "header",
+          "content": "Mobile Position"
+        },
+        {
+          "type": "range",
+          "id": "top2_mbl",
+          "label": "Position Top",
+          "default": 70,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%"
+        },
+        {
+          "type": "range",
+          "id": "left2_mbl",
+          "label": "Position Left",
+          "default": 70,
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lookbook New"
+    }
+  ]
+}
+{% endschema %}

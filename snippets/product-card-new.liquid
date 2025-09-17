@@ -1,0 +1,60 @@
+<new-product-card>
+  <div class="new-pc-wrapper">
+    <div class="new-pc-media {% if product.images.size > 1 %}is-hover{% endif %}">
+      <a href="{{ product.url }}">
+        {% if loading == true %}
+          {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', class: 'featured-image' }}
+        {% else %}
+          {{ product.featured_image | image_url: width: 600 | image_tag: class: 'featured-image' }}
+        {% endif %}
+        {% if product.images.size > 1 %}
+          {{ product.images[1] | image_url: width: 600 | image_tag: loading: 'lazy', class: 'hover-image' }}
+        {% endif %}
+      </a>
+      <button
+        class="card-qatc-btn button"
+        data-product-handle="{{ product.handle }}"
+        data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+      >
+        <span>Quick Shop</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
+          <path d="M7.99998 3.95825V13.2916M3.33331 8.62492H12.6666" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="new-pc-info">
+      <div class="new-pc-color-variants">
+        {% for option in product.options_with_values %}
+          {% if option.name == 'Color' or option.name == 'color' %}
+            {% for value in option.values limit: 4 %}
+              {% liquid
+                assign color_img = value.name | downcase | strip | replace: ' ', '-' | replace: '/', '-' | append: '.png'
+              %}
+              <a class="new-pc-color-variant" href="{{ value.variant.url }}" title="{{ value.name }}">
+                <span
+                  style="background-image: url('{{ color_img | file_img_url: "50x" }}'); background-color: {{ value.name | downcase }}"
+                ></span>
+              </a>
+            {% endfor %}
+            {% if option.values.size >= 4 %}
+              <a class="new-pc-color-variant plus__icon-new-card" href="{{ product.url }}">+{{ option.values.size | minus: 4 }}</a>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </div>
+      <h5 class="new-pc-title">{{ product.title | downcase }}</h5>
+      <div class="new-pc-price-wrapper">
+        {% if product.selected_or_first_available_variant.price
+            < product.selected_or_first_available_variant.compare_at_price
+        %}
+          <h5 class="new-pc-regular-price">{{ product.selected_or_first_available_variant.price | money }}</h5>
+          <h5 class="new-pc-compare-price">
+            <s>{{ product.selected_or_first_available_variant.compare_at_price | money }}</s>
+          </h5>
+        {% else %}
+          <h5 class="new-pc-regular-price">{{ product.selected_or_first_available_variant.price | money }}</h5>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</new-product-card>

@@ -1,0 +1,533 @@
+
+
+
+{% style %}
+  #shopify-section-{{section.id}} {
+    box-sizing: border-box;
+    padding-block: {{section.settings.padding_block_desktop}};
+
+.--top-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--Spacing-Container-md, 40px);
+  /* margin-bottom: var(--Spacing-Container-lg, 40px); */
+}
+    h2.--section-title {
+    letter-spacing: -0.96px;
+    margin-block: 0;
+    /* margin-block: 0 var(--Spacing-Container-lg, 40px); */
+}
+  .--section-content {
+    max-width: 780px;
+}
+.--section-content p:first-child {
+    margin-top: 0;
+}
+.--section-content p:last-child {
+    margin-bottom: 0;
+}
+    
+.hero_slider__nav_icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    background: #fff;
+    line-height: 1;
+    position: absolute;
+    top: 50%;
+    z-index: 1;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(-50%);
+    box-shadow: 0px 1px 2px -1px rgba(0, 0, 0, 0.10), 0px 1px 3px 0px rgba(0, 0, 0, 0.10);
+    cursor: pointer;
+}
+.hero_slider__nav_icon.swiper-button-disabled {
+    display: none!important;
+}
+    
+    
+    .new-cl-media{
+      display: flex;
+      margin-bottom: 16px;
+    }
+    .new-cl-media svg{
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+    }
+    .new-cl-media img{
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+    }
+
+    .next-{{ section.id }} {
+      right: 0
+    }
+
+    @media(max-width: 768px) {
+      padding-block: {{section.settings.padding_block_mobile}};
+    }
+    
+  }
+
+.sec-{{ section.id }} {
+  display: flex;
+  flex-direction: column;
+  gap: var(--Spacing-Container-lg, 40px);
+}
+{% endstyle %}
+
+<div id ="{{ section.settings.nav_id }}" class="{% if section.settings.full_width_section %}full-width{% else %}page-width{% endif %} sec-{{ section.id }}">
+  <div class="--top-block">
+    <h2 class="--section-title">{{ section.settings.title }}</h2>
+    {% if section.settings.content != blank %}
+      <div class="--section-content"> {{ section.settings.content }} </div>
+    {% endif %}
+    
+  </div>
+  
+  <div class="new-cl-wrapper">
+    <div class="swiper swiper-{{ section.id }}">
+      <div class="swiper-wrapper">
+        {% for block in section.blocks %}
+          {% liquid
+            
+            assign title = block.settings.title
+            
+            assign description = block.settings.text
+            assign button_text = block.settings.button_label
+
+            unless block.settings.button_url == blank
+              assign url = block.settings.button_url
+            endunless
+
+            unless block.settings.image == blank
+              assign image = block.settings.image
+            else
+             assign image = ""
+            endunless
+
+            unless block.settings.title == blank
+              assign title = block.settings.title
+            endunless
+          %}
+
+          <div class="swiper-slide">
+            <a class="new-cl-media" href="{{ url }}">
+              {%- if image == blank %}
+                {{ 'collection-apparel-3' | placeholder_svg_tag }}
+              {% else %}
+                {{ image | image_url: width: 600 | image_tag: loading: 'lazy' }}
+              {% endif -%}
+            </a>
+            <div class="new-cl-body cl-{{ block.id }}">
+              <h4 class="new-cl-title">{{ title }}</h4>
+              <p class="new-cl-description">{{ description }}</p>
+              <a href="{{ url }}" class="new-cl-view-all">{{ button_text }}</a>
+            </div>
+          </div>
+
+          <style>
+            .cl-{{ block.id }} {
+              display: flex;
+              flex-direction: column;
+              gap: 24px;
+
+              .new-cl-title {
+                color: {{block.settings.title_color}};
+                font-size: {{block.settings.title_font_size_desktop | append: 'px' }};
+                text-transform: {{block.settings.title_text_transform}};
+                margin: 0;
+                font-family: var(--font-family-Title, "Sainte Colombe");
+                font-style: normal;
+                font-weight: 400;
+                line-height: var(--Line-Height-Heading-H4, 28px); /* 116.667% */
+                letter-spacing: -0.48px;
+              }
+              .new-cl-description{
+                color: {{block.settings.text_color}};
+                font-size: {{block.settings.text_font_size_desktop | append: 'px' }};
+                text-transform: {{block.settings.text_text_transform}};
+                margin: 0;
+                font-family: var(--font-family-Body, "Sainte Colombe");
+                font-style: normal;
+                font-weight: 400;
+                line-height: var(--Line-Height-Paragraph-Regular, 24px);
+              }
+              .new-cl-view-all{
+                color: {{block.settings.button_color}};
+                font-size: {{block.settings.button_font_size_desktop | append: 'px' }};
+                text-transform: {{block.settings.button_text_transform}};
+                margin: 0;
+                font-family: var(--font-family-Control, "Archivo Expanded");
+                font-style: normal;
+                font-weight: 400;
+                line-height: 13px;
+                {% if block.settings.show_underline %}
+                  text-decoration-line: underline;
+                  text-decoration-style: solid;
+                  text-decoration-skip-ink: none;
+                  text-decoration-thickness: auto;
+                  text-underline-offset: auto;
+                  text-underline-position: from-font;
+                {% endif %}}
+              }
+
+              @media(max-width: 768px) {
+                .new-cl-title {
+                  font-size: {{block.settings.title_font_size_mobile | append: 'px' }};
+                }
+                .new-cl-description{
+                  font-size: {{block.settings.text_font_size_mobile | append: 'px' }};
+                }
+                .new-cl-view-all{
+                  font-size: {{block.settings.button_font_size_mobile | append: 'px' }};
+                }
+              }
+            }
+          </style>
+        {% endfor %}
+      </div>
+      <div class="prev-{{ section.id }} hero_slider__nav_icon">
+        {% render 'all-icons', name: 'left_arrow' %}
+      </div>
+      <div class="next-{{ section.id }} hero_slider__nav_icon">
+        {% render 'all-icons', name: 'right_arrow' %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  //document.addEventListener("DOMContentLoaded", e => {
+    swiperSlider["{{ section.id }}"] = {};
+
+    swiperSlider["{{ section.id }}"].swiper = new Swiper(".swiper-{{ section.id }}", {
+      slidesPerView: 3,
+      spaceBetween: 40,
+      navigation: {
+        nextEl: '.next-{{ section.id }}',
+        prevEl: '.prev-{{ section.id }}'
+      },
+      breakpoints: {
+        200: {
+          slidesPerView: 1.2,
+          spaceBetween: 20,
+        },
+        768: {
+          slidesPerView: 2,
+          spaceBetween: 20,
+        },
+        1024: {
+          slidesPerView: 3,
+          spaceBetween: 25,
+        },
+        1200: {
+          slidesPerView: {{ section.settings.card_count }},
+          spaceBetween: 30,
+        },
+        1400: {
+          slidesPerView: {{ section.settings.card_count }},
+          spaceBetween: 40,
+        }
+      }
+    })
+  //});
+</script>
+
+{% schema %}
+{
+  "name": "Featured Cards",
+  "presets": [
+    {
+      "name": "Featured Cards",
+      "blocks": [
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "nav_id",
+      "label": "Navigation ID"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width_section",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrow",
+      "label": "Show Slider Arrow",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "card_count",
+      "label": "Number of Cards",
+      "options": [
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+      ],
+      "default": "3"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Section Content"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "text",
+      "id": "padding_block_desktop",
+      "label": "Padding Block",
+      "default": "40px 80px",
+      "info": "0px 0px; means top 0px and bottom 0px"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing (Mobile)"
+    },
+    {
+      "type": "text",
+      "id": "padding_block_mobile",
+      "label": "Padding Block",
+      "default": "24px 24px",
+      "info": "0px 0px; means top 0px and bottom 0px"
+    },
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Select Image",
+        },
+        {
+          "type": "header",
+          "content": "Title"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Font Color",
+          "default": "#1F2937"
+        },
+        {
+          "type": "range",
+          "id": "title_font_size_desktop",
+          "min": 12,
+          "max": 34,
+          "step": 1,
+          "unit": "px",
+          "label": "Font size (Desktop)",
+          "default": 24
+        },
+        {
+          "type": "range",
+          "id": "title_font_size_mobile",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Font size (Mobile)",
+          "default": 18
+        },
+        {
+          "type": "select",
+          "id": "title_text_transform",
+          "label": "Text Transform",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "uppercase",
+              "label": "Uppercase"
+            },
+            {
+              "value": "lopwercase",
+              "label": "Lowercase"
+            },
+            {
+              "value": "capitalize",
+              "label": "Capitalize"
+            }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "header",
+          "content": "Description"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Description"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Font Color",
+          "default": "#1F2937"
+        },
+        {
+          "type": "range",
+          "id": "text_font_size_desktop",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Font size (Desktop)",
+          "default": 16
+        },
+        {
+          "type": "range",
+          "id": "text_font_size_mobile",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Font size (Mobile)",
+          "default": 16
+        },
+        {
+          "type": "select",
+          "id": "text_text_transform",
+          "label": "Text Transform",
+          "options": [
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "uppercase",
+              "label": "Uppercase"
+            },
+            {
+              "value": "lopwercase",
+              "label": "Lowercase"
+            },
+            {
+              "value": "capitalize",
+              "label": "Capitalize"
+            }
+          ],
+          "default": "none"
+        },
+        {
+          "type": "header",
+          "content": "View All Button"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button Lable",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button URL"
+        },
+        {
+          "type": "color",
+          "id": "button_color",
+          "label": "Font Color",
+          "default": "#4B5563"
+        },
+        {
+          "type": "range",
+          "id": "button_font_size_desktop",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "label": "Font size (Desktop)",
+          "default": 13
+        },
+        {
+          "type": "range",
+          "id": "button_font_size_mobile",
+          "min": 10,
+          "max": 18,
+          "step": 1,
+          "unit": "px",
+          "label": "Font size (Mobile)",
+          "default": 10
+        },
+        {
+          "type": "select",
+          "id": "button_text_transform",
+          "label": "Text Transform",
+          "options": [
+            {
+              "value": "uppercase",
+              "label": "Uppercase"
+            },
+            {
+              "value": "lopwercase",
+              "label": "Lowercase"
+            },
+            {
+              "value": "capitalize",
+              "label": "Capitalize"
+            }
+          ],
+          "default": "uppercase"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_underline",
+          "label": "Show Underline",
+          "default": true
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,324 @@
+{% assign id = section.id %}
+<style>
+  #shopify-section-{{id}} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+  }
+  .sec-{{ id }} {
+    .category__wrap {
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      gap: var(--Spacing-Container-xl);
+      padding: 15px 0;
+      border-block: 1px solid;
+      margin-bottom: 32px;
+      border: none;
+      padding-left: 20px;
+      @media(max-width: 768px) {
+        justify-content: start;
+        /* margin-bottom: 16px; */
+        overflow: auto;
+        scrollbar-width: none;
+      }
+      h3{
+        margin: 0;
+        cursor: pointer;
+        position: relative;
+        color: var(--Brand-Primary, #212B36);
+
+        /* UI Controls/Control/input/sm */
+        font-family: var(--font-body-family);
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        text-wrap: nowrap;
+        line-height: 20px; /* 125% */
+      }
+    }
+    .category__wrap h3:after {
+      /* position: absolute;
+      content: "";
+      background: #292929;
+      width: 0;
+      height: 2px;
+      left: 0;
+      transition: all 0.4s;
+      bottom: -14px; */
+      position: absolute;
+      content: "";
+      background: #292929;
+      width: 0;
+      height: calc(100% + 20px);
+      left: -20px;
+      transition: all 0.4s;
+      top: -10px;
+      z-index: -1;
+
+    }
+    .category__heading.active h3:after,
+    .category__wrap h3:hover:after {
+      width: calc(100% + 40px);
+    }
+    .category__wrap h3:hover,
+    .category__heading.active h3{
+      color: #fff;
+    }
+    .pt__richtext {
+      display: none;
+    }
+    .pt__richtext.active {
+      display: block;
+    }
+  }
+
+  .pt__richtext *{
+    margin: 0 0 var(--Spacing-Container-xs);
+  }
+  .pt__richtext a{
+    color: var(--Content-Base-highlight, #312E81);
+    font-family: var(--font-family-control, "Archivo Expanded");
+    font-size: var(--Font-Size-Paragraph-Large, 20px);
+    font-style: normal;
+    font-weight: 400;
+    line-height: var(--Line-Height-Paragraph-Large, 30px);
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+    text-transform: uppercase;
+  }
+  .pt__richtext p{
+    color: var(--Brand-Primary, #212B36);
+
+    /* UI Controls/Control/input/sm */
+    font-family: var(--font-body-family);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 125% */
+  }
+  /* css for hiding block if empty starts */
+  .category__heading-Détails.details, .category__heading-Composition.composition, .category__heading-Utilisation.use, .category__heading-Certificates.certificates {
+    /* display: none; */
+  }
+
+  /* css for hiding block if empty ends */
+
+  @media(max-width: 600px) {
+    #shopify-section-{{id}} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+</style>
+
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      <div class="category__wrap">
+        {% for block in section.blocks %}
+          {% if block.type == 'category' %}
+            {% unless block.settings.text == blank %}
+              <div
+                class="category__heading {% if forloop.first %}active{% endif %} category__heading-{{ block.settings.text }} "
+                data-title="{{ block.settings.text | handleize }}"
+              >
+                <h3>{{ block.settings.text }}</h3>
+              </div>
+            {% endunless %}
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="content__wrap">
+        {% for block in section.blocks %}
+          {% if block.type == 'tab_content' %}
+            {% unless block.settings.content == blank %}
+              <div
+                class="pt__richtext"
+                data-title="{{ block.settings.category | handleize }}"
+              >
+                {{ block.settings.content }}
+              </div>
+            {% endunless %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const tabHeadings = document.querySelectorAll(".wrapper-{{ id }} .category__heading");
+    const contents = document.querySelectorAll(".wrapper-{{ id }} .pt__richtext");
+    if (tabHeadings.length && contents.length) {
+      tabHeadings[0].classList.add("active");
+      contents[0].classList.add("active");
+    }
+    tabHeadings.forEach(tabHeading => {
+      tabHeading.addEventListener("click", () => {
+        // Remove active class from all headings and contents
+        tabHeadings.forEach(th => th.classList.remove("active"));
+        contents.forEach(content => content.classList.remove("active"));
+
+        // Add active class to clicked tab and matching content
+        tabHeading.classList.add("active");
+        contents.forEach(content => {
+          if (content.dataset.title === tabHeading.dataset.title ) {
+            content.classList.add("active");
+          }
+        });
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Tab Section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Don't Change The Block Order"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Category Title"
+        },
+      ]
+    },
+    {
+      "type": "tab_content",
+      "name": "Tab Content",
+      "settings": [
+        {
+          "type": "text",
+          "id": "category",
+          "label": "Category Title",
+          "info": "Name same as category block"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Tab Section"
+    }
+  ]
+}
+{% endschema %}

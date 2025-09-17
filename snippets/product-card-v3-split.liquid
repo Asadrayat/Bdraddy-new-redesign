@@ -1,0 +1,87 @@
+{% comment %} {% render 'product-card-v3-split', product: product, card_variant: color_variant, variant_option: value %} {% endcomment %}
+<div class="--product-card-v3 --august-product-card">
+  <div class="--image-wrapper">
+    <a class="absolute-link" href="{{ card_variant.url | within: collection }}"></a>
+    {% if card_variant.image != blank %}
+      {{ card_variant.image | image_url: width: 400 | image_tag: class: '--product-first-image' }}
+    {% else %}
+      {{ product.featured_image | image_url: width: 400 | image_tag: class: '--product-first-image' }}
+    {% endif %}  
+    
+
+    {% if product.metafields.custom.product_badge != blank %}
+      <div class="--custom-badge-wrapper">
+        {% for badge in product.metafields.custom.product_badge.value %}
+          <span class="--single-badge">{{ badge }}</span>
+          {% unless forloop.last %}
+            <span class="small-hide">|</span>
+          {% endunless %}
+        {% endfor %}
+      </div>
+    {% endif %}
+    <button class="--quick-add --quick-add-mobile --quick-add-trigger">
+      {% render 'all-icons', name: 'test-bag' %}
+    </button>
+  </div>
+
+  <div class="--product-info">
+    <div class="--color-options --quick-add-trigger -hidden">
+      {%- assign color_option = product.options_with_values | where: 'name', 'Color' | first -%}
+
+      {% assign color_handle = card_variant.title | split: ' / ' | first | strip | handle %}
+      {% assign swatch_image = color_handle | append: '.png' | file_img_url: '45x' %}
+      {% comment %} {% assign color_variant = product.variants | where: 'option1', color | first %} {% endcomment %}
+      <span
+        class="--color-swatch --quick-add-trigger"
+        style="{% if images[color_handle] %}background-image: url({{ swatch_image }});{% else %}background-color: {{ color_handle }};{% endif %}"
+        data-url="{{ card_variant.url | within: collection }}"
+      ></span>
+    </div>
+
+    <h3 class="--product-title">
+      <a class="absolute-link" href="{{ card_variant.url | within: collection }}"></a>
+      {{ product.title }} - {{ card_variant.title | split: ' / ' | first | strip }}
+    </h3>
+    {% comment %} <div class="--card-short-description">{{ product.metafields.custom.description_romance_copy }}</div> {% endcomment %}
+    <p class="--product-attribute">{{ product.metafields.custom.product_attribute }}</p>
+    <p class="--color-count hidden">Available in {{ color_option.values.size }} colors.</p>
+    <div class="product-card__pricing" data-price-container>
+      {% # render 'new-price', product: product %}
+      <div
+        class="price-wrapper"
+        data-product-id="{{ card_variant.id }}"
+        data-variant-id="{{ card_variant.id }}"
+      >
+        <span class="price-regular">
+          {% if card_variant.compare_at_price > card_variant.price %}
+            {% comment %}
+              <span class="price-compare-at">{{ card_variant.price | money }}</span>
+              <span class="price-sale">{{ card_variant.compare_at_price | money }}</span>
+            {% endcomment %}
+            <span class="price-standard">{{ card_variant.price | money }}</span>
+            <span class="price-sale">{{ card_variant.compare_at_price | money }}</span>
+
+          {% else %}
+            <span class="price-standard">{{ card_variant.price | money }}</span>
+          {% endif %}
+        </span>
+      </div>
+    </div>
+  </div>
+  {% comment %} <div class="--card-hover-elements">
+    <a class="--product-card-url" href="{{ card_variant.url | within: collection }}"></a>
+    <div class="--image-wrapper">
+      {% assign next_index = card_variant.image.position %}
+      {% comment %} {% assign original_index = card_variant.image.position %} {% endcomment %}
+      {% comment %} {% assign next_index = original_index | plus: 1 %} {% endcomment %}
+      {% assign original_index = next_index | minus: 1 %}
+      {% if product.media[next_index] != blank %}
+        {{ product.media[next_index] | image_url: width: 400 | image_tag: class: '--product-hover-image' }}
+      {% else %}
+        {{ product.media[original_index] | image_url: width: 400 | image_tag: class: '--product-hover-image' }}
+      {% endif %}
+    </div>
+
+    <button class="--quick-add --quick-add-trigger">{% render 'all-icons', name: 'test-bag' %}</button>
+  </div> {% endcomment %}
+</div>

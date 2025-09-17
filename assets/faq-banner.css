@@ -1,0 +1,102 @@
+.faq_banner-container {
+    position: relative;
+    line-height: 0;
+}
+.faq_banner-container .heading{
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(0, -50%);
+    box-sizing: border-box;
+    text-align: left;
+}
+.faq_banner-container .heading h2{
+    margin: 0;
+    color: var(--Content-Inverted-main, #F3F4F6);
+    /* text-align: center; */
+    font-family: var(--font-family-Title, "Sainte Colombe");
+    font-size: var(--Font-Size-Heading-H1, 56px);
+    font-style: normal;
+    font-weight: 400;
+    line-height: var(--Line-Height-Heading-H1, 64px); /* 114.286% */
+    letter-spacing: -1.12px;
+}
+.faq_banner-container .rte {
+    color: var(--Content-Inverted-main, #F3F4F6);
+    /* text-align: center; */
+    font-family: var(--font-family-Body, "Sainte Colombe");
+    font-size: var(--Font-Size-Paragraph-Large, 20px);
+    font-style: normal;
+    font-weight: 400;
+    line-height: var(--Line-Height-Paragraph-Large, 30px); /* 150% */
+    margin: 12px 0 24px 0;
+    /* max-width: 378px;
+    margin-inline: auto; */
+    em{
+      display: block;          
+      font-style: normal;
+    }
+}
+.faq_banner-container .heading input{
+    max-width: 480px;
+    width: 100%;
+    height: 42px;
+    border: none;
+    box-shadow: unset;
+    padding: 11px 16px;
+    background-color: #fff;
+    color: #858585;
+    /* text-align: center; */
+    font-family: var(--font-family-Control, "Archivo Expanded");
+    font-size: var(--Font-Size-Paragraph-Regular, 16px);
+    font-style: normal;
+    font-weight: 400;
+    line-height: var(--Line-Height-Paragraph-Regular, 24px); /* 150% */
+}
+h3.faq_title {
+  font-family: var(--font-family-Body, Archivo);
+    font-size: var(--Font-Size-Heading-H4);
+    line-height: var(--Line-Height-Heading-H4);
+    margin: 24px 0;
+  @media(max-width: 768px){
+      margin: 16px 0;
+  }
+}
+.faq_banner-container img{
+    width: 100%;
+    height: auto;
+    object-fit: cover;  
+      aspect-ratio: 3 / 1;
+  /* @media(max-width: 1150px){
+      aspect-ratio: 2.7;
+  } */
+  @media(max-width: 749px){
+     aspect-ratio: 2 / 3;
+  }
+}
+@media(max-width: 800px) {
+  .faq_banner-container .heading {
+      padding: 16px;
+      width: 100%;
+      /* height: 100%; */
+  }  
+  .faq_banner-container .heading h2{
+    font-size: 40px;
+    line-height: 44px;    
+  }
+  .faq_banner-container .heading .rte {
+    font-size: 14px;
+    color: #fff;
+    /* text-align: center; */
+    line-height: normal; 
+    margin: 8px 0 16px 0;
+    em{
+      display: unset;          
+    }    
+  }
+  .faq_banner-container .heading input {
+    height: 40px;
+    font-size: 16px;
+    /* text-align: center; */
+  }
+}

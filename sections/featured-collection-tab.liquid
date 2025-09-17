@@ -1,0 +1,593 @@
+{% style %}
+    #shopify-section-{{section.id}}  .new-fc-list-btn {
+          opacity: 0.5;
+    }
+    #shopify-section-{{section.id}}  .new-fc-list-btn.active{
+      color: {{ section.settings.font_color }} !important;
+      opacity: 1;
+    }
+    #shopify-section-{{section.id}}  .--arrow_btn.arrow_btn:before, .--arrow_btn.arrow_btn:after {
+      content: unset;
+    }
+    #shopify-section-{{section.id}}  .--arrow_btn.arrow_btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  #shopify-section-{{section.id}} {
+    box-sizing: border-box;
+    padding-block: {{section.settings.padding_block_desktop}};
+    {% unless section.settings.background_image == blank %}
+      background-image: url({{section.settings.background_image | image_url: width: section.settings.background_image.width }});
+      background-repeat: no-repeat;
+      background-size: cover;
+    {% else %}
+      background-color: {{ section.settings.bg_color }};
+    {% endunless %}
+
+    {% unless section.settings.font_color == "rgba(0,0,0,0)" %}
+    *:not(.button):not(.--custom-badge-wrapper):not(.--custom-badge-wrapper span) {
+      color: {{ section.settings.font_color }} !important;
+    }
+    {% endunless %}
+
+    .hidden-collection{
+      display: none;
+    }
+
+    .full-width{
+      padding-inline: 40px;
+    }
+
+    .new-fc-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: var(--Spacing-Container-xl);
+      @media(max-width: 768px) {
+        /* gap: 24px; */
+      }
+      @media(max-width: 768px) {
+        gap: 24px;
+        padding-block: {{section.settings.padding_block_mobile}};
+      }
+    }
+    .new-fc-header {
+      display: flex;
+      align-items: center;
+      gap: calc(8px + var(--Spacing-Container-md, 24px));
+      justify-content: space-between;
+      margin-bottom: var(--Spacing-Container-xxl, 48px);
+
+      @media(max-width: 768px) {
+        display: flex;
+        gap: 0;
+        align-items: center;
+        flex-direction: column;
+      }
+    }
+    .fct__top {
+        max-width: 100%;
+    }
+    .new-fc-header h2, h2.heading__{
+      margin: 0;
+      color: #000;
+      text-align: left;
+      font-family: var(--font-family-Title, "Sainte Colombe");
+      font-size: var(--Font-Size-Heading-H2, 48px);
+      font-style: normal;
+      font-weight: 400;
+      line-height: var(--Line-Height-Heading-H2, 56px);
+      letter-spacing: 0;
+
+      @media(max-width: 768px) {
+        text-align: left;
+        font-size: var(--Font-Size-Heading-H2, 30px);
+        line-height: var(--Line-Height-Heading-H2, 36px);
+        letter-spacing: 0;
+      }
+    }
+    .new-fc-list {
+      display: flex;
+      align-items: flex-start;
+      /* gap: var(--Spacing-Container-md, 24px); */
+      position: relative;
+      @media(max-width: 1200px) {
+        overflow: auto;
+        scrollbar-width: none;
+      }
+    }
+    .new-fc-list:after{
+      position: absolute;
+      content: "";
+      /* background: #E5E7EB; */
+      background: rgba(
+        {{ section.settings.font_color | color_extract: 'red' }},
+        {{ section.settings.font_color | color_extract: 'green' }},
+        {{ section.settings.font_color | color_extract: 'blue' }},
+        0.1
+      );
+      width: 100%;
+      height: 2px;
+      bottom: -8px;
+      left: 0;
+      z-index: 1;
+        @media(max-width: 1200px) {
+          bottom: 0;
+        }
+    }
+    .new-fc-list-btn:first-child {
+        padding: 0 12px 0px 0px;
+        @media(max-width: 1200px) {
+          padding: 12px 12px 12px 0px;
+        }
+    }
+    .new-fc-list-btn {
+      font-family: var(--font-family-Heading, Gotham);
+      /* color: #9CA3AF; */
+      font-size: var(--Font-Size-Heading-H2, 40px);
+      font-style: normal;
+      font-weight: 700;
+      line-height: var(--Line-Height-Heading-H2, 40px);
+      letter-spacing: 0;
+      text-transform: uppercase;
+      position: relative;
+      padding: 0 12px;
+      border: 0;
+      margin: 0;
+      @media(max-width: 1200px) {
+        text-wrap: nowrap;
+        padding: 12px;
+      }
+    }
+    .new-fc-list.heading__three .new-fc-list-btn {
+      font-size: var(--Font-Size-Heading-H3, 40px);
+      line-height: var(--Line-Height-Heading-H3, 40px);
+    }
+    .new-fc-list-btn:after {
+      position: absolute;
+      content: "";
+      width: 0%;
+      /* background: #1f2937; */
+      background: {{ section.settings.font_color }};
+      height: 2px;
+      left: 0%;
+      /* transform: translateX(-50%); */
+      bottom: -8px;
+      transition: width .1s ease-in;
+      z-index: 2;
+        @media(max-width: 1200px) {
+          bottom: 0;
+          width: 100%;
+          background: #9CA3AF;
+        }
+    }
+   /* .new-fc-list-btn:hover:after, */
+    .new-fc-list-btn.active:after {
+      width: 100%;
+        @media(max-width: 1200px) {
+          background: {{ section.settings.font_color }};
+        }
+    }
+    .border__none.new-fc-list-btn.active:after {
+      width: 0%;
+    }
+    .next-{{ section.id }} {
+      right: 0
+    }
+    .new-fc-btn__wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .new-fc-view-all-btn {
+      display: block;
+      color: var(--Content-Base-main, #1f2937);
+      text-align: center;
+      font-family: var(--font-family-Control, "Archivo Expanded");
+      font-size: var(--Font-Size-UI-Controls-Control-Button-Small, 16px);
+      font-style: normal;
+      font-weight: 400;
+      line-height: var(--Line-Height-UI-Controls-Control-Button-Small, 16px);
+      text-decoration-line: underline;
+      text-decoration-style: solid;
+      text-decoration-skip-ink: none;
+      text-decoration-thickness: auto;
+      text-underline-offset: auto;
+      text-underline-position: from-font;
+      text-transform: uppercase;
+      margin: 0;
+    }
+    .swiper-scrollbar-{{ section.id }} {
+      position: relative !important;
+      left: 0 !important;
+      bottom: 0 !important;
+      margin:  0;
+      height: 1px !important;
+      opacity: 1 !important;
+      width: 100% !important;
+      cursor: pointer;
+      padding-block: 8px;
+      background: transparent;
+      padding-block: var(--Spacing-Container-xxl);
+      @media(width < 768px) {
+
+      }
+      .swiper-scrollbar-drag {
+        background: {{ section.settings.font_color }};
+        display: block !important;
+        height: 1px;
+      }
+    }
+    .swiper-scrollbar-{{ section.id }}::before {
+      position: absolute;
+      content: "";
+      /* background: var(--swiper-scrollbar-bg-color, rgba(0, 0, 0, .1)); */
+      background: rgba(
+        {{ section.settings.font_color | color_extract: 'red' }},
+        {{ section.settings.font_color | color_extract: 'green' }},
+        {{ section.settings.font_color | color_extract: 'blue' }},
+        0.1
+      );
+
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 1px;
+    }
+  }
+
+  @media(max-width: 768px) {
+    .--arrow_btn.arrow_btn.desktop__only {
+      display: none !important;
+    }
+  }
+
+.section-{{section.id }} .new-fc-body {
+    position: relative;
+}
+.section-{{section.id }} .swiper-button-disabled {
+    opacity: .5;
+}
+.section-{{section.id }} .--nav-icon.swiper-button-lock {
+    display: none;
+}
+.section-{{section.id }} .--nav-icon {
+    display: flex;
+    width: 36px;
+    height: 36px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--Border-Base-dense, #4B5563);
+    background: #FFF;
+    position: absolute;
+    top: 40%;
+    z-index: 1;
+    cursor: pointer;
+    transition: 0.5s ease;
+      svg path{
+      transition: 0.5s ease;
+      }
+      @media(max-width: 768px){
+      display: none;
+    }
+}
+ @media(min-width: 769px){
+  .section-{{section.id }} .--nav-icon:hover{
+    background: #1F2937;
+    svg path{
+      fill: #fff;
+    }
+  }
+
+  }
+.swiper-prev-{{section.id }} {
+    
+    left: -60px;
+    
+    
+}
+.swiper-next-{{section.id }} {
+   
+    right: -60px;
+   
+}
+
+{% endstyle %}
+
+{% liquid
+  assign selected_collection = section.blocks.first.settings.collection
+%}
+
+<div
+  id="{{ section.settings.nav_id }}"
+  class="{% if section.settings.full_width_section %}full-width{% else %}page-width{% endif %} section-{{section.id }}"
+>
+  <div class="new-fc-wrapper">
+    {% if section.blocks.size > 1 %}
+      <h2 class="heading__">{{ section.settings.heading }}</h2>
+    {% endif %}
+    <div class="new-fc-header">
+      {% if section.blocks.size == 1 %}
+        <h2>{{ section.settings.heading }}</h2>
+      {% endif %}
+      <div class="fct__top">
+        <div class="new-fc-list fc-list-{{ section.id }} {% if section.blocks.size > 1 or section.settings.heading != blank %}heading__three{% endif %}">
+          {% for block in section.blocks %}
+            {% unless block.settings.collection == blank %}
+              <button
+                class="new-fc-list-btn {% if forloop.first %}active{% endif %} {% if forloop.length == 1 %}hidden{% endif %}"
+                data-collection="{{ block.settings.collection.handle }}"
+                data-url="{{ block.settings.collection.url }}"
+              >
+                {% if block.settings.title != blank -%}
+                  {{ block.settings.title }}
+                {% else %}
+                  {{ block.settings.collection.title }}
+                {% endif %}
+              </button>
+            {% endunless %}
+          {% endfor %}
+        </div>
+      </div>
+      {% unless section.settings.view_all_btn_text == blank %}
+        <div class="new-fc-btn__wrap ">
+          <a
+            class="_btn-{{section.id}} --arrow_btn arrow_btn desktop__only"
+            href="{{ section.settings.view_all_btn_url | default: section.blocks.first.settings.collection.url }}"
+          >
+            <span>{% render 'all-icons', name: 'chev_left' %}</span>
+            {{- section.settings.view_all_btn_text -}}
+            <span>{% render 'all-icons', name: 'chev_right' %}</span>
+          </a>
+        </div>
+      {% endunless %}
+    </div>
+  </div>
+  <div class="new-fc-body">
+    <div class="swiper swiper-{{ section.id }}">
+      <div class="swiper-wrapper">
+        {% for block in section.blocks %}
+          {% unless block.settings.collection == blank %}
+            {% for product in block.settings.collection.products limit: 8 %}
+              <div
+                class="swiper-slide swiper-slide--{{ section.id }} {% unless selected_collection.handle == block.settings.collection.handle %}hidden-collection{% endunless %}"
+                data-collection="{{ block.settings.collection.handle }}"
+              >
+                {% # render 'product-card-new-v1', product: product, loading: true %}
+                {% render 'product-card-v3', product: product, loading: true %}
+              </div>
+            {% endfor %}
+          {% endunless %}
+        {% endfor %}
+      </div>
+      {% comment %}
+        <div class="prev-{{ section.id }} hero_slider__nav_icon">
+          {% render 'all-icons', name: 'left_arrow' %}
+        </div>
+        <div class="next-{{ section.id }} hero_slider__nav_icon">
+          {% render 'all-icons', name: 'right_arrow' %}
+        </div>
+      {% endcomment %}
+      <div class="swiper-scrollbar-{{ section.id }} swiper-scrollbar"></div>
+    </div>
+    <div class="swiper-prev-{{ section.id }} --nav-icon">{%- render 'header-icons', name: 'left' -%}</div>
+      <div class="swiper-next-{{ section.id }} --nav-icon">{%- render 'header-icons', name: 'right' -%}</div>
+  </div>
+  {% unless section.settings.view_all_btn_text == blank %}
+    <div class="new-fc-btn__wrap mobile__only">
+      <a
+        class="btn-{{section.id}} button "     
+        href="{{ section.settings.view_all_btn_url | default: section.blocks.first.settings.collection.url }}"   
+      >
+        {{- section.settings.view_all_btn_text -}}
+      </a>
+    </div>
+    {% comment %} <div class="new-fc-btn__wrap mobile__only">
+      <a
+        class="btn-{{section.id}} button "
+        href="{{ section.settings.view_all_btn_url | default: section.blocks.first.settings.collection.url }}"
+      >
+        {{- section.settings.view_all_btn_text -}}
+      </a>
+    </div> {% endcomment %}
+  {% endunless %}
+</div>
+
+<script>
+  //document.addEventListener("DOMContentLoaded", e => {
+  swiperSlider['{{section.id}}'] = {};
+
+  swiperSlider['{{section.id}}'].swiperInit = () =>
+    (swiperSlider['{{section.id}}'].swiper = new Swiper('.swiper-{{section.id}}', {
+      slidesPerView: 3.2,
+      spaceBetween: 40,
+      navigation: {
+        nextEl: '.next-{{ section.id }}',
+        prevEl: '.prev-{{ section.id }}',
+      },
+      scrollbar: {
+        el: '.swiper-scrollbar-{{ section.id }}.swiper-scrollbar',
+        draggable: true,
+        hide: false,
+      },
+       navigation: {
+        nextEl: ".swiper-next-{{ section.id }}",
+        prevEl: ".swiper-prev-{{ section.id }}",
+      },
+      breakpoints: {
+        200: {
+          slidesPerView: 1.2,
+          spaceBetween: 20,
+        },
+        768: {
+          slidesPerView: 3,
+          spaceBetween: 20,
+        },
+        1024: {
+          slidesPerView: 3,
+          spaceBetween: 25,
+        },
+        1200: {
+          slidesPerView: 3.2,
+          spaceBetween: 30,
+        },
+        1400: {
+          slidesPerView: 4,
+          spaceBetween: 40,
+        },
+        1600: {
+          slidesPerView: 4,
+          spaceBetween: 40,
+        },
+      },
+    }));
+
+  swiperSlider['{{section.id}}'].swiperInit();
+
+  swiperSlider['{{section.id}}'].lists = document.querySelectorAll(`.fc-list-{{section.id}} button`);
+  swiperSlider['{{section.id}}'].slides = document.querySelectorAll(
+    `.swiper-{{section.id}} .swiper-slide--{{ section.id }}`
+  );
+  
+  swiperSlider['{{section.id}}'].viewAllBtn = document.querySelector(`.new-fc-btn__wrap.mobile__only .btn-{{section.id}}`);
+  swiperSlider['{{section.id}}'].viewAllBtnDesktop = document.querySelector(`.new-fc-btn__wrap .--arrow_btn`);
+  swiperSlider['{{section.id}}'].updateSlider = (handle) => {
+    console.log('handle', handle);
+    if (swiperSlider['{{section.id}}'].slides) {
+      swiperSlider['{{section.id}}'].slides.forEach((slide) => {
+        slide.dataset.collection === handle
+          ? slide.classList.remove('hidden-collection')
+          : slide.classList.add('hidden-collection');
+      });
+    }
+
+    if (swiperSlider['{{section.id}}'].swiper) swiperSlider['{{section.id}}'].swiper.destroy(true, true);
+    swiperSlider['{{section.id}}'].swiperInit();
+  };
+
+  if (swiperSlider['{{section.id}}'].lists) {
+    swiperSlider['{{section.id}}'].lists.forEach((list, index) => {
+      list.addEventListener('click', (e) => {
+        swiperSlider['{{section.id}}'].updateSlider(list.dataset?.collection);
+        swiperSlider['{{section.id}}'].lists.forEach((l, i) =>
+          index === i ? l.classList.add('active') : l.classList.remove('active')
+        );
+        swiperSlider['{{section.id}}'].viewAllBtn.setAttribute('href', list.dataset?.url);
+        swiperSlider['{{section.id}}'].viewAllBtnDesktop.setAttribute('href', list.dataset?.url);
+      });
+    });
+  }
+  //});
+</script>
+
+{% schema %}
+{
+  "name": "Featured Collection Tab",
+  "settings": [
+    {
+      "type": "text",
+      "id": "nav_id",
+      "label": "Navigation ID"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width_section",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "color",
+      "id": "font_color",
+      "label": "Font Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "View All Button"
+    },
+    {
+      "type": "text",
+      "id": "view_all_btn_text",
+      "label": "Button Text",
+      "default": "SHOP full  collection"
+    },
+    {
+      "type": "url",
+      "id": "view_all_btn_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "text",
+      "id": "padding_block_desktop",
+      "label": "Padding Block",
+      "default": "40px 80px",
+      "info": "0px 0px; means top 0px and bottom 0px"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing (Mobile)"
+    },
+    {
+      "type": "text",
+      "id": "padding_block_mobile",
+      "label": "Padding Block",
+      "default": "24px 24px",
+      "info": "0px 0px; means top 0px and bottom 0px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection Tab",
+      "blocks": [
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

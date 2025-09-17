@@ -1,0 +1,28 @@
+{% comment %}
+  {{ block.settings.category }}
+  {{ block.settings.collection.title }}
+{% endcomment %}
+
+<div class="--collection-card --collection-list-tab-card">
+  <a class="absolute-link" href="{{ block.settings.collection.url }}"> </a>
+  <div class="--image-wrapper">
+    {% comment %} {{ block.settings.image | image_url: width: block.settings.image.width | image_tag }} {% endcomment %}
+    <picture>
+      <source media="(max-width:768px)" srcset="{{ block.settings.image | image_url: width: 400 }}">
+      <source media="(max-width:1250px)" srcset="{{ block.settings.image | image_url: width: 800 }}">
+      <source media="(max-width:1600px)" srcset="{{ block.settings.image | image_url: width: 800 }}">
+      <img src="{{ block.settings.image | image_url: width: block.settings.image.width }}">
+    </picture>
+  </div>
+  <div class="--card-text-container">
+    <h2 class="--card-title">
+      {% if block.settings.title != blank %}
+        {{ block.settings.title }}
+      {% else %}
+        {{ block.settings.collection.title }}
+      {% endif %}
+    </h2>
+    <div class="--card-subtitle">{{ block.settings.subtitle }}</div>
+    <a class="arrow_btn" href="{{ block.settings.collection.url }}"> view collection </a>
+  </div>
+</div>

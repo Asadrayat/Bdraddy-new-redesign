@@ -1,0 +1,457 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  .sec-{{ id }} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+  }
+
+  .shop-look-tab-content-wrapper{
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: var(--Spacing-Container-md, 24px);
+    @media(max-width: 768px){
+      grid-template-columns: minmax(0,1fr);
+    }
+  }
+
+  .sec-{{ id }} .img-wrapper--{{ section.id }} img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  
+  .sec-{{ id }} .left--wrapper {
+    position: relative;
+  }
+  .sec-{{ id }} .title-wrapper--{{ section.id }} {
+    position: absolute;
+    left: var(--Spacing-Container-lg, 40px);
+    bottom: var(--Spacing-Container-lg, 48px);
+  }
+  .sec-{{ id }} .title-wrapper--{{ section.id }} p {
+    color: var(--Content-Inverted-main, #F3F4F6);
+    font-family: var(--font-family-Title, "Sainte Colombe");
+    font-size: var(--Font-Size-Heading-H2, 48px);
+    font-style: normal;
+    font-weight: 400;
+    line-height: var(--Line-Height-Heading-H2, 56px); /* 116.667% */
+    letter-spacing: -0.96px;
+    margin: 0;
+  }
+
+  .sec-{{ id }} .right--wrapper-dektop {
+    /* max-height: 80vh;  */
+    overflow-y: auto;
+    padding-right: 10px;
+    scroll-behavior: smooth;
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: var(--Spacing-Container-sm, 16px);
+    {% if section.settings.img_position == 'right' %}
+      grid-column: 1;
+      grid-row: 1;
+    {% endif %}
+    @media(max-width: 768px){
+      display: none;
+    }    
+  }
+  .sec-{{ id }} .right--wrapper-dektop::-webkit-scrollbar {
+    display: none; 
+  }
+
+  .sec-{{ id }} .right--wrapper-mbl {
+    display: none;
+    @media(max-width: 768px){
+      display: block;
+    }    
+  }
+  
+  /* .sec-{{ id }}.scroll-enabled {
+    overflow: auto;
+  }
+
+  .sec-{{ id }}.scroll-disabled {
+    overflow: hidden;
+  } */
+
+  .heading-{{ id }}{
+    text-align: center;
+    margin: 0 0 24px;
+  }
+  .heading-{{ id }} h2{
+    font-size: 48px;
+    line-height: 56px;
+    color: #000000;
+    margin: 0;
+  }
+  .shop-look-tab-headers{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 0 0 64px;
+  }
+    
+  .shop-look-tab-header-item {
+    padding: 10px 0px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: 600;
+    color: #4B5563;
+    min-width: max-content;
+    transition: all 0.3s ease;
+  }
+  .shop-look-tab-header-item.active {
+    border-bottom: 2px solid #1F2937;
+    color: #1F2937;
+  }
+  .shop-look-tab-header-item:hover {
+    border-bottom: 2px solid #1F2937;
+    color: #1F2937;
+  }
+  
+  .shop-look-tab-content {
+    display: none;
+    opacity: 0;
+    animation: fadeIn 0.5s ease forwards;
+  }
+  .shop-look-tab-content.active {
+    display: block;
+    opacity: 1;
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @media screen and (max-width: 600px){
+    .shop-look-tab-headers{
+      overflow-x: auto;
+    }
+  }
+</style>
+
+<div class="sec-{{ id }} shop-look-tabs" id="sec-{{ id }}" data-section-id={{ id }}>
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %} belongsToNav" id="{{ section.settings.sec_id  | downcase }}">
+    <div class="wrapper-{{ id }}">
+      {% if section.settings.title %}
+        <div class="heading-{{ id }}">
+          <h2>{{ section.settings.title }}</h2>
+        </div>
+      {% endif %}
+      {% if section.blocks.size > 0 %}
+        {% if section.blocks.size > 1 %}
+          <div class="shop-look-tab-headers">
+            {% for block in section.blocks %}
+              <div data-tab="{{ block.settings.collection.handle }}" class="shop-look-tab-header-item">
+                {{ block.settings.collection.title }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        <div class="shop-look-tab-contents">
+          {% for block in section.blocks %}
+            <div data-tab="{{ block.settings.collection.handle }}" class="shop-look-tab-content">
+              <div class="shop-look-tab-content-wrapper">
+                <!-- Left Image -->
+                <div class="left--wrapper">
+                  {% if block.settings.title != blank %}
+                    <div class="title-wrapper--{{ section.id }}">
+                      <p>{{ block.settings.title }}</p>          
+                    </div>
+                  {% endif %}
+                  {% if block.settings.image %}
+                    <div class="img-wrapper--{{ section.id }}">
+                      {{ block.settings.image | image_url: width: block.settings.image.width | image_tag }}          
+                    </div>
+                  {% endif %}
+                </div>
+          
+                <!-- Right Product List Desktop -->
+                <div class="right--wrapper right--wrapper-dektop">
+                  {% for block in section.blocks %}
+                    {% unless block.settings.collection == blank %}
+                      {% for product in block.settings.collection.products limit: section.settings.p_to_show %}
+                        <div class="product-card">
+                           {%# render 'product-card-new-v1', product: product, loading: true %}
+                    {% render 'product-card-v3', product: product, loading: true %}
+                        </div>
+                      {% endfor %}
+                    {% endunless %}
+                  {% endfor %}
+                </div>
+                
+                <!-- Right Product List Mobile -->
+                <div class="right--wrapper right--wrapper-mbl">
+                  <div class="swiper swiper-{{ section.id }}">
+                    <div class="swiper-wrapper">
+                      {% for block in section.blocks %}
+                        {% unless block.settings.collection == blank %}
+                          {% for product in block.settings.collection.products limit: section.settings.p_to_show %}
+                            <div class="swiper-slide">
+                              {%# render 'product-card-new-v1', product: product, loading: true %}
+                    {% render 'product-card-v3', product: product, loading: true %}
+                            </div>
+                          {% endfor %}
+                        {% endunless %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+  const tabSections = document.querySelectorAll('.shop-look-tabs');
+
+  function initializeSwiper(section, sectionId) {
+    new Swiper(`.swiper-${sectionId}`, {
+      slidesPerView: 1.2,
+      spaceBetween: 12,
+    });
+  }
+
+  function adjustRightWrapperHeight(section, sectionId) {
+    const imgs = section.querySelectorAll(`.img-wrapper--${sectionId} img`);
+    const rightWrappers = section.querySelectorAll('.right--wrapper-dektop');
+    
+    imgs.forEach((img, index) => {
+      const rightWrapper = rightWrappers[index];
+      if (img && rightWrapper) {
+        const imageHeight = img.clientHeight;
+        rightWrapper.style.maxHeight = `${imageHeight}px`;
+      }
+    });
+  }
+
+  function initializeTabContent(wrapper, sectionId) {
+    adjustRightWrapperHeight(wrapper, sectionId);
+    initializeSwiper(wrapper, sectionId);
+  }
+
+  tabSections.forEach(wrapper => {
+    const sectionId = wrapper.dataset.sectionId || '{{ section.id }}'; // Fallback if dataset not set
+    const tabHeaders = wrapper.querySelectorAll('.shop-look-tab-header-item');
+    const tabItems = wrapper.querySelectorAll('.shop-look-tab-content');
+
+    if (tabHeaders.length > 0 && tabItems.length > 0) {
+      tabHeaders[0].classList.add('active');
+      tabItems[0].classList.add('active');
+      tabItems[0].style.display = 'block';
+      initializeTabContent(wrapper, sectionId);
+    }
+
+    tabHeaders.forEach(header => {
+      header.addEventListener('click', () => {
+        const tabId = header.dataset.tab;
+        tabHeaders.forEach(h => h.classList.remove('active'));
+        tabItems.forEach(item => {
+          item.classList.remove('active');
+          item.style.display = 'none';
+        });
+        header.classList.add('active');
+        const targetTab = wrapper.querySelector(`.shop-look-tab-content[data-tab="${tabId}"]`);
+        if (targetTab) {
+          targetTab.classList.add('active');
+          targetTab.style.display = 'block';
+          initializeTabContent(wrapper, sectionId);
+        }
+      });
+    });
+
+    window.addEventListener('resize', () => adjustRightWrapperHeight(wrapper, sectionId));
+  });
+});
+</script>
+
+
+
+{% schema %}
+{
+  "name": "Shop The Look Tab",
+  "settings": [
+    {
+      "type": "text",
+      "id": "sec_id",
+      "label": "Section ID"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "select",
+      "id": "img_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left",
+      "label": "Image Position"
+    },
+    {
+      "type": "range",
+      "id": "p_to_show",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "label": "Product To Show",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop The Look Tab",
+      "blocks": [
+        {
+          "type": "collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

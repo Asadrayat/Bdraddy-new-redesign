@@ -1,0 +1,289 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+      .sec-{{ id }} {
+        box-sizing: border-box;
+        margin-top: {{section.settings.margin_top | append: 'px'}};
+        margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+        padding-top: {{section.settings.padding_top | append: 'px'}};
+        padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+      }
+
+      @media(max-width: 600px) {
+        .sec-{{ id }} {
+          margin-top: {{section.settings.margin_top_m | append: 'px'}};
+          margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+          padding-top: {{section.settings.padding_top_m | append: 'px'}};
+          padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+        }
+      }
+
+
+
+    .sec-{{ id }}{
+
+    .wrapper-{{ id }}{
+      position: relative;
+    }
+  .--review-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #D4C3AB;
+  background: #E5DBCC;
+  color: var(--Content-Base-main, #1F2937);
+
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  padding: var(--Spacing-Section-Vertical-Padding, 64px) var(--Spacing-Section-Horizontal-Padding, 128px);
+  flex-direction: column;
+  align-items: center;
+  gap: var(--Spacing-Container-xl, 32px);
+  align-self: stretch;
+  text-align: center;
+  @media(max-width: 600px){
+    padding: 64px var(--Spacing-Section-Horizontal-Padding, 16px);
+    width: calc(100% - 32px);
+  }
+  }
+  .--reviewer-box img {
+    width: auto;
+    height: 72px;
+    @media(max-width: 768px) {
+        height: 64px;
+    }
+  }
+
+  .--section-highlight {
+      font-family: var(--font-family-Heading, Gotham);
+      font-size: var(--Font-Size-UI-Controls-Contextual-Tagline-Regular, 14px);
+      /* font-style: normal; */
+      font-weight: 700;
+      line-height: var(--Line-Height-UI-Controls-Contextual-Tagline-Regular, 20px);
+      letter-spacing: 0.84px;
+      text-decoration-line: underline;
+      text-decoration-style: solid;
+      text-decoration-skip-ink: none;
+      text-decoration-thickness: 14%;
+      text-underline-offset: 25%;
+      text-underline-position: from-font;
+      text-transform: uppercase;
+  }
+  .--review {
+      color: var(--Content-Base-main, #1F2937);
+      text-align: center;
+      font-family: var(--font-family-Heading, Gotham);
+      font-size: 28px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 40px;
+      text-transform: uppercase;
+      @media(max-width: 768px) {
+      font-size: 24px;
+      line-height: 32px;
+      }
+  }
+  .--reviewer-box {
+      display: flex;
+
+      flex-direction: column;
+
+      gap: var(--Spacing-Container-sm, 12px);
+
+  }
+  .--reviewer-box h3 {
+      color: inherit;
+      margin-block: 0;
+
+  }
+  .--reviewer-box .--designation {
+      font-size: var(--Font-Size-Paragraph-Medium, 14px);
+      line-height: var(--Line-Height-Paragraph-Medium, 22px);
+  }
+
+    }
+</style>
+
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      <div class="--image-wrapper">
+        <picture>
+          <source media="(max-width: 600px)" srcset="{{ section.settings.image_mobile | image_url: width: 500 }}">
+          <source media="(max-width: 1250px)" srcset="{{ section.settings.image | image_url: width: 1250 }}">
+          <source media="(max-width: 2000px)" srcset="{{ section.settings.image | image_url: width: 2000 }}">
+          <img src="{{ section.settings.image | image_url: width: section.settings.image.width }}">
+        </picture>
+      </div>
+      <div class="--review-wrapper">
+        <div class="--section-highlight">{{ section.settings.section_title }}</div>
+
+        <div class="--review">
+          {% if section.settings.review != blank %}
+            "{{ section.settings.review }}"
+          {% endif %}
+        </div>
+        <div class="--reviewer-box">
+          {% comment %} <h3>{{ section.settings.title }}</h3> {% endcomment %}
+          {% unless section.settings.signature == blank %}
+            {{ section.settings.signature | image_url: width: section.settings.signature.width | image_tag }}
+          {% endunless %}
+          {% if section.settings.designation != blank %}
+            <div class="--designation">{{ section.settings.designation }}</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Single Testimonial",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section Title",
+      "default": "what others say about us"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Reviewer Name",
+      "default": "Billy Draddy"
+    },
+    {
+      "type": "image_picker",
+      "id": "signature",
+      "label": "Signature"
+    },
+    {
+      "type": "text",
+      "id": "designation",
+      "label": "Reviewer Designation",
+      "default": "Founder, B.Draddy"
+    },
+    {
+      "type": "textarea",
+      "id": "review",
+      "label": "Review",
+      "default": "B.Draddy aims to embody brotherhood and superlative quality, and there are plenty of items for preppy outfits."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Select Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Select Image (Mobile)"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Single Testimonial"
+    }
+  ]
+}
+{% endschema %}

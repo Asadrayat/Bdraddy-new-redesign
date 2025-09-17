@@ -1,0 +1,270 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  .sec-{{ id }} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+  }
+
+  @media(max-width: 600px) {
+    .sec-{{ id }} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+  .sec-{{ id }}{
+    .image--container--desktop{
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 16px;
+      @media(max-width: 768px){
+        display: none;
+      }    
+    }
+    .img--wrapper img{
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+    .image--container--desktop .img--wrapper:nth-child(2){
+      grid-column: 2/4;
+    }
+    .image--container--desktop .img--wrapper:nth-child(4){
+      grid-column: 1/3;
+    }
+    .image--container--mbl{
+      display: none;
+      @media(max-width: 768px){
+        display: block;
+      }   
+      .img--wrapper img{
+        aspect-ratio: 4 / 5;
+      }
+    }
+    .swiper-scrollbar-{{ section.id }} {
+      position: relative !important;
+      left: 0 !important;
+      bottom: 0 !important;
+      margin: var(--Spacing-Container-xl) 0 0 0;
+      height: 1px !important;
+      opacity: 1 !important;
+      width: 100% !important;
+      cursor: pointer;
+      padding-block: 8px;
+      background: transparent;
+      .swiper-scrollbar-drag {
+        background: #00094b;
+        display: block !important;
+        height: 1px;
+      }
+    }
+    .swiper-scrollbar-{{ section.id }}::before {
+      position: absolute;
+      content: "";
+      background: var(--swiper-scrollbar-bg-color, rgba(0, 0, 0, .1));
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 1px;
+    }
+  }
+</style>
+
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      {% if section.settings.title %}
+        <div class="title--wrapper">
+          <h2>{{ section.settings.title }}</h2>
+        </div>
+      {% endif %}
+      <div class="image--container--desktop">
+        {% for block in section.blocks %}
+          {% if block.type == 'image' %}
+            <div class="img--wrapper">
+              {% if block.settings.img != null %}
+                {{
+                  block.settings.img
+                  | image_url: width: block.settings.img.width
+                  | image_tag: class: 'img'
+                }}
+              {% else %}
+                {{ 'image' | placeholder_svg_tag }}
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}      
+      </div>
+
+      <div class="image--container--mbl">
+        <div class="swiper swiper-{{ section.id }}">
+          <div class="swiper-wrapper">
+            {% for block in section.blocks %}
+              {% if block.type == 'image' %}
+                <div class="swiper-slide">
+                  <div class="img--wrapper">
+                    {% if block.settings.img != null %}
+                      {{
+                        block.settings.img
+                        | image_url: width: block.settings.img.width
+                        | image_tag: class: 'img'
+                      }}
+                    {% else %}
+                      {{ 'image' | placeholder_svg_tag }}
+                    {% endif %}
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="swiper-scrollbar-{{ section.id }} swiper-scrollbar"></div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    new Swiper(".swiper-{{ section.id }}", {
+      slidesPerView: 1.2,
+      spaceBetween: 12,
+      scrollbar: {
+        el: ".swiper-scrollbar-{{ section.id }}.swiper-scrollbar",
+        draggable: true
+      }, 
+    });
+  });
+</script>
+{% schema %}
+{
+  "name": "Image Grid Gallery",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "img",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image Grid Gallery"
+    }
+  ]
+}
+{% endschema %}

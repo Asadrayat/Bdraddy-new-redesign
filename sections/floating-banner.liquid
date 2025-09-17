@@ -1,0 +1,225 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  #shopify-section-{{id}} {
+    box-sizing: border-box;
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+    margin-top: -150px;
+    position: relative;
+    z-index: 2;
+    @media(max-width: 1600px){
+      margin-top: -120px;
+    }
+    @media(max-width: 1300px){
+      margin-top: -90px;
+    }
+    @media(max-width: 990px){
+      margin-top: 32px;
+    }
+    .image__wrap img{
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      aspect-ratio: 2.2/1;
+      @media(max-width: 768px) {
+        aspect-ratio: unset;
+      }
+    }
+    .page-width {
+
+    }
+    .contents {
+      padding-block: var(--Spacing-Container-lg) 0;
+    }
+    .contents.page-width {
+      max-width: 900px;
+    }
+    h3 {
+      color: var(--Content-Base-main, #1F2937);
+      text-align: center;
+
+      /* Headings/H3 */
+      font-family: var(--font-family-Title, "Parnaso Display Trial");
+      font-size: var(--Font-Size-Heading-H3, 32px);
+      font-style: normal;
+      font-weight: 400;
+      line-height: var(--Line-Height-Heading-H3, 40px); /* 125% */
+      letter-spacing: -0.64px;
+      margin: 0 0 16px 0;
+    }
+    .description {
+      color: var(--Content-Base-main, #1F2937);
+      text-align: center;
+
+      /* UI Controls/Control/input/lg */
+      font-family: var(--font-family-Control);
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 24px; /* 120% */
+      margin: 0;
+    }
+  }
+
+  @media(max-width: 600px) {
+    #shopify-section-{{id}} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+</style>
+
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      {% unless section.settings.img == blank %}
+        <div class="image__wrap ">
+          {{ section.settings.img | image_url: width: section.settings.img.width | image_tag }}
+        </div>
+      {% endunless %}
+      <div class="contents page-width">
+        {% unless section.settings.pretitle == blank %}
+          <p class="pretitle center">{{ section.settings.pretitle }}</p>
+        {% endunless %}
+        {% unless section.settings.title == blank %}
+          <h3 class="title center">{{ section.settings.title }}</h3>
+        {% endunless %}
+        {% unless section.settings.description == blank %}
+          <p class="description center">{{ section.settings.description }}</p>
+        {% endunless %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Floating Banner",
+  "enabled_on": {
+    "templates": ["page"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "image_picker",
+      "id": "img",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "pretitle",
+      "label": "Pre Title",
+      "default": "Join the pack"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Members Only"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "Floating Banner"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,502 @@
+{% liquid
+  assign product_cards = product.metafields.custom.product_card.value
+  assign product_images = product.metafields.custom.product_image.value
+%}
+{% assign section_visibility = false %}
+{% for image in product_images %}
+  {% if forloop.last and forloop.index == product_cards.size %}
+    {% assign section_visibility = true %}
+  {% endif %}
+{% endfor %}
+{% unless product_cards == blank %}
+  {% style %}
+      #shopify-section-{{section.id}} {
+        box-sizing: border-box;
+        padding-block: {{section.settings.padding_block_desktop}};
+
+        {% if section.settings.dark_mode %}
+          background-color: #000;
+        {% endif %}
+        .title-{{ section.id }}{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        h2.--section-title {
+        letter-spacing: 0;
+        text-align: center;
+        color: #1F2937;
+
+        /* Headings/H1 */
+        font-family: var(--font-family-Heading, Gotham);
+        font-size: var(--Font-Size-Heading-H1, 64px);
+        font-style: normal;
+        font-weight: 700;
+        line-height: var(--Line-Height-Heading-H1, 64px); /* 100% */
+        text-transform: uppercase;
+        {% if section.settings.dark_mode %}
+          color: #fff;
+        {% endif %}
+        position: relative;
+        /* width: max-content; */
+        margin: 0 auto var(--Spacing-Container-xxl, 40px);
+    }
+    /* h2.--section-title::after {
+      content: "";
+      position: absolute;
+      background: url("https://cdn.shopify.com/s/files/1/0031/4920/1526/files/Frame_1484581015.svg?v=1756813830");
+      background-repeat: no-repeat;
+      background-size: cover;
+      width: calc(100% + 80px);
+      height: calc(100% + 20px);
+      top: -10px;
+      left: -40px;
+      z-index: -1;    
+    } */
+      .wrapper__content {
+        position: relative;
+        box-sizing: border-box;
+      }
+      .wrapper__content::before {
+        /* content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: linear-gradient(to right, rgba(48, 50, 127, 1), rgba(48, 50, 127, 0.2));
+        width: 100%;
+        height: 100%; */
+      }
+      .new-cl-body {
+          /* position: absolute;
+          top: 0;
+          left: 0; */
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: flex-start;
+          padding: var(--Spacing-Container-md) 0 0 0;
+        @media(max-width: 768px) {
+
+        }
+      }
+    .hero_slider__nav_icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        background: #fff;
+        line-height: 1;
+        position: absolute;
+        top: 50%;
+        z-index: 1;
+        border-radius: 50%;
+        align-items: center;
+        justify-content: center;
+        transform: translateY(-50%);
+        box-shadow: 0px 1px 2px -1px rgba(0, 0, 0, 0.10), 0px 1px 3px 0px rgba(0, 0, 0, 0.10);
+        cursor: pointer;
+    }
+      .hero_slider__nav_icon svg{
+         width: 25px;
+          height: auto;
+      }
+      .hero_slider__nav_icon:after {
+        content: none!important;
+      }
+    .hero_slider__nav_icon.swiper-button-disabled {
+        display: none!important;
+    }
+       .new-cl-view-all_ {
+         width: max-content;
+       }
+        .new-cl-media:hover img {
+          /* scale: 1.05; */
+        }
+        .new-cl-media{
+          display: flex;
+          /* margin-bottom: 16px; */
+          overflow: hidden;
+          @media(max-width: 768px) {
+            /* margin-bottom: 24px; */
+          }
+        }
+        .new-cl-media svg{
+          width: 100%;
+          height: auto;
+          aspect-ratio: 3/2;
+          object-fit: cover;
+        }
+        .new-cl-media img{
+          width: 100%;
+          height: auto;
+          aspect-ratio: 3/2;
+          transition: all 0.4s ease-in-out;
+          object-fit: cover;
+        }
+        .next-{{ section.id }} {
+          right: 0
+        }
+
+        @media(max-width: 768px) {
+          padding-block: {{section.settings.padding_block_mobile}};
+        }
+
+      }
+      .swiper-scrollbar-{{ section.id }} {
+        position: relative !important;
+        left: 0 !important;
+        bottom: 0 !important;
+        margin: var(--Spacing-Container-xl) 0 0 0;
+        height: 1px !important;
+        opacity: 1 !important;
+        width: 100% !important;
+        .swiper-scrollbar-drag {
+          background: #00094b;
+          display: block !important;
+          height: 1px;
+        }
+      }
+      .swiper-scrollbar-{{ section.id }}::before {
+        position: absolute;
+        content: "";
+      }
+  {% endstyle %}
+
+<style>
+    .sec-{{ section.id }}.meta_img_not__visible {
+        .new-cl-media img{
+          {% comment %} aspect-ratio: 1 !important; {% endcomment %}
+        }
+    }  
+    .sec-{{ section.id }}.meta_img_not__visible .new-cl-body {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex  !important;
+        justify-content: center  !important;
+        align-items: center !important;
+        padding: var(--Spacing-Container-xxl) !important;
+        gap: var(--Spacing-Container-md);
+      @media(max-width: 768px) {
+
+      }
+
+    } 
+    
+    
+    .--section-title-pp{
+      position: relative;
+    }
+    .--section-title-pp:after{
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+      width: 100%;
+      height: 4px;
+      background: #009d4a;
+    }
+</style>
+  <div
+    id="{{ section.settings.nav_id }}"
+    class="{% if section.settings.full_width_section %}full-width{% else %}page-width{% endif %} {% if section_visibility == false %}meta_img_not__visible{% endif %} sec-{{ section.id }}"
+  >
+    {% comment %}
+      <div class="test">
+        {% assign section_visibility = false %}
+        {% for image in product_images %}
+          {% if forloop.last and forloop.index == product_cards.size %}
+            {% assign section_visibility = true %}
+          {% endif %}
+        {% endfor %}
+
+        {% if section_visibility == true %}
+          <p>Show me the section</p>
+          {% for text in product_cards %}
+            <div>
+              {% assign image_index = forloop.index %}
+
+              {% for image in product_images %}
+                <div>
+                  {% if image_index == forloop.index %}
+                    <h5>Text Value: {{ text }}</h5>
+                    {{- image | image_url: width: 100 | image_tag }}
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        {% else %}
+          <p>Hide me</p>
+        {% endif %}
+      </div>
+    {% endcomment %}
+
+    {% assign keywords = "sport,performance,cool" | split: ',' %}
+    {% assign premium_performance = false %}
+
+    {% if keywords %}
+      {% for keyword in keywords %}
+        {% if product.title contains keyword %}
+          {% assign premium_performance = true %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {% if product.collections.size > 0 %}
+      {% for collection in product.collections %}
+        {% if collection.title contains "sport" or collection.title contains "performance" or collection.title contains "cool" %}
+          {% assign premium_performance = true %}
+        {% elsif collection.handle contains "sport" or collection.handle contains "performance" or collection.handle contains "cool" %}
+          {% assign premium_performance = true %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+
+    <div class="title-{{ section.id }}">
+      {% if premium_performance %}
+        <h2 class="--section-title --section-title-pp">Premium performance</h2>
+      {% else %}
+        <h2 class="--section-title">{{ section.settings.title }}</h2>
+      {% endif %}
+    </div>
+    <div class="new-cl-wrapper new-cl-wrapper--{{ section.id }}">
+      <div class="swiper swiper-{{ section.id }}">
+        <div class="swiper-wrapper">
+          {% for block in product_cards %}
+            {% if product_cards[forloop.index0] != blank %}
+              {% assign card_title = product_cards[forloop.index0] | split: '#' | first %}
+              {% assign card_content = product_cards[forloop.index0] | split: '#' | last %}
+            {% endif %}
+            <div class="swiper-slide">
+              <div class="wrapper__content">
+                <div class="new-cl-media">
+                  {% if section_visibility == true %}
+                    {% assign image_index = forloop.index %}
+                    {% for image in product_images %}
+                      <div>
+                        {% if image_index == forloop.index %}
+                          {{- image | image_url: width: image.width | image_tag }}
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    {% unless section.settings.image == blank %}
+                      {{ section.settings.image | image_url: width: section.settings.image.width | image_tag }}
+                    {% endunless %}
+                  {% endif %}
+                  {% comment %}
+                  {% endcomment %}
+                </div>
+
+                <div class="new-cl-body cl-{{ block.id }} {% if section_visibility == false %}meta_img_not__visible_new_cl_body{% endif %}">
+                  <h3 class="new-cl-title">{{ card_title }}</h3>
+                  <p class="new-cl-description">{{ card_content }}</p>
+                </div>
+              </div>
+            </div>
+
+            <style>
+              .new-cl-body {
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                @media(max-width: 768px) {
+                  {% comment %} gap: 16px; {% endcomment %}
+                }             
+
+                .new-cl-title {
+                  color: {{block.settings.title_color}};
+                  {% if section.settings.dark_mode %}
+                    color: #fff;
+                  {% endif %}
+                  font-size: {{block.settings.title_font_size_desktop | append: 'px' }};
+                  text-transform: {{block.settings.title_text_transform}};
+                  margin: 0 0 8px;
+                  /* Headings/H2 */
+                  font-family: var(--font-family-Heading, Gotham);
+                  font-size: var(--Font-Size-Heading-H3, 40px);
+                  font-style: normal;
+                  font-weight: 700;
+                  line-height: var(--Line-Height-Heading-H3, 40px); /* 100% */
+                  letter-spacing: 0px;
+                  text-transform: uppercase;
+                  position: relative;
+                }
+                .new-cl-description{
+                  color: #1F2937;
+                  {% if section.settings.dark_mode %}
+                    color: #fff;
+                  {% endif %}
+                  {% comment %} color: var(--Content-Base-main, #1F2937); {% endcomment %}
+                  font-family: var(--font-family-Body, Gotham);
+                  font-size: var(--Font-Size-Paragraph-Large, 16px);
+                  font-style: normal;
+                  font-weight: 400;
+                  line-height: 180%;
+                  text-align: left;
+                  margin: 0;
+                  @media(width < 768px) {
+                    {% comment %} font-size: 12px; {% endcomment %}
+                  }
+                }
+
+                @media(max-width: 768px) {
+                  .new-cl-title {
+                    font-size: {{block.settings.title_font_size_mobile | append: 'px' }};
+                  }
+                  .new-cl-description{
+                    font-size: {{block.settings.text_font_size_mobile | append: 'px' }};
+                  }
+                  .new-cl-view-all{
+                    font-size: {{block.settings.button_font_size_mobile | append: 'px' }};
+                  }
+                }
+              }
+              .meta_img_not__visible_new_cl_body h3, .meta_img_not__visible_new_cl_body p{
+                text-align: center !important;
+                color: #fff !important                ;
+              }
+            </style>
+          {% endfor %}
+        </div>
+        {% comment %}
+          <div class="prev-{{ section.id }} hero_slider__nav_icon swiper-button-prev">
+            {% render 'all-icons', name: 'left_arrow' %}
+          </div>
+          <div class="next-{{ section.id }} hero_slider__nav_icon swiper-button-next">
+            {% render 'all-icons', name: 'right_arrow' %}
+          </div>
+        {% endcomment %}
+      </div>
+      <div class="swiper-scrollbar-{{ section.id }} swiper-scrollbar"></div>
+    </div>
+  </div>
+
+  <script>
+    //document.addEventListener("DOMContentLoaded", e => {
+    swiperSlider['{{ section.id }}'] = {};
+
+    swiperSlider['{{ section.id }}'].swiper = new Swiper('.swiper-{{ section.id }}', {
+      slidesPerView: 3,
+      spaceBetween: 40,
+      navigation: {
+        nextEl: '.next-{{ section.id }}',
+        prevEl: '.prev-{{ section.id }}',
+      },
+      scrollbar: {
+        el: '.swiper-scrollbar-{{ section.id }}.swiper-scrollbar',
+        // hide: true,
+        draggable: true,
+      },
+      breakpoints: {
+        200: {
+          slidesPerView: 1.2,
+          spaceBetween: 20,
+        },
+        350: {
+          slidesPerView: 1,
+          spaceBetween: 20,
+        },
+        768: {
+          slidesPerView: 2,
+          spaceBetween: 20,
+        },
+        1024: {
+          slidesPerView: 2,
+          spaceBetween: 25,
+        },
+        1200: {
+          slidesPerView: 2.2,
+          spaceBetween: 30,
+        },
+        1400: {
+          slidesPerView: 2.5,
+          spaceBetween: 40,
+        },
+        1500: {
+          slidesPerView: 3,
+          spaceBetween: 40,
+        },
+      },
+    });
+    //});
+  </script>
+  
+<script>
+document.addEventListener("DOMContentLoaded", (event) => {
+  setEqualHeightv2(".sec-{{ section.id }}", ".new-cl-description")
+});
+</script> 
+
+{% endunless %}
+{% schema %}
+{
+  "name": "Collection List New",
+  "presets": [
+    {
+      "name": "Collection List New"
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "nav_id",
+      "label": "Navigation ID"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width_section",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrow",
+      "label": "Show Slider Arrow",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "dark_mode",
+      "label": "Dark Mode",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Frame Image"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "text",
+      "id": "padding_block_desktop",
+      "label": "Padding Block",
+      "default": "40px 80px",
+      "info": "0px 0px; means top 0px and bottom 0px"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing (Mobile)"
+    },
+    {
+      "type": "text",
+      "id": "padding_block_mobile",
+      "label": "Padding Block",
+      "default": "24px 24px",
+      "info": "0px 0px; means top 0px and bottom 0px"
+    }
+  ]
+}
+{% endschema %}

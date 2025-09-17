@@ -1,0 +1,12 @@
+{% assign current_date = 'now' | date: '%s' %}
+{% assign delivery_start = current_date | plus: 345600 %}
+{% assign delivery_end = current_date | plus: 604800 %}
+{% assign delivery_start_day = delivery_start | date: '%e' %}
+{% assign delivery_end_day = delivery_end | date: '%e' %}
+{% assign delivery_start_month = delivery_start | date: '%b' %}
+{% assign delivery_end_month = delivery_end | date: '%b' %}
+{% if delivery_start_month == delivery_end_month %}
+  {{ delivery_start_month }} {{ delivery_start_day }}-{{ delivery_end_day }} 
+{% else %}
+  {{ delivery_start_month }} {{ delivery_start_day }} - {{ delivery_end_month }} {{ delivery_end_day }} 
+{% endif %}

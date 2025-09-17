@@ -1,0 +1,244 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  .sec-{{ id }} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+  }
+
+  @media(max-width: 600px) {
+    .sec-{{ id }} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+
+  .sec-{{ id }}{
+    .wrapper-{{ id }}{
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 40px;
+      max-width: 1080px;
+      margin-inline: auto;
+      align-items: flex-start;
+      @media(max-width: 768px){
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+      }
+    }
+    .content--wrapper{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--Spacing-Container-xs, 12px);
+      @media(max-width: 768px){
+        gap: 8px;
+      }
+    }
+    .number--wrapper p{
+      color: #000;
+      text-align: center;
+      font-family: var(--font-family-Control, "Archivo Expanded");
+      font-size: 64px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 64px; /* 100% */
+      letter-spacing: -1.28px;
+      text-transform: uppercase; 
+      margin: 0;
+      @media(max-width: 768px){
+        font-size: 36px;
+        line-height: 36px; /* 100% */
+      }
+    }
+    .text--wrapper p{
+      color: #000;
+      text-align: center;
+      font-family: var(--font-family-Body, "Sainte Colombe");
+      font-size: var(--Font-Size-Paragraph-Regular, 16px);
+      font-style: normal;
+      font-weight: 400;
+      line-height: var(--Line-Height-Paragraph-Regular, 24px); /* 150% */     
+      margin: 0;
+    }
+  }
+</style>
+
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      {% for block in section.blocks %}
+        <div class="content--wrapper">
+          {% if block.settings.counter != blank %}
+            <div class="number--wrapper">
+              <p id="counter-{{ forloop.index }}">{{ block.settings.counter }}%</p>
+            </div>
+          {% endif %}
+          {% if block.settings.text != blank %}
+            <div class="text--wrapper">
+              <p>{{ block.settings.text }}</p>
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+function animateCounters() {
+  const counters = document.querySelectorAll('.number--wrapper p');
+  
+  counters.forEach(counter => {
+    const target = parseInt(counter.innerText.replace('%', ''), 10);
+    let count = 0;
+    const interval = setInterval(() => {
+      counter.innerText = `${count}%`;
+      if (count === target) {
+        clearInterval(interval);
+      }
+      count++;
+    }, 30); 
+  });
+}
+
+window.addEventListener('load', animateCounters);
+</script>
+
+{% schema %}
+{
+  "name": "Counter",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "counter",
+      "name": "Counter",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "range",
+          "id": "counter",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 50,
+          "label": "Select Number"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Counter"
+    }
+  ]
+}
+{% endschema %}

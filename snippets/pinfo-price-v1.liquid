@@ -1,0 +1,40 @@
+{% liquid
+  for currency in shop.enabled_currencies
+    if currency.iso_code == shop.currency
+      assign symbol = currency.symbol
+      break
+    endif
+  endfor
+%}
+<div class="pinfo-price-wrapper {{ class }} {% if block.settings.enable_mb %}mb{% endif %}">
+  {% comment %}
+       <div class="pinfo-review">
+      <div
+        class="ruk_rating_snippet"
+        data-sku="{{ product.handle }};{{ product.variants | map: 'sku' | join: ';' }};{{ product.variants | map: 'id' | join: ';' }}"
+      ></div>
+    </div>
+  {% endcomment %}
+
+  <div class="pinfo-price">
+    {% if product.selected_or_first_available_variant.price
+        < product.selected_or_first_available_variant.compare_at_price
+    %}
+      <p class="pinfo-regular-price">
+        <span>{{ shop.money_format | split: '{{' | first }}</span>
+        {{- product.selected_or_first_available_variant.price | money_without_currency }}
+      </p>
+      <p class="pinfo-compare-price">
+        <s
+          ><span>{{ shop.money_format | split: '{{' | first }}</span>
+          {{- product.selected_or_first_available_variant.compare_at_price | money_without_currency -}}
+        </s>
+      </p>
+    {% else %}
+      <p class="pinfo-regular-price">
+        <span>{{ shop.money_format | split: '{{' | first }}</span>
+        {{- product.selected_or_first_available_variant.price | money_without_currency }}
+      </p>
+    {% endif %}
+  </div>
+</div>

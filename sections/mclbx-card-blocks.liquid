@@ -1,0 +1,330 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+           .sec-{{ id }} {
+             box-sizing: border-box;
+             margin-top: {{section.settings.margin_top | append: 'px'}};
+             margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+             padding-top: {{section.settings.padding_top | append: 'px'}};
+             padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+
+           }
+
+           @media(max-width: 600px) {
+             .sec-{{ id }} {
+               margin-top: {{section.settings.margin_top_m | append: 'px'}};
+               margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+               padding-top: {{section.settings.padding_top_m | append: 'px'}};
+               padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+             }
+           }
+    .--parallax {
+         background-image: url('{{ section.settings.bg_image | image_url }}');  /* Replace with your background image */
+         background-attachment: fixed;  /* This is what creates the parallax effect */
+         background-position: top;
+         background-repeat: no-repeat;
+         background-size: cover;
+         /* height: 40vh;  /* You can adjust the height to fit your design */ */
+         /* display: flex;
+         justify-content: center;
+         align-items: center;
+         color: white;
+         text-align: center; */
+       }
+         .sec-{{ id }} {
+
+       .--top-block {
+           max-width: 880px;
+           margin: auto;
+           text-align: center;
+       }
+           h2.--section-title {
+             margin-block: 0 var(--Spacing-Container-xs, 12px);
+           color: var(--Content-Inverted-main, #F3F4F6);
+           font-weight: 400;
+           letter-spacing: -0.96px;
+       }
+       .--section-content {
+           color: var(--Content-Inverted-main, #F3F4F6);
+           text-align: center;
+           font-family: var(--font-family-Body, "Sainte Colombe");
+           font-size: var(--Font-Size-Paragraph-Regular, 16px);
+           font-style: normal;
+           font-weight: 400;
+           line-height: var(--Line-Height-Paragraph-Regular, 24px);
+       }
+
+
+
+
+
+         .--image-blocks {
+           padding: var(--Spacing-Section-Section-Vertical-Padding, 80px) var(--Spacing-Section-Section-Horizontal-Padding, 80px) ;
+           background: linear-gradient(to top, {{ section.settings.bg-color }} 50%, transparent 50%);
+           @media(max-width: 768px){
+             padding-inline: 0;
+           }
+         }
+           .--single-card {
+             /* background: #FCFAF8; */
+     }
+           h5.--content-title {
+            color: {{ section.settings.content-color }} ;
+            font-family: var(--font-family-Title, "Sainte Colombe");
+            font-size: var(--Font-Size-Heading-H4, 20px);
+            font-style: normal;
+            font-weight: 400;
+            line-height: var(--Line-Height-Heading-H4, 24px);
+            letter-spacing: -0.4px;
+            margin-block: 0 var(--Spacing-Container-xxs, 8px);
+        }
+       .--card-image {
+           width: 100%;
+           height: auto;
+           aspect-ratio: 4/5;
+           object-fit: contain;
+       }
+       .--content-wrapper {
+           color: {{ section.settings.content-color }} ;
+           font-family: var(--font-family-Body, "Sainte Colombe");
+           font-size: var(--Font-Size-Paragraph-Medium, 18px);
+           font-style: normal;
+           font-weight: 400;
+           line-height: var(--Line-Height-Paragraph-Medium, 26px);
+           margin-top: var(--Spacing-Container-sm, 16px);
+       }
+
+         }
+</style>
+
+<div class="sec-{{ id }} --parallax">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %} ">
+    <div class="wrapper-{{ id }}">
+      <div class="--top-block ">
+        <h2 class="--section-title">{{ section.settings.title }}</h2>
+        <div class="--section-content">{{ section.settings.content }}</div>
+      </div>
+
+      <div class="--image-blocks">
+        <div class="swiper swiper-{{ section.id }}">
+          <div class="swiper-wrapper">
+            {% for block in section.blocks %}
+              <div class="swiper-slide">
+                <div class="--single-card">
+                  <div class="--image-wrapper">
+                    {% if block.settings.image != blank %}
+                      {{
+                        block.settings.image
+                        | image_url: width: block.settings.image.width
+                        | image_tag: class: '--card-image'
+                      }}
+                    {% else %}
+                      {{ 'image' | placeholder_svg_tag: '--card-image' }}
+                    {% endif %}
+                  </div>
+
+                  <div class="--content-wrapper">
+                    <h5 class="--content-title">
+                      {{ block.settings.title }}
+                    </h5>
+                    {{ block.settings.content }}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    swiperSlider["{{section.id}}"] = {};
+
+  swiperSlider["{{section.id}}"].swiperInit = () => swiperSlider["{{section.id}}"].swiper = new Swiper(".swiper-{{ section.id }}", {
+    slidesPerView: 1.2,
+    spaceBetween: 16,
+    navigation: {
+      nextEl: '.next-{{ section.id }}',
+      prevEl: '.prev-{{ section.id }}'
+    },
+    breakpoints: {
+       768: {
+        slidesPerView: {{ section.blocks.size | default: 1 }},
+        spaceBetween: 24,
+      },
+
+    }
+  })
+
+  swiperSlider["{{section.id}}"].swiperInit()
+</script>
+
+{% schema %}
+{
+  "name": "Card Blocks",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "bg-color",
+      "label": "Background Color",
+      "default": "#FCFAF8"
+    },
+    {
+      "type": "color",
+      "id": "content-color",
+      "label": "Card Content Color",
+      "default": "#000"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Champion of the Future"
+    },
+    {
+      "type": "textarea",
+      "id": "content",
+      "label": "Content",
+      "default": "B. Draddy, or the Brothers Draddy, blends classic inspiration with modern design. What began as a polo shirt has evolved into a collection of luxe essentials for the course and clubhouse. Using premium materials like organic Peruvian Pima cotton and Italian merino, B. Draddy offers comfort and versatility."
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image Block",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Use image of ratio 4:5"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "title"
+        },
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Content",
+          "default": "In 2013, we set out to design a top-notch golf shirt that performed well on the course and felt comfortable off it, unlike the common uncomfortable synthetics and sticky cotton."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Card Blocks",
+      "blocks": [
+        { "type" : "image" },
+        { "type" : "image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

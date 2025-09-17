@@ -1,0 +1,96 @@
+<div class="--product-card-v3 --august-product-card">
+  <div class="--image-wrapper">
+    <a class="absolute-link" href="{{ product.selected_or_first_available_variant.url | within: collection }}"></a>
+    {% if product.selected_or_first_available_variant.image != blank %}
+      {{
+        product.selected_or_first_available_variant.image
+        | image_url: width: 400
+        | image_tag: class: '--product-first-image'
+      }}
+    {% else %}
+      {{ product.featured_image | image_url: width: 400 | image_tag: class: '--product-first-image' }}
+    {% endif %}
+    {% assign next_index = product.selected_or_first_available_variant.image.position %}
+
+    {% assign original_index = next_index | minus: 1 %}
+    {% if product.media[next_index] != blank %}
+      {{ product.media[next_index] | image_url: width: 400 | image_tag: class: '--product-second-image' }}
+    {% else %}
+      {{ product.media[original_index] | image_url: width: 400 | image_tag: class: '--product-second-image' }}
+    {% endif %}
+    <div class="--custom-badge-container">
+      {% assign product_title = product.title | downcase %}
+      {% if product_title contains 'cool' or product_title contains 'sport'  or product_title contains 'everyday-vest' %}
+        <div class="--sport-badge">
+          {%# render 'all-icons', name: 'draddy-sport-logo' %}
+          Draddy Sport
+        </div>
+      {% endif %}
+      {% if product.metafields.custom.product_badge != blank %}
+        <div class="--custom-badge-wrapper">
+          {% for badge in product.metafields.custom.product_badge.value %}
+            <span class="--single-badge">{{ badge }}</span>
+            {% unless forloop.last %}
+              <span class="small-hide">|</span>
+            {% endunless %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <button
+      class="--quick-add --quick-add-mobile --quick-add-trigger {{ product.template_suffix }}--hide--quick-add"
+      data-url="{{ product.selected_or_first_available_variant.url | within: collection }}"
+    >
+      {% render 'all-icons', name: 'test-bag' %}
+    </button>
+  </div>
+
+  <div class="--product-info">
+    <div class="--color-options --quick-add-trigger-- -hidden">
+      {%- assign color_option = product.options_with_values | where: 'name', 'Color' | first -%}
+
+      {%- if color_option and color_option.values.size > 0 -%}
+        {% for color in color_option.values %}
+          {% assign color_handle = color | handle %}
+          {% assign swatch_image = color_handle | append: '.png' | file_img_url: '45x' %}
+          {% assign color_variant = product.variants | where: 'option1', color | first %}
+          <span
+            class="--color-swatch --quick-add-trigger"
+            style="{% if images[color_handle] %}background-image: url({{ swatch_image }});{% else %}background-color: {{ color_handle }};{% endif %}"
+            data-url="{{ color_variant.url | within: collection }}"
+          ></span>
+        {% endfor %}
+      {% endif %}
+    </div>
+    <h3 class="--product-title">
+      <a class="absolute-link" href="{{ product.selected_or_first_available_variant.url | within: collection }}"></a>
+      {{ product.title }}
+    </h3>
+    {% comment %} <div class="--card-short-description">{{ product.metafields.custom.description_romance_copy }}</div> {% endcomment %}
+    <p class="--product-attribute">{{ product.metafields.custom.product_attribute }}</p>
+    <p class="--color-count hidden">Available in {{ color_option.values.size }} colors.</p>
+    <div class="product-card__pricing" data-price-container>
+      {% render 'new-price', product: product %}
+    </div>
+  </div>
+  {% comment %}
+    <div class="--card-hover-elements">
+      <a class="--product-card-url" href="{{ product.selected_or_first_available_variant.url | within: collection }}"></a>
+      <div class="--image-wrapper">
+        {% assign next_index = product.selected_or_first_available_variant.image.position %}
+        {% comment %} {% assign original_index = product.selected_or_first_available_variant.image.position %} {% endcomment %}
+        {% comment %} {% assign next_index = original_index | plus: 1 %} {% endcomment %}
+        {% assign original_index = next_index | minus: 1 %}
+        {% if product.media[next_index] != blank %}
+          {{ product.media[next_index] | image_url: width: 400 | image_tag: class: '--product-hover-image' }}
+        {% else %}
+           {{ product.media[original_index] | image_url: width: 400 | image_tag: class: '--product-hover-image' }}
+        {% endif %}
+
+      </div>
+
+      <button class="--quick-add --quick-add-trigger" data-url="{{ product.selected_or_first_available_variant.url | within: collection }}">{% render 'all-icons', name: 'test-bag' %}</button>
+    </div>
+  {% endcomment %}
+</div>

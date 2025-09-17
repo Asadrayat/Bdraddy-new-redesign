@@ -1,0 +1,87 @@
+<pinfo-variant-picker class="{% if block.settings.enable_mb %}mb{% endif %}">
+  {% for option in product.options_with_values %}
+    {% assign option_name = option.name | downcase %}
+    <div class="pinfo-variants-options {% if option.name == 'Color' or option.name == 'color' or option.name == 'COlOR' or option_name == 'color' %}color-variant{% else %}others-variant{% endif %}">
+      <div class="pinfo-option-label-wrapper">
+        <p class="pinfo-filter-label">
+          <span>{{ option.name }}:</span>
+          {% if option.name == 'Color' or option.name == 'color' or option.name == 'COlOR' or option_name == 'color' %}
+            <span class="pinfo-selected-color">{{ option.selected_value }}</span>
+          {% elsif option.name == 'Size' or option.name == 'size' %}
+            <span class="pinfo-size-guide openPopup">
+              <svg xmlns="http://www.w3.org/2000/svg" width="8" height="14" viewBox="0 0 8 14" fill="none">
+                <path d="M7.04687 14L6.46156 13.7371L0.95427 7.00191L0.952715 7L0.95427 6.9981L6.46156 0.262928L7.04688 0L3.94193 6.9981L3.9413 6.99969V7.00031L3.94193 7.00191L7.04687 14Z" fill="black"/>
+              </svg>
+              <span>Size Guide</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="8" height="14" viewBox="0 0 8 14" fill="none">
+                <path d="M0.953125 0L1.53844 0.262928L7.04573 6.99809L7.04729 7L7.04573 7.0019L1.53844 13.7371L0.953125 14L4.05807 7.0019L4.0587 7.00031V6.99969L4.05807 6.99809L0.953125 0Z" fill="black"/>
+              </svg>
+            </span>
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="pinfo-options-values-wrapper {% if option.name == 'Color' or option.name == 'color' or option_name == 'color' %}color-options{% else %}others-options{% endif %}">
+        {% for value in option.values %}
+          <div
+            class="
+              pinfo-option-value {% unless value.available %}
+                disabled-option
+              {% endunless -%}
+            "
+          >
+            <input
+              {% if value.selected %}
+                checked
+              {% endif %}
+              {% unless value.available %}
+                disabled-
+              {% endunless %}
+              class="hidden"
+              id="{{ option.position }}-{{ value.id }}-{{ forloop.index }}"
+              type="radio"
+              name="{{ option.name }}"
+              data-variant-url="{{ value.variant.url }}"
+              value="{{ value.name }}"
+            >
+            {% if option.name == 'Color'
+              or option.name == 'color'
+              or option.name == 'COlOR'
+              or option_name == 'color'
+            %}
+              {% liquid
+                assign color_img = value.name | downcase | strip | replace: ' ', '-' | replace: '/', '-' | append: '.png'
+              %}
+              <label
+                title="{{ value.name }}"
+                class="
+                  {% if option.name == 'Color' or option.name == 'color' or option.name == 'COlOR' or option_name == 'color' %}pinfo-color-label{% endif %}
+                  {% unless value.available %}disabled{% endunless %}
+                "
+                for="{{ option.position }}-{{ value.id }}-{{ forloop.index }}"
+              >
+                <span
+                  style="background-image: url('{{ color_img | file_img_url: "200x" }}'); background-color: {{ value.name | downcase }}"
+                ></span>
+              </label>
+              {% if value.variant.compare_at_price > value.variant.price %}
+                <span class="--sale-variant">Sale</span>
+              {% endif %}
+            {% else %}
+              <label
+                class="{% unless  value.available %}disabled{% endunless %}"
+                for="{{ option.position }}-{{ value.id }}-{{ forloop.index }}"
+              >
+                {% if value.available %}
+                  {{ value.name }}
+                {% else %}
+                  <s>{{ value.name }}</s>
+                {% endif %}
+              </label>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endfor %}
+</pinfo-variant-picker>

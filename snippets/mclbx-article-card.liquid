@@ -1,0 +1,158 @@
+{% comment %}
+  {% render 'mclbx-article-card', article: article, img_ratio: "portrait", img_ratio_mobile: "portrait", badge: "badge" %}
+{% endcomment %}
+<style>
+      .--card-wrapper.--article-card--{{ article.id }}{
+          position: relative;
+
+        .--image-wrapper{
+          position:relative;
+        }
+        .--badge {
+      position: absolute;
+      top: var(--Spacing-Container-sm, 16px);
+      right: var(--Spacing-Container-sm, 16px);
+      color: var(--Content-Inverted-main, #F3F4F6);
+      font-family: var(--font-family-Control, "Archivo Expanded");
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 20px;
+      padding: var(--Spacing-Container-xxs, 8px);
+      background: var(--Background-inverted-surface, #374151);
+      text-align: center;
+      max-width: max-content;
+  }
+        .--image-wrapper img , svg {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 4/5;
+            {% if img_ratio == 'portrait' %}
+              aspect-ratio: 4/5;
+            {% elsif img_ratio == 'landecape' %}
+              aspect-ratio: 123/100;
+            {% elsif img_ratio == 'square' %}
+              aspect-ratio: 1;
+            {% endif %}
+            object-fit: cover;
+            object-position: center;
+            overflow: hidden;
+            /* border-radius: 16px; */
+            @media(max-width: 600px){
+            {% if img_ratio_mobile == 'portrait' %}
+              aspect-ratio: 4/5;
+            {% elsif img_ratio_mobile == 'landecape' %}
+              aspect-ratio: 4/3;
+            {% elsif img_ratio_mobile == 'square' %}
+              aspect-ratio: 1;
+            {% endif %}
+            }
+        }
+          svg {
+              border: 1px solid #0000004a;
+          }
+          /* h4.--card-title {
+              color: var(--Content-Base-main, #1F2937);
+              font-family: var(--font-family-Title, "Neue Plak");
+              font-size: var(--Font-Size-Heading-H4, 20px);
+              font-style: normal;
+              font-weight: 400;
+              line-height: var(--Line-Height-Heading-H4, 24px);
+              letter-spacing: -0.4px;
+              margin-block: var(--Spacing-Container-sm) var(--Spacing-Container-xxs);
+          } */
+
+        .--text-block {
+            /* position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            padding: var(--Spacing-Container-md, 24px) var(--Spacing-Section-Section-Horizontal-Padding, 12px); */
+            box-sizing: border-box;
+            margin-block: var(--Spacing-Container-sm, 16px);
+            display: flex;
+            gap: var(--Spacing-Container-md, 24px);
+            flex-direction: column;
+        }
+        h4.--card-title {
+            /* color: var(--Content-Inverted-main, #F3F4F6);
+            font-family: var(--font-family-Title, Krylon);
+            font-size: var(--Font-Size-Heading-H3, 24px);
+            font-style: normal;
+            font-weight: 400;
+            line-height: var(--Line-Height-Heading-H3, 28px);
+            margin-block: 0 var(--Spacing-Container-xs, 16px); */
+          color: var(--Content-Base-main, #1F2937);
+
+          /* Headings/H4 */
+          font-family: var(--font-family-Title, "Sainte Colombe");
+          font-size: var(--Font-Size-Heading-H4, 24px);
+          font-style: normal;
+          font-weight: 400;
+          line-height: var(--Line-Height-Heading-H4, 28px); /* 116.667% */
+          letter-spacing: -0.48px;
+          margin-block: 0;
+        }
+
+    .--card-content {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        color: var(--Content-Base-main, #1F2937);
+        font-size: var(--Font-Size-Paragraph-Regular, 16px);
+        line-height: var(--Line-Height-Paragraph-Regular, 24px);
+    }
+    a.--learn-more {
+        color: var(--Content-Base-base, #4B5563);
+        font-family: var(--font-family-Control, "Archivo Expanded");
+        font-size: 13px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 13px;
+        text-decoration-line: underline;
+        text-decoration-style: solid;
+        text-decoration-skip-ink: none;
+        text-decoration-thickness: auto;
+        text-underline-offset: auto;
+        text-underline-position: from-font;
+        text-transform: uppercase;
+    }
+      .absolute-link {
+          position: absolute;
+          display: block;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 2;
+      }
+      }
+</style>
+
+<div class="--card-wrapper --article-card--{{ article.id }}">
+  {% if article.url != blank %}
+    <a class="absolute-link" href="{{ article.url  }}"></a>
+  {% endif %}
+  <div class="--image-wrapper">
+    {% if badge != blank %}
+      <div class="--badge">{{ badge }}</div>
+    {% endif %}
+
+    {% if article.image != blank %}
+      {{ article.image | image_url: width: article.image.width | image_tag }}
+    {% else %}
+      {{ 'image' | placeholder_svg_tag }}
+    {% endif %}
+  </div>
+  <div class="--text-block">
+    <h4 class="--card-title">
+      {{ article.title }}
+    </h4>
+    <div class="--card-content">
+      {{ article.content | strip_html }}
+    </div>
+    <a class="--learn-more" href="{{ article.url }}">Read The Story</a>
+  </div>
+</div>
