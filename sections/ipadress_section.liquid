@@ -1,0 +1,271 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  .sec-{{ id }} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin: 24px;
+      line-height: 1.4;
+    }
+    .card {
+      max-width: 520px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+    }
+    .row { margin-top: 10px; }
+    .muted { color: #6b7280; font-size: 14px; }
+    .value { font-size: 18px; font-weight: 650; }
+    button {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 0;
+      cursor: pointer;
+      font-weight: 600;
+    }    
+  }
+
+  @media(max-width: 600px) {
+    .sec-{{ id }} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+</style>
+
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      <div class="card">
+        <div class="value">Distance to Camp Nou</div>
+        <div class="muted">Uses your browser location permission.</div>
+
+        <div class="row">
+          <div class="muted">Your location</div>
+          <div id="coords" class="value">Not loaded</div>
+        </div>
+
+        <div class="row">
+          <div class="muted">Distance</div>
+          <div id="distance" class="value">--</div>
+        </div>
+
+        <div class="row muted" id="status"></div>
+
+        <button id="btn">Get Distance</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const DEST = { name: 'Camp Nou', lat: 41.3809, lon: 2.1228 };
+
+  const coordsEl = document.getElementById('coords');
+  const distanceEl = document.getElementById('distance');
+  const statusEl = document.getElementById('status');
+  const btn = document.getElementById('btn');
+
+  function toRad(deg) {
+    return (deg * Math.PI) / 180;
+  }
+
+  // Haversine distance in kilometers
+  function distanceKm(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Earth radius (km)
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  }
+
+  function setStatus(msg) {
+    statusEl.textContent = msg || '';
+  }
+
+  async function getDistance() {
+    setStatus('');
+
+    if (!('geolocation' in navigator)) {
+      setStatus('Geolocation is not supported in this browser.');
+      return;
+    }
+
+    // Some browsers require HTTPS to allow geolocation
+    if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+      setStatus('Geolocation usually requires HTTPS (or localhost).');
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Getting location...';
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+
+        coordsEl.textContent = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+
+        const km = distanceKm(lat, lon, DEST.lat, DEST.lon);
+        const miles = km * 0.621371;
+
+        distanceEl.textContent = `${km.toFixed(2)} km (${miles.toFixed(2)} mi)`;
+        setStatus(`Destination: ${DEST.name}`);
+
+        btn.disabled = false;
+        btn.textContent = 'Refresh Distance';
+      },
+      (err) => {
+        const map = {
+          1: 'Permission denied. Please allow location access.',
+          2: 'Position unavailable. Try again.',
+          3: 'Timed out. Try again.',
+        };
+        setStatus(map[err.code] || `Error: ${err.message}`);
+        btn.disabled = false;
+        btn.textContent = 'Get Distance';
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 30000,
+      }
+    );
+  }
+
+  btn.addEventListener('click', getDistance);
+</script>
+{% schema %}
+{
+  "name": "Ip Address",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ip Address"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,19 @@
+{% comment %} Popup HTML, CSS, and JavaScript for Shopify theme with transition-based steps, close button animation, and overlay click close using Promises {% endcomment %}
+{% comment %} <div class="see__action "> {% endcomment %}
+
+  <div class="action__popup">
+    <div class="action__popup-wrapper">
+      <div class="action__popup-close">
+        <button close-action-popup>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-minus" width="16" height="16" viewBox="0 0 8 8" fill="none">
+                <path d="M7.23248 1.57393L4.80812 3.99829L7.23248 6.42266L6.42436 7.23078L3.99999 4.80641L1.57563 7.23078L0.767506 6.42266L3.19187 3.99829L0.767506 1.57392L1.57563 0.765803L3.99999 3.19017L6.42436 0.765803L7.23248 1.57393Z" fill="#6C7884"></path>
+            </svg>
+        </button>
+      </div>
+      <div class="popup__video">
+        {% assign video = product.metafields.custom.action_video.value %}
+        {{ video | video_tag: image_size: '700x', autoplay: false, loop: true, muted: false, controls: true, class: 'action-video' }}
+      </div>
+    </div>
+  </div>
+{% comment %} </div> {% endcomment %}

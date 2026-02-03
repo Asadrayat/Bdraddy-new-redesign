@@ -1,0 +1,52 @@
+<div class="mega__menu">
+  <div class="mega__menu-wrapper mega__menu-images-wrapper page-width">
+      <div class="mega__image-items">
+        <div class="mega__image-items-wrapper">
+          {% liquid
+            assign title_handle = link.title | handleize
+            assign has_mega_image = false
+          %}
+          {% for block in section.blocks %}
+            {% if block.type == 'image_mega_menu' %}
+              {% liquid
+                assign menu_title = block.settings.heading | handleize
+
+                if menu_title == blank or menu_title != title_handle
+                  continue
+                endif
+                if menu_title == title_handle
+                  assign has_mega_image = true
+                endif
+              %}
+              {% if has_mega_image %}
+                {% for i in (1..4) %}
+                    {% liquid
+                        capture title
+                            echo 'title_' | append: i
+                        endcapture
+                        capture image
+                            echo 'image_' | append: i
+                        endcapture
+                        capture link
+                            echo 'link_' | append: i
+                        endcapture
+                    %}
+                    {% if block.settings[image] and block.settings[title] != blank %}
+                    <div class="image-mega__menu-item mega__menu-item">
+                        <div class="mega__menu-item-image">
+                            {% if block.settings[image] %}
+                            {{ block.settings[image] | image_url: width: 600 | image_tag: loading: 'lazy', decoding: 'async' }}
+                            {% endif %}
+                        </div>
+                        <p>{{ block.settings[title] }}</p>
+                        <a href="{{ block.settings[link] | default: '#' }}"></a>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+  </div>
+</div>

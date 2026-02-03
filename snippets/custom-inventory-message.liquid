@@ -1,0 +1,13 @@
+{%- assign v = item.variant -%}
+{%- if v.inventory_management and v.inventory_policy != 'continue' -%}
+  {%- assign remaining = v.inventory_quantity | minus: item.quantity -%}
+  {%- if remaining < 0 -%}{% assign remaining = 0 %}{%- endif -%}
+
+  {%- if remaining == 0 -%}
+    <div class="stock-badge"></div>
+  {%- elsif remaining < 11 -%}
+    <div class="stock-badge"><span class="stock-dot stock-dot--very-low"></span>Only {{ remaining }} left</div>
+  {%- elsif remaining < 20 -%}
+    <div class="stock-badge"><span class="stock-dot stock-dot--low"></span>Low stock</div>
+  {%- endif -%}
+{%- endif -%}

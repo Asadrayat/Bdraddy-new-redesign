@@ -1,0 +1,130 @@
+<style>
+  .pinfo-breadcumb-wrapper{
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .lg-view.pinfo-breadcrumb.mb {
+      {% comment %} display: flex;
+      align-items: center;
+      justify-content: space-between; {% endcomment %}
+      width: 100%;
+      margin: 0;
+      {% comment %} gap: 10px; {% endcomment %}
+      {% comment %} flex-wrap: wrap; {% endcomment %}
+  }
+  .pinfo-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .pinfo-breadcumb-wrapper a{
+    color:  #4B5563;
+    {% comment %} font-size: 14px; {% endcomment %}
+    font-size: 12px;
+    line-height: 140%;
+    transition: all 0.3s;
+    text-transform: uppercase;
+  }
+  .pinfo-breadcumb-wrapper a:hover{
+    text-decoration: underline;
+  }
+  .pinfo-collection{
+    margin: 32px 0 0;
+      {% comment %} text-align: center; {% endcomment %}
+  }
+  .pinfo-collection a{
+    {% comment %} letter-spacing: 0;
+    text-transform: uppercase;
+    margin: 0;
+    color: #1F2937;
+    font-size: 14px;
+    line-height: 22px;
+    transition: all 0.3s;
+    background: #ece3d7;
+    font-family: var(--font-body-family);
+    text-decoration: none;
+    padding: 5px 12px;     {% endcomment %}
+
+    font-family: var(--font-heading-family);
+    font-size: 14px;
+    line-height: 20px;
+    color: #1F2937;
+    text-transform: uppercase;
+    text-decoration: underline;
+  }
+  .breadcrumb__divider {
+    color: #1d2a39;
+    font-size: 7px;
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+  .--product-attribute-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+  .pinfo-breadcrumb p.--product-attribute {
+    margin-block: 0;
+    font-weight: 500;
+    color: #000;
+    {% comment %} border: 1px solid #1f293738; {% endcomment %}
+    max-width: max-content;
+    {% comment %} padding: 5px 10px; {% endcomment %}
+    {% comment %} font-size: var(--Font-Size-Paragraph-Small); {% endcomment %}
+     font-size: 10px;
+    line-height: var(--Line-Height-Paragraph-Small);
+    text-transform: uppercase;
+    @media(max-width: 768px) {
+      font-size: 10px;
+      padding: 2px 7px;
+    }
+  }
+  @media screen and (max-width: 768px){
+    .pinfo-breadcumb-wrapper a{
+      {% comment %} font-size: 10px;
+      line-height: 16px; {% endcomment %}
+    }
+    .pinfo-collection{
+      margin: 0 0 0;
+    }
+    .pinfo-collection a{
+      font-size: 12px;
+      line-height: 18px;
+      text-wrap: nowrap;
+      font-family: var(--font-body-family);
+      text-decoration: none;
+    }
+  }
+</style>
+
+<div class="{{  class }} pinfo-breadcrumb {% if block.settings.enable_mb %}mb{% endif %}">
+  <div class="pinfo-breadcumb-wrapper">
+    {% comment %}
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M11.1547 3.33333L5.24062 12.2103" stroke="#4B5563" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    {% endcomment %}
+    
+    {% if collection -%}
+      <a href="{{ collection.url }}">{{ collection.title }}</a>
+    {% else %} 
+      <a href="{{ shop.url }}">{{ 'Home' | upcase }}</a>   
+    {%- endif %}
+  </div>
+
+
+  {% comment %}
+    {% if collection %}
+      <div class="pinfo-collection desktop__only">
+        <a href="{{ collection.url }}">{{ collection.title | upcase }}</a>
+      </div>
+    {% else %}
+      <div class="pinfo-collection desktop__only">
+        <a href="/collections/best-sellers">Best Seller</a>
+      </div>
+    {% endif %}
+  {% endcomment %}
+</div>

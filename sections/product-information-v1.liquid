@@ -1,0 +1,1703 @@
+<section class="--product-section" id="--custom-product-section">
+{% # render 'pfm', section: section %}
+{% comment %} <script src="{{ 'product-information-v1.js' | asset_url }}" defer="defer"></script>{% endcomment %}
+{% comment %} {% liquid
+  assign id = section.id
+
+  for option in product.options_with_values
+    if option.name == 'Color' or option.name == 'color' or option.name == 'COLOR'
+      assign color_option = 'option' | append: option.position
+    endif
+  endfor
+  assign selected_color = product.selected_or_first_available_variant[color_option] | downcase
+  assign is_selected_variant = product.selected_or_first_available_variant.id
+
+  assign is_alt_text = false
+  for media in product.media
+    assign alt_txt = media.alt | split: '#' | first | strip | downcase
+    if alt_txt == selected_color
+      assign is_alt_text = true
+    endif
+  endfor
+%} {% endcomment %}
+{% liquid
+  assign id = section.id
+  assign color_option = 'option1'
+  
+  assign selected_color = product.selected_or_first_available_variant[color_option] | downcase
+  assign is_selected_variant = product.selected_or_first_available_variant.id
+
+  assign is_alt_text = false
+  for media in product.media
+    assign alt_txt = media.alt | split: '#' | first | strip | downcase
+    if alt_txt == selected_color
+      assign is_alt_text = true
+    endif
+  endfor
+%}
+
+
+<style>
+  .sec-{{ id }} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+  }
+  {% if template.suffix == 'gift-card' %}
+  .sec-{{ id }} .pr-faq-item {
+    padding-bottom: 16px;
+  }    
+  {% endif %}
+  @media(max-width: 600px) {
+    .sec-{{ id }} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+
+  {% if product.handle == 'the-joey-2-pack' %}
+    .sale__discount-variant{
+      display: none;
+    }
+  {% endif %}
+  .sec-{{ id }} .pinfo-wrapper.page-width {
+    @media(min-width: 1600px){
+      max-width: 1900px;
+    }
+  }
+</style>
+<div id="product-information-container" data-id="{{ section.id }}" class="sec-{{ id }}">
+  {% comment %} {{ 'product-information-v1.css' | asset_url | stylesheet_tag }} {% endcomment %}
+  <product-information data-update-url="true" data-section-id="{{ section.id }}">
+     
+    <div class="pinfo-wrapper page-width">
+      {% if product.metafields.custom.action_video != blank %}
+        {% render 'see-action', product: product, has_model_info: has_model_info %}
+      {% endif %}
+      <pinfo-content-sm class="sm-view">
+        <div class="pinfo-top mb">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'description' %}
+                {% unless product.metafields.custom.description_romance_copy.value == blank %}
+                  <div class="sm-view product__description {% if block.settings.enable_mb %}mb{% endif %}">{{ block.settings.desc }}</div>
+                {% endunless %}                    
+              {% comment %} {% when '@app' %}
+                <div class="pinfo-app-block">{% render block %}</div> {% endcomment %}
+              
+              {% when 'title' %}
+                <div>
+                  {% for block in section.blocks %}
+                    {% if block.type == 'breadcrumbs' %}
+                      {% #render 'breadcrumb', product: product, block: block, class: 'sm-view' %}   
+                    {% endif %}
+                   {% endfor %} 
+                  <div class="sm-view pd-title-wrapper {% if block.settings.enable_mb %}mb{% endif %}">
+                    <h1 class="pinfo-title h2">{{ product.title | downcase }}</h1>
+                  </div>
+                  <div class="--product-attribute-wrapper sm-view">
+                    {% if product.metafields.custom.pattern_type.value[0] != blank %}
+                      <p class="--product-attribute">{{ product.metafields.custom.pattern_type.value | join : " " }}</p>
+                    {% endif %}
+                    {% if product.metafields.custom.unique_element.value[0] != blank %}
+                      <p class="--product-attribute">{{ product.metafields.custom.unique_element.value | join : " " }}</p>
+                    {% endif %}
+                  </div>
+                  {% render 'pinfo-price-v1', product: product, block: block, class: 'sm-view' %} 
+                </div>
+              
+              {% when 'price' %}
+                <div class="price__collection_wrap mb">
+                  <div class="mobile__only app__block mobile__review_wrap">
+                    {% for block in section.blocks %}
+                      {% if block.type == '@app' %}
+                        <div class="pinfo-app-block">{% render block %}</div>
+                      {% endif %}
+                    {% endfor %}
+                  </div>  
+                  {% comment %} {% if product.metafields.custom.outfit_products.value != blank %}
+                    <a href="#shop_the_look" class=" --shop-the-look-anchor --section-navigator mobile__only">Style It With</a>
+                  {% endif %} {% endcomment %}
+                  {% comment %} {% unless block.settings.discounted_text == blank  %}<p class="highlighted_discounted_text sm-view">{{ block.settings.discounted_text }}</p>{% endunless %}   {% endcomment %}               
+                </div>
+              {% when 'custom_discount_price' %}
+                {% render 'custom-discount-price', product: product, block: block, section: section, class: 'sm-view' %}                                    
+              {% when 'attribute' %}
+                {% render 'product-attribute', product: product, block: block, section: section %}                
+              {% comment %} {% when '@app' %}              
+                  <div class="pinfo-app-block mb sm-view">{% render block %}</div> {% endcomment %}
+            {% endcase %}
+          {% endfor %}
+        </div>
+      </pinfo-content-sm>
+      <product-info-media>
+        {% if product.metafields.custom.outfit_products.value != blank %}
+        <a href="#shop_the_look" class="--shop-the-look-anchor --section-navigator desktop__only">Style It With</a>
+        {% endif %}
+        {% case section.settings.image_style %}
+          {% when 'slider' %}
+            <div class="pinfo-slider-wrapper">
+              <div class="swiper pinfo-thumb-swiper">
+                <div class="swiper-wrapper">
+                  {% for media in product.media %}
+                    <div data-media="{{ media.id }}" class="swiper-slide pdp-media">
+                      {% unless media == blank %}
+                        <picture class="pinfo-thumb-pic">
+                          <source media="(max-width: 600px)" srcset="{{ media | image_url: width: 500 }}">
+                          <source media="(max-width: 1024px)" srcset="{{ media | image_url: width: 1024 }}">
+                          {% if forloop.first %}
+                            {{ media | image_url: width: media.width | image_tag }}
+                          {% else %}
+                            {{ media | image_url: width: media.width | image_tag: loading: 'lazy' }}
+                          {% endif %}
+                        </picture>
+                      {% endunless %}
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="swiper pinfo-gallery-swiper">
+                <div class="swiper-wrapper">
+                  {% for media in product.media %}
+                    <div class="swiper-slide">
+                      {% unless media == blank %}
+                        <picture class="pinfo-gallery-pic">
+                          <source
+                            media="(max-width: 600px)"
+                            srcset="{{ media | image_url: width: 400, height: 200, crop: 'top'}}"
+                          >
+                          {% if forloop.index >= 2 %}
+                            {{ media | image_url: width: 500, height: 200, crop: 'top' | image_tag: loading: 'lazy' }}
+                          {% else %}
+                            {{ media | image_url: width: 500, height: 200, crop: 'top' | image_tag }}
+                          {% endif %}
+                        </picture>
+                      {% endunless %}
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% when 'stack' %}
+
+            {% liquid
+              assign media_size = product.media.size
+              assign mod = media_size | modulo: 2
+              if mod == 0
+                assign is_even = true
+              else
+                assign is_even = false
+              endif
+              assign featured_media_id = product.selected_or_first_available_variant.featured_media.id
+              assign start_index = 0
+              for m in product.media
+                if m.id == featured_media_id
+                  assign start_index = forloop.index0
+                  break
+                endif
+              endfor
+              assign end_index = start_index | plus: 0
+              assign index_difference = end_index | minus: start_index | plus: 1
+
+
+              assign has_featured_image = false
+              if product.selected_or_first_available_variant.featured_media != blank
+                assign has_featured_image = true
+              endif
+              
+              assign show_all_images = false
+              if is_alt_text == false or has_featured_image == false
+                assign show_all_images = true
+              endif
+            %}
+
+            {% liquid
+              assign count_condition_1 = 0
+              assign count_condition_2 = 0
+
+              for m in product.media
+                assign alt_text = m.alt | split: '#' | first | strip | downcase
+                if is_alt_text and alt_text == selected_color and is_selected_variant != blank
+                  assign count_condition_1 = count_condition_1 | plus: 1
+                endif
+                if is_alt_text == false or is_selected_variant == blank
+                  assign count_condition_2 = count_condition_2 | plus: 1
+                endif
+              endfor
+
+              assign is_condition_1_odd = false
+              assign is_condition_2_odd = false
+
+              if count_condition_1 > 0
+                assign remainder_1 = count_condition_1 | modulo: 2
+                if remainder_1 == 1
+                  assign is_condition_1_odd = true
+                endif
+              endif
+
+              if count_condition_2 > 0
+                assign remainder_2 = count_condition_2 | modulo: 2
+                if remainder_2 == 1
+                  assign is_condition_2_odd = true
+                endif
+              endif
+            %}
+
+            {% render 'gallery-grid-styles' count_condition_1: count_condition_1, count_condition_2: count_condition_2, index_difference: index_difference %}
+
+            <div class="count--{{ count_condition_2 }} stack___pdp-container-wrap {{ count_condition_1 }}---{{ count_condition_2 }}--{{ index_difference }}">
+              <div class="pdp__media-swiper vertical__swiper stack___pdp-container">
+                  {% if product.metafields.custom.action_video != blank %}
+                    {% render 'see-action-button', product: product, has_model_info: has_model_info %}
+                  {% endif %}
+                <div class="vertical__medias test">
+                  <div class="vertical__medias-wrapper">
+                    {% for m in product.media %}
+                      {% liquid
+                        assign alt_text = m.alt | split: '#' | first | strip | downcase
+                        assign media = m
+                        if forloop.first and product.selected_or_first_available_variant.featured_media != blank and m.media_type == 'image'
+                          assign media = product.selected_or_first_available_variant.featured_media
+                        endif
+                      %}
+
+                      {% if is_alt_text and alt_text == selected_color and is_selected_variant != blank %}
+                        {% case media.media_type %}
+                          {% when 'image' %}
+                            <div
+                              
+                              data-media="{{ media.id }}"
+                              class="pdp-media-v info-media-image-v {% if forloop.first %}first{% endif %} {% if forloop.last and is_even %}last{% endif %}"
+                            >
+                              <picture class="pinfo-stack-picture-v">
+                                 <source
+                                    media="(max-width: 600px)"
+                                    srcset="{{ media | image_url: width: 50 }}"
+                                  >
+                                  <source
+                                    media="(max-width: 1600px)"
+                                    srcset="{{ media | image_url: width: 100 }}"
+                                  >
+                                  <source
+                                    media="(max-width: 2000px)"
+                                    srcset="{{ media | image_url: width: 150 }}"
+                                  >
+                                
+                                {% if forloop.index >= 2 %}
+                                  {{ media | image_url: width: 400 | image_tag: class: 'vertical__media', loading: 'lazy' }}
+                                {% else %}
+                                  {{ media | image_url: width: 400 | image_tag: class: 'vertical__media' }}
+                                {% endif %}
+                              </picture>
+                            </div>
+                          {% when 'video' %}
+                            <div
+                              data-media="{{ media.id }}"
+                              class="pdp-media-v info-media-image-v info-media-video-v {% if forloop.first %}first{% endif %} {% if forloop.last and is_even %}last{% endif %}"
+                            >
+                              {{
+                                media
+                                | video_tag: class: 'vertical__media', image_size: '400x', autoplay: true, loop: true, muted: true, controls: false
+                              }}
+                            </div>
+                        {% endcase %}
+                      {% endif %}
+                      {% if is_alt_text == false or is_selected_variant == blank %}
+                        {% if show_all_images %}
+                          {% case media.media_type %}
+                            {% when 'image' %}
+                              <div
+                                
+                                data-media="{{ media.id }}"
+                                class="pdp-media-v info-media-image-v {% if forloop.first %}first{% endif %} {% if forloop.last and is_even %}last{% endif %}"
+                              >
+                                <picture class="pinfo-stack-picture-v">
+                                  <source
+                                    media="(max-width: 600px)"
+                                    srcset="{{ media | image_url: width: 50 }}"
+                                  >
+                                  <source
+                                    media="(max-width: 1600px)"
+                                    srcset="{{ media | image_url: width: 100 }}"
+                                  >
+                                  <source
+                                    media="(max-width: 2000px)"
+                                    srcset="{{ media | image_url: width: 150 }}"
+                                  >
+                                  {% if forloop.index >= 2 %}
+                                    {{ media | image_url: width: 400 | image_tag: class: 'vertical__media', loading: 'lazy' }}
+                                  {% else %}
+                                    {{ media | image_url: width: 400 | image_tag: class: 'vertical__media' }}
+                                  {% endif %}
+                                </picture>
+                              </div>
+                            {% when 'video' %}
+                              <div
+                                data-media="{{ media.id }}"
+                                class="pdp-media-v info-media-image-v info-media-video-v {% if forloop.first %}first{% endif %} {% if forloop.last and is_even %}last{% endif %}"
+                              >
+                                {{
+                                  media
+                                  | video_tag: class: 'vertical__media', image_size: '400x', autoplay: true, loop: true, muted: true, controls: false
+                                }}
+                              </div>
+                          {% endcase %}
+                        {% else %}
+                          {% if forloop.index0 >= start_index and forloop.index0 <= end_index %}
+                            {% case media.media_type %}
+                              {% when 'image' %}
+                                <div
+                                  
+                                  data-media="{{ media.id }}"
+                                  class="pdp-media-v info-media-image-v {% if forloop.first %}first{% endif %} {% if forloop.last and is_even %}last{% endif %}"
+                                >
+                                  <picture class="pinfo-stack-picture-v">
+                                    <source
+                                      media="(max-width: 600px)"
+                                      srcset="{{ media | image_url: width: 50 }}"
+                                    >
+                                    <source
+                                      media="(max-width: 1600px)"
+                                      srcset="{{ media | image_url: width: 100 }}"
+                                    >
+                                    <source
+                                      media="(max-width: 2000px)"
+                                      srcset="{{ media | image_url: width: 150 }}"
+                                    >
+                                    {% if forloop.index >= 2 %}
+                                      {{ media | image_url: width: 400 | image_tag: class: 'vertical__media', loading: 'lazy' }}
+                                    {% else %}
+                                      {{ media | image_url: width: 400 | image_tag: class: 'vertical__media' }}
+                                    {% endif %}
+                                  </picture>
+                                </div>
+                              {% when 'video' %}
+                                <div
+                                  data-media="{{ media.id }}"
+                                  class="pdp-media-v info-media-image-v info-media-video-v {% if forloop.first %}first{% endif %} {% if forloop.last and is_even %}last{% endif %}"
+                                >
+                                  {{
+                                    media
+                                    | video_tag: class: 'vertical__media', image_size: '400x', autoplay: true, loop: true, muted: true, controls: false
+                                  }}
+                                </div>
+                            {% endcase %}
+                          {% endif %}
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+                <div class="{% if count_condition_2 > 0 %}info-media-stack-wrapper-no-alt{% endif %} info-media-stack-wrapper pdp-media-lg swiper-wrapper- {% if is_condition_1_odd or is_condition_2_odd %}odd__images{% endif %}">
+                  {% for m in product.media %}
+                    {% liquid
+                      assign alt_text = m.alt | split: '#' | first | strip | downcase
+                      assign media = m
+                      if forloop.first and product.selected_or_first_available_variant.featured_media != blank and m.media_type == 'image'
+                        assign media = product.selected_or_first_available_variant.featured_media
+                      endif
+                    %}
+
+                    {% if is_alt_text and alt_text == selected_color and is_selected_variant != blank %}
+                      {% case media.media_type %}
+                        {% when 'image' %}
+                          <div
+                            data-media="{{ media.id }}"
+                            class="pdp-media info-media-image {% if forloop.first %}first{% endif %} {% if forloop.last and is_even %}last{% endif %} swiper-slide-"
+                          >
+                            <picture class="pinfo-stack-picture">
+                              <source
+                                media="(max-width: 600px)"
+                                srcset="{{ media | image_url: width: 400 }}"
+                              >
+                              {% if forloop.index >= 2 %}
+                                {{ media | image_url: width: 800 | image_tag: class: 'pdp__media-tag', loading: 'lazy' }}
+                              {% else %}
+                                {{ media | image_url: width: 800 | image_tag: class: 'pdp__media-tag' }}
+                              {% endif %}
+                            </picture>
+                          </div>
+                        {% when 'video' %}
+                          <div
+                            data-media="{{ media.id }}"
+                            class="pdp-media info-media-image info-media-video {% if forloop.first %}first{% endif %} {% if forloop.last and is_even %}last{% endif %} swiper-slide-"
+                          >
+                            {{
+                              media
+                              | video_tag: class: 'pdp__media-tag', image_size: '400x', autoplay: true, loop: true, muted: true, controls: true
+                            }}
+                          </div>
+                      {% endcase %}
+                    {% endif %}
+                    {% if is_alt_text == false or is_selected_variant == blank %}
+                      {% if show_all_images %}
+                          {% case media.media_type %}
+                            {% when 'image' %}
+                              <div
+                                data-media="{{ media.id }}"
+                                class="pdp-media info-media-image info-media-image-no-alt {% if forloop.first %}first{% endif %} {% if forloop.last and is_even %}last{% endif %}"
+                              >
+                                <picture class="pinfo-stack-picture">
+                                  <source
+                                    media="(max-width: 600px)"
+                                    srcset="{{ media | image_url: width: 400 }}"
+                                  >
+                                  {% if forloop.index >= 2 %}
+                                    {{ media | image_url: width: 800 | image_tag: class: 'pdp__media-tag', loading: 'lazy' }}
+                                  {% else %}
+                                    {{ media | image_url: width: 800 | image_tag: class: 'pdp__media-tag' }}
+                                  {% endif %}
+                                </picture>
+                              </div>
+                            {% when 'video' %}
+                              <div
+                                data-media="{{ media.id }}"
+                                class="pdp-media info-media-image info-media-image-no-alt info-media-video {% if forloop.first %}first{% endif %} {% if forloop.last and is_even %}last{% endif %}"
+                              >
+                                {{
+                                  media
+                                  | video_tag: class: 'pdp__media-tag', image_size: '400x', autoplay: true, loop: true, muted: true, controls: true
+                                }}
+                              </div>
+                          {% endcase %}
+                      {% else %}
+                        {% if forloop.index0 >= start_index and forloop.index0 <= end_index %}
+                          {% case media.media_type %}
+                            {% when 'image' %}
+                              <div
+                                data-media="{{ media.id }}"
+                                class="pdp-media info-media-image info-media-image-no-alt {% if forloop.first %}first{% endif %} {% if forloop.last and is_even %}last{% endif %}"
+                              >
+                                <picture class="pinfo-stack-picture">
+                                  <source
+                                    media="(max-width: 600px)"
+                                    srcset="{{ media | image_url: width: 400 }}"
+                                  >
+                                  {% if forloop.index >= 2 %}
+                                    {{ media | image_url: width: 800 | image_tag: class: 'pdp__media-tag', loading: 'lazy' }}
+                                  {% else %}
+                                    {{ media | image_url: width: 800 | image_tag: class: 'pdp__media-tag' }}
+                                  {% endif %}
+                                </picture>
+                              </div>
+                            {% when 'video' %}
+                              <div
+                                data-media="{{ media.id }}"
+                                class="pdp-media info-media-image info-media-image-no-alt info-media-video {% if forloop.first %}first{% endif %} {% if forloop.last and is_even %}last{% endif %}"
+                              >
+                                {{
+                                  media
+                                  | video_tag: class: 'pdp__media-tag', image_size: '400x', autoplay: true, loop: true, muted: true, controls: true
+                                }}
+                              </div>
+                          {% endcase %}
+                        {% endif %}
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </div>
+                {% comment %} <div class="swiper-scrollbar pdp_info_scrollbar"></div> {% endcomment %}
+              </div>
+            </div>
+
+            {% liquid
+              assign media_size = product.media.size
+              assign featured_media_id = product.selected_or_first_available_variant.featured_media.id
+              assign start_index = 0
+              for m in product.media
+                if m.id == featured_media_id
+                  assign start_index = forloop.index0
+                  break
+                endif
+              endfor
+              assign end_index = start_index | plus: 3
+            %}
+            <div class="pdp-media-sm">
+              <div class="main-swiper-wrapper">
+   
+                <div class="swiper main-swiper">
+           {% if product.metafields.custom.outfit_products.value != blank %}
+                <a href="#shop_the_look" class=" --shop-the-look-anchor --section-navigator mobile__only">Style It With</a>
+              {% endif %}
+                  {% if product.metafields.custom.action_video != blank %}
+                    {% render 'see-action-button', product: product, has_model_info: has_model_info %}
+                  {% endif %}
+                  <div class="swiper-wrapper">
+                    {% assign media_count = 0 %}
+                    {% for media in product.media %}
+                      {% liquid
+                        assign alt_text = media.alt | split: '#' | first | strip | downcase
+                        if forloop.first and product.selected_or_first_available_variant.featured_media != blank and media.media_type == 'image'
+                          assign media = product.selected_or_first_available_variant.featured_media
+                        endif
+                      %}
+                      {% if is_alt_text and alt_text == selected_color and is_selected_variant != blank %}
+                        {% assign media_count = media_count | plus: 1 %}
+                        <div class="swiper-slide">
+                          {% case media.media_type %}
+                            {% when 'image' %}
+                              <div
+                                data-media="{{ media.id }}"
+                                class="pdp-media pdp-media-image"
+                              >
+                                <picture>
+                                  <source
+                                    media="(max-width: 600px)"
+                                    srcset="{{ media | image_url: width: 400 }}"
+                                  >
+                                  {% if forloop.index >= 2 %}
+                                    {{ media | image_url: width: 800 | image_tag: class: 'pdp__media-tag', loading: 'lazy' }}
+                                  {% else %}
+                                    {{ media | image_url: width: 800 | image_tag: class: 'pdp__media-tag' }}
+                                  {% endif %}
+                                </picture>
+                              </div>
+                            {% when 'video' %}
+                              <div
+                                data-media="{{ media.id }}"
+                                class="pdp-media pdp-media-video"
+                              >
+                                {{
+                                  media
+                                  | video_tag: class: 'pdp__media-tag', image_size: '400x', autoplay: true, loop: true, muted: true, controls: true
+                                }}
+                              </div>
+                          {% endcase %}
+                        </div>
+                      {% endif %}
+                      {% if is_alt_text == false or is_selected_variant == blank %}
+                        {% if show_all_images %}
+                            {% assign media_count = media_count | plus: 1 %}
+                            <div class="swiper-slide">
+                              {% case media.media_type %}
+                                {% when 'image' %}
+                                  <div
+                                    data-media="{{ media.id }}"
+                                    class="pdp-media pdp-media-image"
+                                  >
+                                    <picture>
+                                      <source
+                                        media="(max-width: 600px)"
+                                        srcset="{{ media | image_url: width: 400 }}"
+                                      >
+                                      {% if forloop.index >= 2 %}
+                                        {{ media | image_url: width: 800 | image_tag: class: 'pdp__media-tag', loading: 'lazy' }}
+                                      {% else %}
+                                        {{ media | image_url: width: 800 | image_tag: class: 'pdp__media-tag' }}
+                                      {% endif %}
+                                    </picture>
+                                  </div>
+                                {% when 'video' %}
+                                  <div
+                                    data-media="{{ media.id }}"
+                                    class="pdp-media pdp-media-video"
+                                  >
+                                    {{
+                                      media
+                                      | video_tag: class: 'pdp__media-tag', image_size: '400x', autoplay: true, loop: true, muted: true, controls: true
+                                    }}
+                                  </div>
+                              {% endcase %}
+                            </div>
+                        {% else %}
+                          {% if forloop.index0 >= start_index and forloop.index0 <= end_index %}
+                            {% assign media_count = media_count | plus: 1 %}
+                            <div class="swiper-slide">
+                              {% case media.media_type %}
+                                {% when 'image' %}
+                                  <div
+                                    data-media="{{ media.id }}"
+                                    class="pdp-media pdp-media-image"
+                                  >
+                                    <picture>
+                                      <source
+                                        media="(max-width: 600px)"
+                                        srcset="{{ media | image_url: width: 400 }}"
+                                      >
+                                      {% if forloop.index >= 2 %}
+                                        {{ media | image_url: width: 800 | image_tag: class: 'pdp__media-tag', loading: 'lazy' }}
+                                      {% else %}
+                                        {{ media | image_url: width: 800 | image_tag: class: 'pdp__media-tag' }}
+                                      {% endif %}
+                                    </picture>
+                                  </div>
+                                {% when 'video' %}
+                                  <div
+                                    data-media="{{ media.id }}"
+                                    class="pdp-media pdp-media-video"
+                                  >
+                                    {{
+                                      media
+                                      | video_tag: class: 'pdp__media-tag', image_size: '400x', autoplay: true, loop: true, muted: true, controls: true
+                                    }}
+                                  </div>
+                              {% endcase %}
+                            </div>
+                          {% endif %}
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                  <div class="swiper-pagination"></div>
+                  <button class="swiper-button-prev">{% render 'all-icons', name: 'swiper_left' %}</button>
+                  <button class="swiper-button-next">{% render 'all-icons', name: 'swiper_right' %}</button>
+                  <div style="display: none !important" class="swiper-scrollbar hidden"></div>
+                  <div style="display: none !important" class="swiper-counter hidden">
+                    <span class="current">1</span> / <span class="total">{{ media_count }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="thumb-swiper-wrapper">
+                <div class="swiper thumb-swiper">
+                  <div class="swiper-wrapper">
+                    {% for media in product.media %}
+                      {% liquid
+                        assign alt_text = media.alt | split: '#' | first | strip | downcase
+                        if forloop.first and product.selected_or_first_available_variant.featured_media != blank and media.media_type == 'image'
+                          assign media = product.selected_or_first_available_variant.featured_media
+                        endif
+                      %}
+                      {% if is_alt_text and alt_text == selected_color and is_selected_variant != blank %}
+                        <div class="swiper-slide thumb-slide">
+                          {% case media.media_type %}
+                            {% when 'image' %}
+                              <div
+                                data-media="{{ media.id }}"
+                                class="pdp-media pdp-media-image thumb-media"
+                              >
+                                {{ media | image_url: width: 100 | image_tag: class: 'pdp__thumb-tag', loading: 'lazy' }}
+                              </div>
+                            {% when 'video' %}
+                              <div
+                                data-media="{{ media.id }}"
+                                class="pdp-media pdp-media-video thumb-media"
+                              >
+                                {{ media.preview_image | image_url: width: 100 | image_tag: class: 'pdp__thumb-tag', loading: 'lazy' }}
+                              </div>
+                          {% endcase %}
+                        </div>
+                      {% endif %}
+                      {% if is_alt_text == false or is_selected_variant == blank %}
+                        {% if show_all_images %}
+                            <div class="swiper-slide thumb-slide">
+                              {% case media.media_type %}
+                                {% when 'image' %}
+                                  <div
+                                    data-media="{{ media.id }}"
+                                    class="pdp-media pdp-media-image thumb-media"
+                                  >
+                                    {{ media | image_url: width: 100 | image_tag: class: 'pdp__thumb-tag', loading: 'lazy' }}
+                                  </div>
+                                {% when 'video' %}
+                                  <div
+                                    data-media="{{ media.id }}"
+                                    class="pdp-media pdp-media-video thumb-media"
+                                  >
+                                    {{ media.preview_image | image_url: width: 100 | image_tag: class: 'pdp__thumb-tag', loading: 'lazy' }}
+                                  </div>
+                              {% endcase %}
+                            </div>
+                        {% else %}
+                          {% if forloop.index0 >= start_index and forloop.index0 <= end_index %}
+                            <div class="swiper-slide thumb-slide">
+                              {% case media.media_type %}
+                                {% when 'image' %}
+                                  <div
+                                    data-media="{{ media.id }}"
+                                    class="pdp-media pdp-media-image thumb-media"
+                                  >
+                                    {{ media | image_url: width: 100 | image_tag: class: 'pdp__thumb-tag', loading: 'lazy' }}
+                                  </div>
+                                {% when 'video' %}
+                                  <div
+                                    data-media="{{ media.id }}"
+                                    class="pdp-media pdp-media-video thumb-media"
+                                  >
+                                    {{ media.preview_image | image_url: width: 100 | image_tag: class: 'pdp__thumb-tag', loading: 'lazy' }}
+                                  </div>
+                              {% endcase %}
+                            </div>
+                          {% endif %}
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+        {% endcase %}
+      </product-info-media>
+      <product-info-content>
+        <div class="pinfo-top">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'description' %}
+                {% unless product.metafields.custom.description_romance_copy.value == blank %}
+                  <div class="lg-view product__description {% if block.settings.enable_mb %}mb{% endif %}">{{ block.settings.desc }}</div>
+                {% endunless %}
+              {% when 'attribute' %}
+                {% render 'product-attribute', product: product, block: block, section: section %}
+              {% when 'breadcrumbs' %}
+                {%# render 'breadcrumb', product: product, block: block, class: 'lg-view' %}
+              {% when '@app' %}
+                {% comment %} <div class="pinfo-app-block mb lg-view">{% render block %}</div> {% endcomment %}
+              {% when 'title' %}
+                <div class='{% if block.settings.enable_mb %}mb_{% endif %}'>
+                  {% render 'breadcrumb', product: product, block: block, class: 'lg-view' %}
+                  <div class="lg-view pd-title-wrapper">
+                    <h1 class="pinfo-title h2">{{ product.title | downcase }}</h1>
+                  </div>
+                  <div class="--product-attribute-wrapper lg-view">
+                    {% if product.metafields.custom.pattern_type.value[0] != blank %}
+                      <p class="--product-attribute">{{ product.metafields.custom.pattern_type.value | join : " " }}</p>
+                    {% endif %}
+                    {% if product.metafields.custom.unique_element.value[0] != blank %}
+                      <p class="--product-attribute">{{ product.metafields.custom.unique_element.value | join : " " }}</p>
+                    {% endif %}
+                  </div>
+                </div>
+              <div class="pinfo__price_app">
+                {% for block in section.blocks %}
+                  {% if block.type == '@app' %}
+                    <div class="pinfo-app-block lg-view">{% render block %}</div>
+                  {% endif %}
+                  {% if block.type == 'price' %}
+                     {% render 'pinfo-price-v1', product: product, block: block, class: 'lg-view' %}
+                  {% endif %}
+                  {% if block.type == 'custom_discount_price' %}
+                    {% render 'custom-discount-price', product: product, block: block, section: section, class: 'lg-view' %}   
+                  {% endif %}
+                {% endfor %}
+              </div>  
+              {% when 'price' %}
+                {% #render 'pinfo-price-v1', product: product, block: block, class: 'lg-view' %}
+              {% when 'custom_discount_price' %}
+                {%# render 'custom-discount-price', product: product, block: block, section: section, class: 'lg-view' %}   
+                {% comment %} {% unless block.settings.discounted_text == blank  %}<p class="highlighted_discounted_text lg-view">{{ block.settings.discounted_text }}</p>{% endunless %} {% endcomment %}
+            {% endcase %}
+          {% endfor %}
+        </div>
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when 'buy-button' %}
+              {% render 'pinfo-buy-button', product: product, block: block, section: section %}
+            {% when 'variant-picker' %}
+              {% render 'pinfo-variant-picker-v1', product: product, block: block %}
+              {% when 'discount-code' %}
+              <div class="--discount-code-container" style="width: 100%;">
+                  {% unless product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}
+                    {% render 'mclbx-copy-discount-code', product: product, block: block %}
+                  {% endunless %}
+                </div>
+            {% when 'inventory' %}
+              {% #render 'inventory-status', product: product, block: block, section: section %}
+            {% when 'quantity' %}
+              {% comment %} <div class="quantity-selector-wrapper {% if block.settings.enable_mb %}mb{% endif %}">
+                {% comment %} <h4>QTY: </h4> {% endcomment %}
+                <div class="quantity-selector" data-quantity-selector>
+                  <button type="button" class="qty-btn decrease" aria-label="Decrease quantity">−</button>
+                  <input type="number" class="qty-input" name="quantity" value="1" min="1" step="1">
+                  <button type="button" class="qty-btn increase" aria-label="Increase quantity">+</button>
+                </div>
+              </div> {% endcomment %}
+            {% when 'image' %}
+              {% assign image = block.settings.img %}
+              {% assign image_mobile = block.settings.img_m %}
+            {% if image %}
+              <div class="image-wrap pdp__img_custom__wrap {% if image_mobile %}small-hide{% endif %} mb">
+                {{ image | image_url: width: image.width | image_tag }}
+              </div>
+            {% endif %}
+            {% if image_mobile %}
+              <div class="image-wrap pdp__img_custom__wrap large-up-hide medium-hide mb">
+                {{ image_mobile | image_url: width: image_mobile.width | image_tag }}
+              </div>
+              {%endif %}    
+                {% when 'recommendation_text' %}
+                  <style>
+                       
+  {{  block.settings.custom_liquid }}
+
+                  </style>
+                  {% if block.settings.text != blank %}
+                     <div class="--text-block--{{  block.id }} --recommendation-text" >{%render 'all-icons', name: 'dot' %}{{ block.settings.text }}</div>
+                  {% endif %}
+                  {% endcase %}
+        {% endfor %}
+        {% render 'pinfo-collapsible-v1', section: section %}
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {%- when 'bundle' -%}
+              {%- render 'pinfo-bundle-products-v1', product: product, block: block -%}
+            {%- when 'embroider_notice' -%}
+              {% if product.tags contains 'EMBROIDER' or product.tags contains 'embroider' or product.tags contains 'Ryder Cup 2025' %}
+                <div class="--embroidery-message-container">
+                    {%- render 'custom-embroidery-message', product: product -%}
+                </div>  
+              {% endif %}
+                                         
+            {% when 'shipping_info' %}
+              {%- unless product.tags contains 'EMBROIDER' or product.template_suffix == 'gift-card' -%}
+                <div class="pd-shipping__info {% if block.settings.enable_mb %}mb{% endif %}">
+                  {%- if product.selected_or_first_available_variant.available and product.selected_or_first_available_variant.price > 10000 -%}
+                {%- render 'product-shipping', block: block, product: product -%}
+                {%- endif -%}
+              </div>
+                 {%- endunless -%} 
+              
+            {% when 'gurantee_info' %}
+              {%- unless product.tags contains 'EMBROIDER' -%}
+                
+                <div class="pd-gurantee__info {% if block.settings.enable_mb %}mb{% endif %}">
+                  {% if product.selected_or_first_available_variant.available %}
+                {% render 'product-gurantee', block: block, product: product %}
+                {% endif %}
+              </div>
+              
+                 {%- endunless -%} 
+              
+              
+                {% when 'text' %}
+                  <style>
+                        .--text-block--{{  block.id }}{
+                          {{  custom_liquid }}
+                        }
+
+                  </style>
+                  {% if block.settings.text != blank %}
+                     <div class="--text-block--{{  block.id }}" style="margin-block: 10px; font-size: 12px;">{{ block.settings.text }}</div>
+                  {% endif %}
+             
+              {% comment %} {% unless   product.metafields.custom.style_no == blank%}
+               <p class="--custom-style">STYLE # {{ product.metafields.custom.style_no.value }}</p>
+              {% endunless %} {% endcomment %}
+            {%when 'faqs' %}
+              {% render 'faqs', block: block, product: product, id: id %}
+            {% when 'icons' %}
+              {% render 'custom-attribute-icons'%}
+              
+          {% endcase %}
+        {% endfor %}
+
+      
+      </product-info-content>
+      <div class="vartical__slider_pd"></div>
+    </div>
+   
+     
+    {% render 'product-quick-add-snippet' %}
+  </product-information>
+</div>
+<script>
+  {% comment %} window.productVariants = {{ product.variants | json }}; {% endcomment %}
+</script>
+<section>
+{% schema %}
+{
+  "name": "Product Information",
+  "class": "sticky--selector",
+  "settings": [
+    {
+      "type": "text",
+      "id": "company_id",
+      "label": "Company Id",
+      "default": "LqCRYf",
+      "info": "Come From API"
+    },
+    {
+      "type": "select",
+      "id": "image_style",
+      "label": "Product Media",
+      "options": [
+        {
+          "value": "slider",
+          "label": "Slider"
+        },
+        {
+          "value": "stack",
+          "label": "Stack"
+        }
+      ],
+      "default": "stack"
+    },
+    {
+      "type": "checkbox",
+      "id": "lightbox",
+      "label": "Enable Lightbox",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Color Swatch"
+    },
+    {
+      "type": "select",
+      "id": "swatch_option",
+      "label": "Color Swatch Option",
+      "options": [
+        {
+          "value": "image_swatch",
+          "label": "Image Swatch"
+        },
+        {
+          "value": "variant_image",
+          "label": "Variant Image"
+        }
+      ],
+      "default": "variant_image"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app",   
+    },
+    {
+      "type": "image",
+      "name": "Image",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "img",
+          "label": "Image Desktop"
+        },
+        {
+          "type": "image_picker",
+          "id": "img_m",
+          "label": "Image Mobile"
+        },
+      ]
+    },    
+    {
+      "type": "quantity",
+      "name": "Quantity Selector",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enable_mb",
+          "label": "Margin Bottom?",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "inventory",
+      "name": "Inventory Status",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enable_mb",
+          "label": "Margin Bottom?",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "faqs",
+      "name": "FAQs",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enable_mb",
+          "label": "Margin Bottom?",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "breadcrumbs",
+      "name": "Breadcrumbs",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enable_mb",
+          "label": "Margin Bottom?",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "recommendation_text",
+      "name": "Recommendation Text",
+      "settings" : [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "Custom Liquid"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings" : [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "Custom Liquid"
+        }
+      ]
+    },
+    {
+      "type": "attribute",
+      "name": "Product Attribute",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "DETAILS & CARE"
+        },
+        {
+          "type": "header",
+          "content": "Tab 1"
+        },
+        {
+          "type": "text",
+          "id": "tab1_title",
+          "label": "Tab Title"
+        },
+        {
+          "type": "richtext",
+          "id": "tab1_content1",
+          "label": "Tab Content 1"
+        },
+        {
+          "type": "richtext",
+          "id": "tab1_content2",
+          "label": "Tab Content 2"
+        },
+        {
+          "type": "richtext",
+          "id": "tab1_content3",
+          "label": "Tab Content 3"
+        },
+        {
+          "type": "header",
+          "content": "Tab 2"
+        },
+        {
+          "type": "text",
+          "id": "tab2_title",
+          "label": "Tab Title"
+        },
+        {
+          "type": "richtext",
+          "id": "tab2_content",
+          "label": "Tab Content"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_icons",
+          "label": "Show Icons"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_mb",
+          "label": "Margin Bottom?",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enable_mb",
+          "label": "Margin Bottom?",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "desc",
+          "label": "Description"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_mb",
+          "label": "Margin Bottom?",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enable_mb",
+          "label": "Margin Bottom?",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_discount_text",
+          "label": "Enable Discount Text",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "discounted_text_regular_variants",
+          "label": "Discount text (Regular Variants)",
+          "default": "Apply code CYBER35 to unlock displayed price."
+        },
+        {
+          "type": "text",
+          "id": "discounted_text",
+          "label": "Discount text",
+          "default": "Extra 35% off with code CYBER35."
+        }
+      ]
+    },
+    {
+      "type": "custom_discount_price",
+      "name": "Custom Discount Price",
+      "settings": [
+        {
+          "type": "range",
+          "id": "discount_percentage",
+          "label": "Discount Percentage",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 0
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_mb",
+          "label": "Margin Bottom?",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "variant-picker",
+      "name": "Variant Picker",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enable_mb",
+          "label": "Margin Bottom?",
+          "default": true
+        }
+      ]
+    },
+            {
+      "type": "discount-code",
+      "name": "Discount Code",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Discount Code"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "discount-message",
+          "label": "Discount Message",
+          "default": "Enter Code at checkout."
+        }
+      ]
+    },
+    {
+      "type": "buy-button",
+      "name": "Buy Button",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "dynamic_checkout_button",
+          "label": "Dynamic Checkout Button",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "dynamic_checkout_button_text",
+          "label": "Dynamic Checkout Button Text",
+          "default": "Shop with"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_terms",
+          "label": "Show Payment Terms?",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_mb",
+          "label": "Margin Bottom?",
+          "default": true
+        },
+        {
+          "type": "richtext",
+          "id": "notify_me_disclaimer_message",
+          "label": "Notify Me Disclaimer Message",
+
+        }
+      ]
+    },
+    {
+      "type": "icons",
+      "name": "Icons Block",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "alignment_icons",
+          "label": "Icon Text Alignment",
+          "options": [
+            {
+              "value": "hr",
+              "label": "Horizontal"
+            },
+            {
+              "value": "vr",
+              "label": "Vartical"
+            },
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_mb",
+          "label": "Margin Bottom?",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "shipping_info",
+      "name": "Shipping Info",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "ship_text",
+          "label": "Shipping Text",
+          "default": "Free Express Shipping"
+        },
+        {
+          "type": "header",
+          "content": "Link"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Shipping Text",
+          "default": "Shipping & Returns"
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "rte",
+          "label": "Richtext"
+        },
+        {
+          "type": "text",
+          "id": "table_top_title",
+          "label": "Table Top Title",
+          "default": "Shipping Options"
+        },
+        {
+          "type": "text",
+          "id": "table_bottom_title",
+          "label": "Table Bottom Title",
+          "default": "*Free shipping offer applies to economy shipping methods only"
+        },
+        {
+          "type": "header",
+          "content": "Table Content"
+        },
+        {
+          "type": "text",
+          "id": "r1c1",
+          "label": "Row 1 Column1",
+          "default": "Ship Service"
+        },
+        {
+          "type": "text",
+          "id": "r1c2",
+          "label": "Row 1 Column2",
+          "default": "Estimated Arrival"
+        },
+        {
+          "type": "text",
+          "id": "r1c3",
+          "label": "Row 1 Column3",
+          "default": "Fee"
+        },
+        {
+          "type": "text",
+          "id": "r2c1",
+          "label": "Row 2 Colum1",
+          "default": "UPS Ground*"
+        },
+        {
+          "type": "text",
+          "id": "r2c2",
+          "label": "Row 2 Column2",
+          "default": "3-5 Business Days"
+        },
+        {
+          "type": "text",
+          "id": "r2c3",
+          "label": "Row 2 Column3",
+          "default": "FREE"
+        },
+        {
+          "type": "text",
+          "id": "r3c1",
+          "label": "Row 3 Column1",
+          "default": "UPS 2-Day"
+        },
+        {
+          "type": "text",
+          "id": "r3c2",
+          "label": "Row 3 Column2",
+          "default": "2 Business Days "
+        },
+        {
+          "type": "text",
+          "id": "r3c3",
+          "label": "Row 3 Column3",
+          "default": "$20"
+        },
+        {
+          "type": "text",
+          "id": "r4c1",
+          "label": "Row 4 Column1",
+          "default": "UPS Next-Day"
+        },
+        {
+          "type": "text",
+          "id": "r4c2",
+          "label": "Row 4 Column2",
+          "default": "1 Business Day "
+        },
+        {
+          "type": "text",
+          "id": "r4c3",
+          "label": "Row 4 Column3",
+          "default": "$40"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_mb",
+          "label": "Margin Bottom?",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "gurantee_info",
+      "name": "Gurantee Info",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "ship_text",
+          "label": "Shipping Text",
+          "default": "Free Express Shipping"
+        },
+        {
+          "type": "header",
+          "content": "Link"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Shipping Text Label",
+          "default": "Shipping & Returns"
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "rte",
+          "label": "Richtext"
+        },
+        {
+          "type": "text",
+          "id": "table_top_title",
+          "label": "Table Top Title",
+          "default": "Shipping Options"
+        },
+        {
+          "type": "text",
+          "id": "table_bottom_title",
+          "label": "Table Bottom Title",
+          "default": "*Free shipping offer applies to economy shipping methods only"
+        },
+        {
+          "type": "header",
+          "content": "Table Content"
+        },
+        {
+          "type": "text",
+          "id": "r1c1",
+          "label": "Row 1 Column1",
+          "default": "Ship Service"
+        },
+        {
+          "type": "text",
+          "id": "r1c2",
+          "label": "Row 1 Column2",
+          "default": "Estimated Arrival"
+        },
+        {
+          "type": "text",
+          "id": "r1c3",
+          "label": "Row 1 Column3",
+          "default": "Fee"
+        },
+        {
+          "type": "text",
+          "id": "r2c1",
+          "label": "Row 2 Colum1",
+          "default": "UPS Ground*"
+        },
+        {
+          "type": "text",
+          "id": "r2c2",
+          "label": "Row 2 Column2",
+          "default": "3-5 Business Days"
+        },
+        {
+          "type": "text",
+          "id": "r2c3",
+          "label": "Row 2 Column3",
+          "default": "FREE"
+        },
+        {
+          "type": "text",
+          "id": "r3c1",
+          "label": "Row 3 Column1",
+          "default": "UPS 2-Day"
+        },
+        {
+          "type": "text",
+          "id": "r3c2",
+          "label": "Row 3 Column2",
+          "default": "2 Business Days "
+        },
+        {
+          "type": "text",
+          "id": "r3c3",
+          "label": "Row 3 Column3",
+          "default": "$20"
+        },
+        {
+          "type": "text",
+          "id": "r4c1",
+          "label": "Row 4 Column1",
+          "default": "UPS Next-Day"
+        },
+        {
+          "type": "text",
+          "id": "r4c2",
+          "label": "Row 4 Column2",
+          "default": "1 Business Day "
+        },
+        {
+          "type": "text",
+          "id": "r4c3",
+          "label": "Row 4 Column3",
+          "default": "$40"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_mb",
+          "label": "Margin Bottom?",
+          "default": true
+        }
+      ]
+    },
+        {
+      "type": "embroider_notice",
+      "name": "Embroidery Notice",
+      "limit": 1,
+      "settings": [
+        
+      ]
+    },
+    {
+      "type": "bundle",
+      "name": "Bundle Products",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "enable_mb",
+          "label": "Margin Bottom?",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "collapsible",
+      "name": "Collapsible Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Lorem Insum Dollar."
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        },
+        {
+          "type": "page",
+          "id": "page",
+          "label": "Page Content",
+          "info": "Select Page"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_mb",
+          "label": "Margin Bottom?",
+          "default": true
+        }
+      ]
+    },
+  ]
+}
+{% endschema %}

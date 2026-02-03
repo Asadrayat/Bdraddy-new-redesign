@@ -1,0 +1,885 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  #shopify-section-{{id}} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+  }
+  
+  @media(max-width: 600px) {
+    #shopify-section-{{id}} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+
+  #shopify-section-{{id}} {
+    .parent__block-container {
+        max-width: 75%;
+        margin: auto;
+        @media(max-width: 1400px) {
+            max-width: 100%;
+        }
+    }   
+    .top__block {
+        display: flex;
+        flex-direction: column;
+        gap: var(--Spacing-Container-xs);        
+        align-items: center;        
+        max-width: 800px;
+        margin: auto;
+        margin-bottom: var(--Spacing-Container-xxl);
+        h2{
+            margin: 0;
+            color: #fff;
+            text-align: center;
+        }
+        p{
+            margin: 0;
+            color: #fff;
+            font-size: 16px;
+            font-family: var(--font-body-family);
+            text-align: center;
+        }
+    } 
+    .wrapper-{{ id }}{
+      {% if section.settings.show_bg %}
+        padding: 80px var(--Spacing-Container-lg);
+        background-image: url('{{ section.settings.bg_img | image_url: width: section.settings.bg_img.width }}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      {% endif %}
+    }
+    .block-container{
+      display: grid;
+      grid-template-columns: repeat( 2, minmax(0,1fr));
+      gap: 0;
+      @media(max-width: 600px){
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+    .block-wrapper{
+      position: relative;
+    }
+    .img-wrapper{
+      line-height: 0;
+      position: relative;
+      &::after {
+        position: absolute;
+        z-index: 1;
+        background: transparent;
+        content: "";
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .img-wrapper img{
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      aspect-ratio: 1;
+      @media(max-width: 600px){
+        {% if section.blocks.size == 2 %}
+          aspect-ratio: 2/3;
+        {% else %}
+          aspect-ratio: 1/2;
+        {% endif %}
+      }
+    }
+    .desktop-img{
+      @media (max-width: 600px) {
+        display: none;
+      }
+    }
+    .mobile-img{
+      @media (min-width: 601px) {
+        display: none;
+      }
+    }
+
+    .text-container{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      box-sizing: border-box;
+      z-index: 2;
+      padding: var(--Spacing-Section-Section-Vertical-Padding, 32px) var(--Spacing-Section-Section-Horizontal-Padding, 12px);
+     {% if section.settings.alignment == 'top_left' %}
+       justify-content: start;
+       align-items: start;
+     {% elsif section.settings.alignment == 'top_center' %}
+       justify-content: center;
+       align-items: start;
+     {% elsif section.settings.alignment == 'top_right' %}
+       justify-content: end;
+       align-items: start;
+     {% elsif section.settings.alignment == 'middle_left' %}
+       justify-content: start;
+       align-items: center;
+     {% elsif section.settings.alignment == 'middle_center' %}
+       justify-content: center;
+       align-items: center;
+     {% elsif section.settings.alignment == 'middle_right' %}
+       justify-content: end;
+       align-items: center;
+     {% elsif section.settings.alignment == 'bottom_left' %}
+       justify-content: start;
+       align-items: end;
+     {% elsif section.settings.alignment == 'bottom_center' %}
+       justify-content: center;
+       align-items: end;
+     {% else %}
+       justify-content: end;
+       align-items: end;
+     {% endif %}
+      @media screen and (max-width: 600px){
+       {% if section.settings.mobile_alignment == 'top_left' %}
+         justify-content: start;
+         align-items: start;
+       {% elsif section.settings.mobile_alignment == 'top_center' %}
+         justify-content: center;
+         align-items: start;
+       {% elsif section.settings.mobile_alignment == 'top_right' %}
+         justify-content: end;
+         align-items: start;
+       {% elsif section.settings.mobile_alignment == 'middle_left' %}
+         justify-content: start;
+         align-items: center;
+       {% elsif section.settings.mobile_alignment == 'middle_center' %}
+         justify-content: center;
+         align-items: center;
+       {% elsif section.settings.mobile_alignment == 'middle_right' %}
+         justify-content: end;
+         align-items: center;
+       {% elsif section.settings.mobile_alignment == 'bottom_left' %}
+         justify-content: start;
+         align-items: end;
+       {% elsif section.settings.mobile_alignment == 'bottom_center' %}
+         justify-content: center;
+         align-items: end;
+       {% else %}
+         justify-content: end;
+         align-items: end;
+       {% endif %}
+      }
+    }
+    .text-wrapper{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: var(--Spacing-Container-xl, 16px);
+      max-width: 480px;
+     {% if section.settings.content_alignment == 'left' %}
+       align-items: start;
+     {% elsif section.settings.content_alignment == 'right' %}
+       align-items: end;
+     {% else %}
+       align-items: center;
+     {% endif %}
+    }
+    .title-wrapper{
+      display: flex;
+      flex-direction: column;
+      gap: var(--Spacing-Container-sm, 8px);
+      margin: 0;
+     {% if section.settings.content_alignment == 'left' %}
+       text-align: left;
+     {% elsif section.settings.content_alignment == 'right' %}
+       text-align: right;
+     {% else %}
+       text-align: center;
+     {% endif %}
+    }
+    .description{
+      color: var(--Content-Inverted-main, #F3F4F6);
+      margin: 0;
+      font-family: var(--font-family-Body);
+      font-size: var(--Font-Size-Paragraph-Large, 14px);
+      font-style: normal;
+      font-weight: 400;
+      line-height: var(--Line-Height-Paragraph-Large, 20px); /* 142.857% */
+     {% if section.settings.content_alignment == 'left' %}
+       text-align: left;
+     {% elsif section.settings.content_alignment == 'right' %}
+       text-align: right;
+     {% else %}
+       text-align: center;
+     {% endif %}
+    }
+    .title{
+      color: var(--Content-Inverted-main, #F3F4F6);
+      margin: 0;
+      font-family: var(--font-family-Title);
+      font-size: var(--Font-Size-Heading-H2, 36px);
+      font-style: normal;
+      font-weight: 400;
+      line-height: var(--Line-Height-Heading-H2, 36px); /* 100% */
+    }
+  }
+   .wrapper-{{ id }}  .swiper {
+      overflow: unset;
+    }  
+  .wrapper-{{ id }} .swiper-pagination {
+    display: none;
+  }
+  .wrapper-{{ id }} .content__wrapper.pagination__padding {
+    padding-bottom: 64px;
+  }
+  .wrapper-{{ id }} .swiper-pagination {
+    /* display: block;
+    bottom: 2.5px !important; */
+    /* display: flex;
+    justify-content: right;
+    bottom: 12.5px !important;
+    padding: 0 var(--Spacing-Container-lg); */
+    display: flex;
+    justify-content: right;
+    bottom: -24px !important;
+    /* padding: 0 var(--Spacing-Container-lg); */
+    left: 50%;
+    justify-content: center;
+    transform: translateX(-50%);
+    @media(max-width: 768px){
+      justify-content: center;
+      bottom: -16px !important;
+    }
+   .swiper-pagination-bullet-active {
+      background: transparent;
+      position: relative;
+    }
+
+    .swiper-pagination-bullet {
+      width: 60px;
+      height: 4px;
+      border: 0;
+      background: #9a9393;
+      margin: 0 4px;
+      opacity: 1;
+      border-radius: 99px;
+      transition: all 0.3s;
+      overflow: hidden;
+    }
+
+    .autoplay-progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 99px;
+      width: 60px;
+      height: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .autoplay-progress svg {
+      --progress: 0;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      stroke-width: 4px; /* Match bullet height */
+      stroke: #f3f4f6;
+      fill: none;
+      stroke-dasharray: 60; /* Match bullet width */
+      stroke-dashoffset: calc(60 * (1 - var(--progress)));
+    }
+
+    .autoplay-progress span {
+      display: none; /* Hide timer text for cleaner look */
+    }
+    /* .swiper-pagination-bullet {
+      width: 60px;
+      height: 2px;
+      background: #9C9C9C;
+      border-radius: 0;
+      opacity: 1;
+      transition: .4s all ease-in-out;
+    }
+    .swiper-pagination-bullet.swiper-pagination-bullet-active {
+      /* width: 60px; */
+      /* height: 2px; */
+      /* background: #fff; */
+    /* } */ */
+  }
+@media(max-width: 768px) {
+    .block-wrapper.Large-hide {
+    display: none;
+    }    
+}
+</style>
+
+<div class="sec-{{ id }} belongsToNav" id="{{ section.settings.id_nav | downcase }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+        <div class="top__block">
+            <h2>{{ section.settings.title }}</h2>
+            <p>{{ section.settings.desc }}</p>
+        </div>
+      <div class="parent__block-container">
+        <div class="swiper">
+          <div class="swiper-wrapper">
+            {% for block in section.blocks %}
+              <div class="swiper-slide">
+                {% if block.type == 'grid' %}
+                  <style>
+                    .img-wrapper--{{ block.id }}::after{
+                      backdrop-filter: brightness({{ block.settings.overlay }}%);
+                      @media(max-width: 768px) {
+                        backdrop-filter: brightness({{ block.settings.overlay_m }}%);
+                      }
+                    }
+                    .--img-wrapper--{{ block.id }} {
+                      backdrop-filter: brightness({{ block.settings.overlay1 }}%);
+                      @media(max-width: 768px) {
+                        backdrop-filter: brightness({{ block.settings.overlay_m1 }}%);
+                      }
+                    }
+                  </style>
+                  <div class="block-container">
+                    <div class="block-wrapper {% unless block.settings.show_mbl %}Large-hide{% endunless %}">
+                      <div class="img-wrapper img-wrapper--{{ block.id }}">
+                        {% if block.settings.mbl_img == blank %}
+                          {% liquid
+                            assign mbl_img = block.settings.mbl_img
+                            assign img = block.settings.img
+                            assign mbl_img = img
+                          %}
+                        {% else %}
+                          {% assign mbl_img = block.settings.mbl_img %}
+                        {% endif %}
+                        <picture>
+                          <source media="(max-width:600px)" srcset="{{ mbl_img | image_url: width: 400 }}">
+                          <source media="(max-width:1600px)" srcset="{{ block.settings.img | image_url: width: 800 }}">
+                          <source media="(max-width:2000px)" srcset="{{ block.settings.img | image_url: width: 1000 }}">
+                          <img
+                            src="{{ block.settings.img | image_url: width: block.settings.img.width }}"
+                            class="grid-img"
+                          >
+                        </picture>
+                      </div>
+                      <div class="text-container">
+                        <div class="text-wrapper">
+                          <div class="title-wrapper">
+                            {% unless block.settings.title == blank %}
+                              <h2 class="title">{{ block.settings.title }}</h2>
+                            {% endunless %}
+                            {% unless block.settings.des == blank %}
+                              <p class="description">{{ block.settings.des }}</p>
+                            {% endunless %}
+                          </div>
+                          {% unless block.settings.btn == blank %}
+                            <div>
+                              <a href="{{ block.settings.btn_url }}" class="button">{{ block.settings.btn }}</a>
+                            </div>
+                          {% endunless %}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="block-wrapper {% unless block.settings.show_mbl1 %}Large-hide{% endunless %}">
+                      <div class="img-wrapper --img-wrapper--{{ block.id }}">
+                        {% if block.settings.mbl_img == blank %}
+                          {% liquid
+                            assign mbl_img = block.settings.mbl_img1
+                            assign img = block.settings.img1
+                            assign mbl_img = img
+                          %}
+                        {% else %}
+                          {% assign mbl_img = block.settings.mbl_img1 %}
+                        {% endif %}
+                        <picture>
+                          <source media="(max-width:600px)" srcset="{{ mbl_img | image_url: width: 400 }}">
+                          <source media="(max-width:1600px)" srcset="{{ block.settings.img1 | image_url: width: 800 }}">
+                          <source
+                            media="(max-width:2000px)"
+                            srcset="{{ block.settings.img1 | image_url: width: 1000 }}"
+                          >
+                          <img
+                            src="{{ block.settings.img1 | image_url: width: block.settings.img1.width }}"
+                            class="grid-img"
+                          >
+                        </picture>
+                      </div>
+                      <div class="text-container">
+                        <div class="text-wrapper">
+                          <div class="title-wrapper">
+                            {% unless block.settings.title1 == blank %}
+                              <h2 class="title">{{ block.settings.title1 }}</h2>
+                            {% endunless %}
+                            {% unless block.settings.des1 == blank %}
+                              <p class="description">{{ block.settings.des1 }}</p>
+                            {% endunless %}
+                          </div>
+                          {% unless block.settings.btn1 == blank %}
+                            <div>
+                              <a href="{{ block.settings.btn_url1 }}" class="button">{{ block.settings.btn1 }}</a>
+                            </div>
+                          {% endunless %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+          <div class="swiper-pagination page-width"></div>
+            <div class="autoplay-progress">
+              <svg viewBox="0 0 60 2">
+                <line x1="0" y1="1" x2="60" y2="1"></line>
+              </svg>
+              <span></span>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const progressLine = document.querySelector(".wrapper-{{ id }} .autoplay-progress svg");
+    const progressContent = document.querySelector(".wrapper-{{ id }} .autoplay-progress span");    
+    const cgsSwiper = new Swiper(".wrapper-{{ id }} .swiper", {
+      slidesPerView: 1,
+      loop: false,
+      autoHeight: true,
+      pagination: {
+        el: ".wrapper-{{ id }} .swiper-pagination",
+        clickable: true,
+      },
+      autoHeight: true,
+      navigation: {
+        nextEl: '.next-{{ section.id }}',
+        prevEl: '.prev-{{ section.id }}'
+      },
+        autoplay: {
+          delay: 5000,
+          disableOnInteraction: false
+        },
+      on: {
+        autoplayTimeLeft(s, time, progress) {
+          progressLine.style.setProperty("--progress", 1 - progress);
+          progressContent.textContent = `${Math.ceil(time / 1000)}s`;
+        }
+      },      
+      effect: "fade"
+    });
+    const autoPlayPagination = () => {
+        const autoplayProgress = document.querySelector(".wrapper-{{ id }} .autoplay-progress");
+        const bulletActive = document.querySelector(".wrapper-{{ id }} .swiper-pagination-bullet-active");
+        bulletActive.appendChild(autoplayProgress);
+        bulletActive.style.position = "relative";
+        autoplayProgress.style.position = "absolute";
+        autoplayProgress.style.top = "0";
+        autoplayProgress.style.left = "0";
+        autoplayProgress.style.width = "100%";
+        autoplayProgress.style.height = "100%";
+    }    
+    // Call autoPlayPagination synchronously with Swiper initialization
+    autoPlayPagination();
+
+    // Call autoPlayPagination when the slide changes
+    cgsSwiper.on('slideChange', function () {
+      autoPlayPagination();
+    });    
+  });
+</script>
+
+{% schema %}
+{
+  "name": "New Grid Swiper",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "id_nav",
+      "label": "Id for Navigtion"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bg",
+      "label": "Show Background Image",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_img",
+      "label": "Background Image"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },    
+    {
+      "type": "text",
+      "id": "desc",
+      "label": "Desctiption"
+    },    
+    {
+      "type": "header",
+      "content": "Desktop Alignment"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "top_left",
+          "label": "Top Left"
+        },
+        {
+          "value": "top_center",
+          "label": "Top Center"
+        },
+        {
+          "value": "top_right",
+          "label": "Top Right"
+        },
+        {
+          "value": "middle_left",
+          "label": "Middle Left"
+        },
+        {
+          "value": "middle_center",
+          "label": "Middle Center"
+        },
+        {
+          "value": "middle_right",
+          "label": "Middle Right"
+        },
+        {
+          "value": "bottom_left",
+          "label": "Bottom Left"
+        },
+        {
+          "value": "bottom_center",
+          "label": "Bottom Center"
+        },
+        {
+          "value": "bottom_right",
+          "label": "Bottom Right"
+        }
+      ],
+      "default": "middle_center"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Alignment"
+    },
+    {
+      "type": "select",
+      "id": "mobile_alignment",
+      "label": "Mobile Alignment",
+      "options": [
+        {
+          "value": "top_left",
+          "label": "Top Left"
+        },
+        {
+          "value": "top_center",
+          "label": "Top Center"
+        },
+        {
+          "value": "top_right",
+          "label": "Top Right"
+        },
+        {
+          "value": "middle_left",
+          "label": "Middle Left"
+        },
+        {
+          "value": "middle_center",
+          "label": "Middle Center"
+        },
+        {
+          "value": "middle_right",
+          "label": "Middle Right"
+        },
+        {
+          "value": "bottom_left",
+          "label": "Bottom Left"
+        },
+        {
+          "value": "bottom_center",
+          "label": "Bottom Center"
+        },
+        {
+          "value": "bottom_right",
+          "label": "Bottom Right"
+        }
+      ],
+      "default": "middle_center"
+    },
+    {
+      "type": "header",
+      "content": "Content Alignment"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "grid",
+      "name": "Grid Item",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Grid 1"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_mbl",
+          "label": "Show on Mobile",
+          "default": true
+        },
+        {
+          "type": "image_picker",
+          "id": "img",
+          "label": "Image"
+        },
+        {
+          "type": "range",
+          "id": "overlay",
+          "label": "Overlay",
+          "max": 100,
+          "min": 0,
+          "unit": "%",
+          "step": 1,
+          "default": 100
+        },
+        {
+          "type": "image_picker",
+          "id": "mbl_img",
+          "label": "Mobile Image",
+          "info": "If there is no image for mobile then desktop image will show in both desktop and mobile"
+        },
+        {
+          "type": "range",
+          "id": "overlay_m",
+          "label": "Overlay Mobile",
+          "max": 100,
+          "min": 0,
+          "step": 1,
+          "unit": "%",
+          "default": 100
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "des",
+          "label": "Description"
+        },
+        {
+          "type": "text",
+          "id": "btn",
+          "label": "Button Label"
+        },
+        {
+          "type": "url",
+          "id": "btn_url",
+          "label": "Button Url"
+        },
+        {
+          "type": "header",
+          "content": "Grid 2"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_mbl1",
+          "label": "Show on Mobile",
+          "default": true
+        },
+        {
+          "type": "image_picker",
+          "id": "img1",
+          "label": "Image"
+        },
+        {
+          "type": "range",
+          "id": "overlay1",
+          "label": "Overlay",
+          "max": 100,
+          "min": 0,
+          "unit": "%",
+          "step": 1,
+          "default": 100
+        },
+        {
+          "type": "image_picker",
+          "id": "mbl_img1",
+          "label": "Mobile Image",
+          "info": "If there is no image for mobile then desktop image will show in both desktop and mobile"
+        },
+        {
+          "type": "range",
+          "id": "overlay_m1",
+          "label": "Overlay Mobile",
+          "max": 100,
+          "min": 0,
+          "step": 1,
+          "unit": "%",
+          "default": 100
+        },
+        {
+          "type": "text",
+          "id": "title1",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "des1",
+          "label": "Description"
+        },
+        {
+          "type": "text",
+          "id": "btn1",
+          "label": "Button Label"
+        },
+        {
+          "type": "url",
+          "id": "btn_url1",
+          "label": "Button Url"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "New Grid Swiper"
+    }
+  ]
+}
+{% endschema %}

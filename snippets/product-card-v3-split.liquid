@@ -1,0 +1,218 @@
+{% comment %} {% render 'product-card-v3-split', product: product, card_variant: color_variant, variant_option: value %} {% endcomment %}
+<div class="--product-card-v3 --august-product-card">
+  <div class="--image-wrapper">
+    {% if card_variant.compare_at_price > card_variant.price %}
+      <div class="--sale-percentage-badge">
+        {{
+          card_variant.compare_at_price
+          | minus: card_variant.price
+          | times: 100
+          | divided_by: card_variant.compare_at_price
+          | round
+          | append: '% OFF'
+        }}
+      </div>
+    {% elsif settings.enable_custom_price == true and product.metafields.custom.exclude_from_custom_pricing != true %}
+      <div class="--sale-percentage-badge">
+        {{ settings.discount_percentage | append: '% OFF WITH CODE' }}
+      </div>
+    {% endif %}
+    <a class="absolute-link" href="{{ card_variant.url | within: collection }}"></a>
+    {% if card_variant.image != blank %}
+      {{
+        card_variant.image
+        | image_url: width: 350
+        | image_tag: class: '--product-first-image', loading: 'lazy', decoding: 'async'
+      }}
+    {% else %}
+      {{
+        product.featured_image
+        | image_url: width: 350
+        | image_tag: class: '--product-first-image', loading: 'lazy', decoding: 'async'
+      }}
+    {% endif %}
+
+    <div class="--custom-badge-container {% if collection.metafields.custom.is_sale_collection == true  %} hidden {% endif %}">
+      {% assign product_title = product.title | downcase %}
+      {% if product_title contains 'cool'
+        or product_title contains 'sport'
+        or product_title contains 'everyday vest'
+        or collection.handle contains 'sport'
+        or collection.handle contains 'cool'
+        or collection.handle contains 'performance'
+      %}
+        <div class="--sport-badge">
+          {% render 'all-icons', name: 'draddy-sport-logo' %}
+        </div>
+      {% endif %}
+      {% if product.metafields.custom.product_badge != blank %}
+        <div class="--custom-badge-wrapper ">
+          {% for badge in product.metafields.custom.product_badge.value limit: 1  %}
+            <span class="--single-badge">{{ badge }}</span>
+            {% unless forloop.last %}
+              <span class="small-hide">|</span>
+            {% endunless %}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    {% comment %}
+      <button class="--quick-add --quick-add-mobile --quick-add-trigger">
+        {% render 'all-icons', name: 'test-bag' %}
+      </button>
+    {% endcomment %}
+  </div>
+
+  <div class="--product-info">
+    <div class="--color-options --quick-add-trigger -hidden">
+      {%- # assign color_option = product.options_with_values | where: 'name', 'Color' | first -%}
+      {% assign color_option = null %}
+      {% for option in product.options_with_values %}
+        {% assign option_name = option.name | downcase %}
+        {% if option_name == 'color' %}
+          {% assign color_option = option %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+
+      {% assign color_handle = card_variant.title | split: ' / ' | first | strip | handle %}
+      {% assign swatch_image = color_handle | append: '.png' | file_img_url: '45x' %}
+      {% comment %} {% assign color_variant = product.variants | where: 'option1', color | first %} {% endcomment %}
+      {% comment %}
+        <span
+          class="--color-swatch --quick-add-trigger"
+          style="{% if images[color_handle] %}background-image: url({{ swatch_image }});{% else %}background-color: {{ color_handle }};{% endif %}"
+          data-url="{{ card_variant.url | within: collection }}"
+        ></span>
+      {% endcomment %}
+      {% comment %} <span
+        class="--color-swatch --quick-add-trigger"
+        style="background-color: {{ color_handle }};"
+        data-url="{{ card_variant.url | within: collection }}"
+      >
+        {% if images[color_handle] -%}
+          <img
+            src="{{ swatch_image }}"
+            class=""
+            style="width: 100%; height: 100%; object-fit: cover; object-position: center;"
+            alt="{{  collection.title }}"
+            loading="lazy"
+            decoding="async"
+          >
+        {% endif %}
+      </span> {% endcomment %}
+      <a
+        href="{{ card_variant.url | within: collection }}"
+        class="--color-swatch --quick-add-trigger"
+        style="background-color: {{ color_handle }};"
+        data-url="{{ card_variant.url | within: collection }}"
+      >
+        {% if images[color_handle] -%}
+          <img
+            src="{{ swatch_image }}"
+            class=""
+            style="width: 100%; height: 100%; object-fit: cover; object-position: center;"
+            alt="{{  collection.title }}"
+            loading="lazy"
+            decoding="async"
+          >
+        {% endif %}
+      </a>
+    </div>
+    {% if card_variant.compare_at_price > card_variant.price or card_variant.product.tags contains 'EMBROIDER' or card_variant.product.tags contains 'embroider' or card_variant.product.tags contains 'Ryder Cup 2025' %}
+      <div class="--sale-badge-on-card">Final Sale</div>
+    {% endif %}
+    <h3 class="--product-title">
+      <a class="absolute-link" href="{{ card_variant.url | within: collection }}"></a>
+      {% if product.title contains '|' %}
+        {% assign custom_title = product.title | split: '|' %}
+        {% for piece in custom_title %}
+          {{ piece }}
+          {% unless forloop.last %}<br>{% endunless %}
+        {% endfor %}
+
+      {% else %}
+        {{ product.title }}
+      {% endif %}
+      {{ card_variant.title | split: ' / ' | first | strip }}
+    </h3>
+    {% comment %} <div class="--card-short-description">{{ product.metafields.custom.description_romance_copy }}</div> {% endcomment %}
+    {% comment %} <p class="--product-attribute">{{ product.metafields.custom.product_attribute }}</p> {% endcomment %}
+    {% if product.metafields.custom.pattern_type.value[0] != blank
+      or product.metafields.custom.unique_element.value[0] != blank
+    %}
+      <div class="--product-attribute-wrapper">
+        <a class="absolute-link" href="{{ card_variant.url | within: collection }}"></a>
+        {% if product.metafields.custom.pattern_type.value[0] != blank %}
+          <p class="--product-attribute">{{ product.metafields.custom.pattern_type.value | join: ' ' }}</p>
+        {% endif %}
+        {% if product.metafields.custom.unique_element.value[0] != blank %}
+          <p class="--product-attribute">{{ product.metafields.custom.unique_element.value | join: ' ' }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+    <p class="--color-count hidden">Available in {{ color_option.values.size }} colors.</p>
+    <div class="product-card__pricing" data-price-container>
+      {% # render 'new-price', product: product %}
+      {%- assign discount_percent = product.metafields.custom.discount_percentage_price.value
+        | default: 0.0
+        | plus: 0.0
+      -%}
+      {% if discount_percent > 0 %}
+        {% render 'new-price-discount-split', product: product, card_variant: card_variant %}
+      {% else %}
+        <div
+          class="price-wrapper"
+          data-product-id="{{ card_variant.id }}"
+          data-variant-id="{{ card_variant.id }}"
+        >
+          <span class="price-regular">
+            {% if card_variant.compare_at_price > card_variant.price %}
+              {% comment %}
+                <span class="price-compare-at">{{ card_variant.price | money }}</span>
+                <span class="price-sale">{{ card_variant.compare_at_price | money }}</span>
+              {% endcomment %}
+              <span class="price-standard">{{ card_variant.price | money }}</span>
+              <span class="price-sale">{{ card_variant.compare_at_price | money }}</span>
+            {% elsif settings.enable_custom_price == true
+              and product.metafields.custom.exclude_from_custom_pricing != true
+            %}
+              {% assign discounted_percentage = 100 | minus: settings.discount_percentage %}
+              {% assign discounted_price = product.selected_or_first_available_variant.price
+                | times: discounted_percentage
+                | divided_by: 100.0
+                | money
+              %}
+
+              <span class="price-standard">{{ discounted_price }}</span>
+              <span class="price-sale">
+                {{ product.selected_or_first_available_variant.price | money }}
+              </span>
+            {% else %}
+              <span class="price-standard">{{ card_variant.price | money }}</span>
+            {% endif %}
+            {% if card_variant.price < card_variant.compare_at_price %}
+              <div class="saved__money">
+                {% assign cap = card_variant.compare_at_price %}
+                {% assign saved_money = cap | minus: card_variant.price %}
+                {% assign saved = saved_money | times: 100 %}
+                {% assign saved_percentage = saved | divided_by: cap %}
+                Save {{ saved_percentage | append: '%' }}
+              </div>
+            {% elsif settings.enable_custom_price == true
+              and product.metafields.custom.exclude_from_custom_pricing != true
+            %}
+              <div class="saved__money">Save {{ settings.discount_percentage | append: '%' }} With Code</div>
+            {% endif %}
+          </span>
+        </div>
+      {% endif %}
+    </div>
+    {% if collection.metafields.custom.is_sale_collection == true %}
+      <div class="--sale-collection-message hidden" style="color: #a6182c; font-size: 14px; line-height: 1;">
+        Extra 35% off with code CYBER35.
+      </div>
+    {% endif %}
+  </div>
+</div>

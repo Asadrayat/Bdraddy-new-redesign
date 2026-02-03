@@ -1,0 +1,343 @@
+{% if section.settings.product_list != blank %}
+  {% liquid
+    assign id = section.id
+  %}
+
+  <style>
+      .sec-{{ id }} {
+        box-sizing: border-box;
+        margin-top: {{section.settings.margin_top | append: 'px'}};
+        margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+        padding-top: {{section.settings.padding_top | append: 'px'}};
+        padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+        @media(min-width: 768px) {
+          .--product-card-v3.--august-product-card .--color-options {
+              {% comment %} justify-content: flex-end; {% endcomment %}
+          }
+          .--product-card-v3.--august-product-card .--product-info {
+              {% comment %} align-items: flex-end; {% endcomment %}
+          }
+          .--product-card-v3.--august-product-card h3.--product-title {
+            {% comment %} text-align: left; {% endcomment %}
+          }
+        }
+        {% if product.tags contains 'EMBROIDER' or product.tags contains 'embroider' or product.tags contains 'Ryder Cup 2025' %}
+          display: none;
+        {% endif %}
+      }
+
+      .wrapper-{{ id }}{
+        display: grid;
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        {% comment %} gap: var(--Spacing-Container-md, 24px); {% endcomment %}
+        gap: 0;
+        @media(max-width: 768px){
+          grid-template-columns: minmax(0,1fr);
+          gap: 32px;
+        }
+      }
+
+      .sec-{{ id }} .img-wrapper--{{ section.id }} img {
+        width: 100%;
+        max-width: 70%;
+        height: 100%;
+        object-fit: cover;
+        @media(max-width: 768px){
+          max-width: 100%;
+        }
+      }
+
+      .sec-{{ id }} .left--wrapper {
+        position: relative;
+        max-height: max-content;
+      }
+      .sec-{{ id }} .title-wrapper--{{ section.id }} h2{
+        margin: 0 0 32px;
+      }
+
+      .sec-{{ id }} .right--wrapper-dektop {
+        /* max-height: 80vh;  */
+        /* max-height: 80vh; */
+        overflow-y: auto;
+        direction: rtl;
+        padding-right: 0;
+        scroll-behavior: smooth;
+        @media(max-width: 768px){
+          display: none;
+          direction: unset;
+          padding-left: 0px;
+        }
+      }
+      .stl_cp__container {
+        display: grid;
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        gap: var(--Spacing-Container-sm, 16px);
+        padding-left: 50px;
+        direction: ltr;
+        {% if section.settings.img_position == 'right' %}
+          grid-column: 1;
+          grid-row: 1;
+        {% endif %}
+        {% comment %} direction: rtl; {% endcomment %}
+      }
+
+    .sec-{{ id }} .right--wrapper-dektop::-webkit-scrollbar-track
+    {
+    	-webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.3);
+    	background: rgba(75, 85, 99, 0.30);
+    }
+
+    .sec-{{ id }} .right--wrapper-dektop::-webkit-scrollbar
+    {
+    	width: 2px;
+    	background: rgba(75, 85, 99, 0.30);
+    }
+
+    .sec-{{ id }} .right--wrapper-dektop::-webkit-scrollbar-thumb
+    {
+    	background-color: #000000;
+    	border: none;
+      overflow: hidden;
+    }
+      .sec-{{ id }} .right--wrapper-mbl {
+        display: none;
+        @media(max-width: 768px){
+          display: block;
+        }
+      }
+
+      /* .sec-{{ id }}.scroll-enabled {
+        overflow: auto;
+      }
+
+      .sec-{{ id }}.scroll-disabled {
+        overflow: hidden;
+      } */
+  </style>
+
+  <div class="sec-{{ id }}" id="sec-{{ id }}">
+    <div
+      class="{% unless section.settings.full_width %}page-width{% endunless %} belongsToNav"
+      id="{{ section.settings.sec_id  | downcase }}"
+    >
+      <div class="wrapper-{{ id }}">
+        <!-- Left Image -->
+        <div class="left--wrapper">
+          <div class="title-wrapper--{{ section.id }}">
+            <h2>{{ section.settings.title }}</h2>
+          </div>
+          <div class="img-wrapper--{{ section.id }}">
+            {{ section.settings.image | image_url: width: section.settings.image.width | image_tag }}
+          </div>
+        </div>
+
+        <!-- Right Product List Desktop -->
+        <div class="right--wrapper right--wrapper-dektop">
+          <div class="stl_cp__container">
+          {% for product in section.settings.product_list limit: section.settings.p_to_show %}
+            <div class="product-card">
+              {% # render 'product-card-new-v1', product: product, loading: true %}
+              {% render 'product-card-v3', product: product, loading: true %}
+            </div>
+          {% endfor %}
+          </div>
+        </div>
+
+        <!-- Right Product List Mobile -->
+        <div class="right--wrapper right--wrapper-mbl">
+          <div class="swiper swiper-{{ section.id }}">
+            <div class="swiper-wrapper">
+              {% for product in section.settings.product_list limit: section.settings.p_to_show %}
+                <div class="swiper-slide">
+                  {% # render 'product-card-new-v1', product: product, loading: true %}
+                  {% render 'product-card-v3', product: product, loading: true %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const img = document.querySelector('.sec-{{ id }} .left--wrapper');
+      const rightWrapper = document.querySelector('.sec-{{ id }} .right--wrapper-dektop');
+      function adjustRightWrapperHeight() {
+        const imageHeight = img.clientHeight;
+        rightWrapper.style.maxHeight = `${imageHeight}px`;
+      }
+      adjustRightWrapperHeight();
+      window.addEventListener('resize', adjustRightWrapperHeight);
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      new Swiper('.swiper-{{ section.id }}', {
+        slidesPerView: 1.2,
+        spaceBetween: 12,
+        scrollbar: {
+          el: '.swiper-scrollbar-{{ section.id }}.swiper-scrollbar',
+          // hide: true,
+          draggable: true,
+        },
+      });
+    });
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Shop The Look",
+  "settings": [
+    {
+      "type": "text",
+      "id": "sec_id",
+      "label": "Section ID"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "product_list",
+      "id": "product_list",
+      "label": "Products",
+      "limit": 12
+    },
+    {
+      "type": "select",
+      "id": "img_position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left",
+      "label": "Image Position"
+    },
+    {
+      "type": "range",
+      "id": "p_to_show",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "label": "Product To Show",
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Shop The Look"
+    }
+  ]
+}
+{% endschema %}

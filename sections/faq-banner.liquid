@@ -1,0 +1,317 @@
+{{ 'faq-banner.css' | asset_url | stylesheet_tag }}
+{{ 'faq-list.css' | asset_url | stylesheet_tag }}
+
+{% assign id = section.id %}
+<style>
+    #shopify-section-{{ id }} {
+     padding-top: {{ section.settings.padding_top }}px;
+     padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  @media screen and (max-width: 890px){
+     #shopify-section-{{ id }} {
+       padding-top: {{ section.settings.padding_top-m }}px;
+       padding-bottom: {{ section.settings.padding_bottom-m }}px;
+    }
+  }
+  .matched-faqs.faq-with-tab{
+    
+    .faq_title{
+      color: var(--Content-Base-main, #1F2937);
+      font-family: var(--font-family-Title, "Aktiv Grotesk");
+      font-size: var(--Font-Size-Heading-H3, 20px);
+      font-style: normal;
+      font-weight: 400;
+      line-height: var(--Line-Height-Heading-H3, 20px); /* 100% */
+      letter-spacing: -0.4px;
+      margin: 16px 0;
+    }
+    .heading svg{
+      display: none;
+    }
+    .faq{
+      display: block!important;
+      max-width: 1200px;
+      margin: 0 auto;
+      border-bottom: 1px solid #00000025;
+      @media screen and (max-width: 1600px){
+        max-width: 1000px;
+      }
+      @media screen and (max-width: 768px){
+        max-width: 90%;
+      }
+    }
+     .faq_content {
+        height: unset;
+    }
+  }
+</style>
+<section class="{% unless section.settings.full_width %}container{% endunless %} --sec--{{ section.id }}">
+  <div class="faq_banner-container color-{{ section.settings.color_scheme }}">
+    <div class="heading-{{ id }} heading page-width">
+      <h2>{{ section.settings.title }}</h2>
+      <p class="rte">{{ section.settings.desc }}</p>
+      <div class="row  button__actions">
+        <input type="text" id="searchFaq" placeholder="Search">
+      </div>
+    </div>
+    {% if section.settings.image %}
+      <span class="image-wrap">
+        {{
+          section.settings.image
+          | image_url: width: section.settings.image.width
+          | image_tag: class: 'small-hide medium-hide'
+        }}
+      </span>
+    {% else %}
+      <span class="image-wrap">
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg', class: 'small-hide medium-hide' }}
+      </span>
+    {% endif %}
+    {% if section.settings.image_m %}
+      <span class="image-wrap">
+        {{
+          section.settings.image_m
+          | image_url: width: section.settings.image_m.width
+          | image_tag: class: 'large-up-hide'
+        }}
+      </span>
+    {% else %}
+      <span class="image-wrap">
+        {{
+          section.settings.image
+          | image_url: width: section.settings.image.width
+          | image_tag: class: 'large-up-hide'
+        }}
+      </span>
+    {% endif %}
+  </div>
+  <div class="matched-faqs page-width">
+    <h5 class="matched-faqs--title">Search Result:</h5>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById("searchFaq");
+  if (!searchInput) {
+    console.error("Search input with ID 'searchFaq' not found.");
+    return;
+  }
+
+  searchInput.addEventListener("input", function () {
+    const searchValue = this.value.toLowerCase().trim();
+    const faqs = document.querySelectorAll(".accordion-wrapper--custom .accordion--custom");
+    const matchedContainer = document.querySelector(".matched-faqs");
+
+    if (!matchedContainer) {
+      console.error("Matched FAQs container with class 'matched-faqs' not found.");
+      return;
+    }
+
+    if (!faqs.length) {
+      console.warn("No FAQs found with selector '.accordion-wrapper--custom .accordion--custom'.");
+    }
+
+    matchedContainer.innerHTML = "";
+
+    if (searchValue === "") {
+      matchedContainer.style.display = 'none';
+      // console.log("Search query cleared, hiding matched FAQs.");
+      return;
+    }
+
+    matchedContainer.style.display = 'block';
+
+    let matchCount = 0;
+
+    faqs.forEach(faq => {
+      const textElements = faq.querySelectorAll(".faq-question, .acr-content p, p, li, h1, h2, h3, h4, a, span, strong");
+      const text = Array.from(textElements)
+        .map(el => el.innerText.toLowerCase())
+        .join(" ");
+
+      if (text.includes(searchValue)) {
+        const faqClone = faq.cloneNode(true);
+        faqClone.style.display = ''; // Reset display to ensure visibility
+        matchedContainer.appendChild(faqClone);
+
+        const content = faqClone.querySelector('.acr-content');
+        if (content) {
+          if (matchCount === 0) {
+            faqClone.classList.add('active');
+            content.style.height = `${content.scrollHeight}px`;
+          } else {
+            faqClone.classList.remove('active');
+            content.style.height = '0';
+          }
+        } else {
+          console.warn("No .acr-content found in cloned FAQ:", faqClone);
+        }
+        matchCount++;
+        // console.log(`Cloned FAQ with question: "${faq.querySelector('.faq-question')?.innerText}"`);
+      }
+    });
+
+    if (matchCount > 0) {
+      // Add "Search Results" title with match count
+      const title = document.createElement('h3');
+      title.className = 'faq_title';
+      title.textContent = `Search Results (${matchCount.toString().padStart(2, '0')})`;
+      matchedContainer.insertBefore(title, matchedContainer.firstChild);
+    } else {
+      // Add "No FAQs found" message
+      const noResults = document.createElement('p');
+      noResults.className = 'no-faqs-message';
+      noResults.textContent = 'No FAQs found';
+      matchedContainer.appendChild(noResults);
+    }
+
+    // console.log(`Found ${matchCount} FAQs matching search query: "${searchValue}"`);
+
+    // Re-initialize accordion for matched FAQs
+    initializeAccordion(matchedContainer);
+  });
+});
+
+// Function to initialize accordion functionality for matched FAQs
+function initializeAccordion(container) {
+  const accordions = container.querySelectorAll('.accordion--custom');
+  if (!accordions.length) {
+    console.warn("No accordions found in matched FAQs container for initialization.");
+    return;
+  }
+
+  accordions.forEach(faq => {
+    const title = faq.querySelector('.acr-title');
+    const content = faq.querySelector('.acr-content');
+
+    if (!title || !content) {
+      console.warn("Missing .acr-title or .acr-content in accordion:", faq);
+      return;
+    }
+
+    title.addEventListener('click', function () {
+      const isOpen = faq.classList.contains('active');
+
+      accordions.forEach(acc => {
+        acc.classList.remove('active');
+        const accContent = acc.querySelector('.acr-content');
+        if (accContent) {
+          accContent.style.height = '0';
+        }
+      });
+
+      if (!isOpen) {
+        faq.classList.add('active');
+        content.style.height = `${content.scrollHeight}px`;
+      }
+    });
+  });
+}
+</script>
+
+{% schema %}
+{
+  "name": "Faq Banner",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color Scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_m",
+      "label": "Image Mobile"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Take Control of Your Health Today"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "desc",
+      "label": "Description"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "options": [
+        {
+          "value": "primary",
+          "label": "Primary"
+        },
+        {
+          "value": "secondary",
+          "label": "Secondary"
+        }
+      ],
+      "default": "primary",
+      "label": "Primary"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Spacing (Mobile)"
+    },
+    {
+      "type": "range",
+      "id": "padding_top-m",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Top  (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom-m",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Bottom  (Mobile)",
+      "default": 0
+    }
+  ],
+  "presets":[
+    {
+      "name": "Faq Banner"
+    }
+  ]
+}
+{% endschema %}

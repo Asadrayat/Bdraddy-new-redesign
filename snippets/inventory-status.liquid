@@ -1,0 +1,30 @@
+<div class="--inventory-status-wrapper">
+  {% assign quantity = product.selected_or_first_available_variant.inventory_quantity %}
+  <div
+    class="
+      inventory-status {% if block.settings.enable_mb %}mb_{% endif %}
+      {% if quantity < 1 or product.selected_or_first_available_variant.available == false %}status-circle--red
+      {% elsif quantity > 0 and quantity < 10 %} status-circle--orange
+        {% else %} status-circle--green
+        {% endif %}
+    "
+  >
+    {% comment %} <svg xmlns="http://www.w3.org/2000/svg" width="6" height="13" viewBox="0 0 6 13" fill="none">
+      <path d="M6 13L5.42373 12.7559L0.0015316 6.50177L0 6.5L0.0015316 6.49823L5.42373 0.244148L6 0L2.94303 6.49823L2.94241 6.49971V6.50029L2.94303 6.50177L6 13Z" fill="currentColor"/>
+    </svg> {% endcomment %}
+    {% if quantity < 1 or product.selected_or_first_available_variant.available == false %}
+      <span class="status-circle "></span><span class="status-text">Out of Stock</span>
+    {% elsif quantity > 0 and quantity < 10 %}
+      {% comment %}
+        <span class="status-number">{{ quantity }}</span><span class="status-circle"></span
+        ><span class="status-text">Low Inventory</span>
+      {% endcomment %}
+      <span class="status-circle "></span
+      ><span class="status-text"
+        ><span class="status-number">{{ quantity }}</span> left
+      </span>
+    {% else %}
+      <span class="status-circle"></span><span class="status-text">In Stock</span>
+    {% endif %}
+  </div>
+</div>

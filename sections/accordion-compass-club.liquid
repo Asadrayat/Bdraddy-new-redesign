@@ -1,0 +1,438 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  #shopify-section-{{id}} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+  }
+  .wrapper-{{ id }} {
+
+  }
+  .heading-{{ id }} h2{
+    color: var(--Content-Base-main, #1F2937);
+    text-align: center;
+    font-family: var(--font-family-Title, "Sainte Colombe");
+    font-size: var(--Font-Size-Heading-H2, 48px);
+    font-style: normal;
+    font-weight: 400;
+    line-height: var(--Line-Height-Heading-H2, 56px); /* 116.667% */
+    letter-spacing: -0.96px;
+    margin: 0 0 var(--Spacing-Container-sm, 16px);
+  }
+  .heading-{{ id }} p{
+    color: var(--Content-Base-main, #1F2937);
+    text-align: center;
+    font-family: var(--font-family-Body, "Archivo Expanded");
+    font-size: var(--Font-Size-Paragraph-Small, 14px);
+    font-style: normal;
+    font-weight: 250;
+    line-height: var(--Line-Height-Paragraph-Small, 20px); /* 142.857% */
+    margin: 0 0  var(--Spacing-Container-lg, 40px);
+  }
+  .wrapper-{{ id }} > div {
+    max-width: 100%;
+    margin: auto;
+    padding-inline: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    @media(max-width: 768px) {
+      max-width: 100%;
+      margin: auto;
+      padding: 0 15px;
+    }
+  }
+  .sec-{{ id }} {
+    .faq-container-{{ id }} {
+      display: flex;
+      gap: 0;
+      justify-content: center;
+      position: relative;
+      align-items: stretch;
+      @media(max-width: 768px) {
+        flex-wrap: wrap;
+      }
+      .pd__feature-image img{
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+      }
+    }
+    .pd__feature-image {
+      flex: 0 0 50%;
+      position: sticky;
+      top: 48px;
+      @media(max-width: 768px) {
+        display: none;
+      }
+    }
+    .faq__inner {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--Spacing-Container-sm, 16px);
+        align-self: stretch;
+        max-width: 70%;
+        margin-inline: auto;
+      @media(max-width: 768px){
+        max-width: unset;
+      }
+    }
+    .faq__wrapp {
+        border: 1px solid #EBEBE0;
+        background: #F3F3EC;
+        display: flex;
+        padding: 0 var(--Spacing-Container-md, 24px);
+        flex-direction: column;
+        align-items: flex-start;
+        /* gap: var(--Spacing-Container-sm, 16px); */
+        align-self: stretch;
+    }
+    .faq__wrapp:first-child {
+      border-top: 0;
+    }
+    .faq__wrapp:last-child {
+      border-bottom: 1px solid #efefef;
+    }
+    [data-faq-content] {
+       overflow: hidden;
+       opacity: 0;
+       max-height: 0;
+       transition: all 0.4s ease-in-out;
+    }
+    [data-faq-content] .richtext p:nth-child(1){
+      margin-top: 0;
+    }
+    [data-faq-content] .richtext p:first-of-type {
+      margin-top: 0;
+    }
+    [data-faq-content].active {
+      opacity: 1;
+    }
+    .intro {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      h3 {
+        color: var(--Content-Base-main, #1F2937);
+        font-family: var(--font-family-Title, "Sainte Colombe");
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: var(--Line-Height-Heading-H5, 24px); /* 150% */
+        letter-spacing: -0.32px;
+        margin: 0;
+        padding: 20px 0;
+        @media(max-width: 768px) {
+          padding: 16px 0;
+        }
+      }
+      .richtext p{ 
+        margin: 0;
+        color: var(--Content-Base-base, #4B5563);
+        font-family: var(--font-family-Body, "Archivo Expanded");
+        font-size: var(--Font-Size-Paragraph-Small, 14px);
+        font-style: normal;
+        font-weight: 250;
+        line-height: var(--Line-Height-Paragraph-Small, 20px); /* 142.857% */        
+      }
+      .icons {
+        font-size: var(--Font-Size-Heading-H3);
+        line-height: var(--Line-Height-Heading-H3);
+        font-family: var(--font-family-Title);
+        padding: 20px;
+        position: relative;
+      }
+      .arrow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform: translate(-50%, -50%);
+        transition: transform 0.4s ease-in-out;
+      }
+    }
+    .intro.active .arrow {
+      transform: translate(-50%, -50%) rotate(180deg);
+    }
+  }
+  @media(max-width: 600px) {
+    #shopify-section-{{id}} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+    .faq-container-{{ id }}.page-width {
+      padding: 0;
+    }
+  }
+</style>
+
+<div class="sec-{{ id }}">
+  <div class="faq-container-{{ id }} {% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      <div>
+        {% if section.settings.title != blank %}
+          <div class="heading-{{ id }}">
+            <h2>{{ section.settings.title }}</h2>
+            <p>{{ section.settings.subtitle }}</p>
+          </div>
+        {% endif %}
+        <div class="faq__inner">
+          {% for block in section.blocks %}
+            <div class="faq__wrapp">
+              <div class="intro" data-faq-title>
+                {% unless block.settings.title == blank %}
+                  <h3>{{ block.settings.title }}</h3>
+                  <div class="icons">
+                    <span class="arrow">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="10" viewBox="0 0 20 10" fill="none">
+                        <path d="M15.5532 2.67358L15.3446 3.13812L9.99921 7.50898L9.99769 7.51022L9.99618 7.50898L4.65081 3.13812L4.44214 2.67358L9.99618 5.13782L9.99745 5.13832H9.99794L9.99921 5.13782L15.5532 2.67358Z" fill="black"/>
+                      </svg>
+                    </span>
+                  </div>
+                {% endunless %}
+              </div>
+              <div class="content" data-faq-content>
+                {% if block.settings.rte != blank %}
+                  <div class="richtext">{{ block.settings.rte }}</div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% if section.settings.image %}
+      <div class="pd__feature-image">
+        {{
+          section.settings.image
+          | image_url: width: section.settings.image.width
+          | image_tag
+        }}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+const initAccordion = () => {
+  const faqIntros = document.querySelectorAll("[data-faq-title]");
+  const faqContents = document.querySelectorAll("[data-faq-content]");
+
+  const toggleAccordion = (faqIntro, faqContent) => {
+    const isActive = faqIntro.classList.contains("active");
+
+    // Close all accordions
+    faqIntros.forEach((fi) => {
+      fi.classList.remove("active");
+      fi.setAttribute("aria-expanded", "false");
+    });
+    faqContents.forEach((fc) => {
+      fc.classList.remove("active");
+      fc.style.maxHeight = null;
+      fc.setAttribute("aria-hidden", "true");
+    });
+
+    // Open the clicked accordion if it wasn't active
+    if (!isActive) {
+      faqIntro.classList.add("active");
+      faqContent.classList.add("active");
+      faqContent.style.maxHeight = `${faqContent.scrollHeight}px`;
+      faqContent.setAttribute("aria-hidden", "false");
+      faqIntro.setAttribute("aria-expanded", "true");
+    }
+  };
+
+  faqIntros.forEach((faqIntro, index) => {
+    const faqContent = faqIntro.parentElement.querySelector("[data-faq-content]");
+    
+    // Set initial ARIA attributes
+    faqIntro.setAttribute("aria-expanded", index === 0 ? "true" : "false");
+    faqIntro.setAttribute("aria-controls", `faq-content-${index}`);
+    faqContent.setAttribute("aria-hidden", index === 0 ? "false" : "true");
+    faqContent.id = `faq-content-${index}`;
+
+    // Click event
+    faqIntro.addEventListener("click", () => toggleAccordion(faqIntro, faqContent));
+
+    // Keyboard accessibility
+    faqIntro.setAttribute("tabindex", "0");
+    faqIntro.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggleAccordion(faqIntro, faqContent);
+      }
+    });
+  });
+
+  // Open the first accordion by default
+  if (faqIntros.length > 0) {
+    const firstIntro = faqIntros[0];
+    const firstContent = firstIntro.parentElement.querySelector("[data-faq-content]");
+    firstIntro.classList.add("active");
+    firstIntro.setAttribute("aria-expanded", "true");
+    firstContent.classList.add("active");
+    firstContent.setAttribute("aria-hidden", "false");
+    firstContent.style.maxHeight = `${firstContent.scrollHeight}px`;
+  }
+};
+
+// Initialize when DOM is loaded
+document.addEventListener("DOMContentLoaded", initAccordion);
+</script>
+{% schema %}
+{
+  "name": "Accordion Compass Club",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Title",
+      "default": "Unveiling the Ultimate Fabric Collection: Where Style Meets Comfort"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Sibtitle",
+      "default": "Your Questions, Our Answers"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "accordion",
+      "name": "Accordion",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Description"
+        },
+        {
+          "type": "richtext",
+          "id": "rte",
+          "label": "Richtext"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Accordion Compass Club"
+    }
+  ]
+}
+{% endschema %}

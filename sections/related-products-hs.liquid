@@ -1,0 +1,490 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{% liquid
+  assign id = section.id
+%}
+<style>
+      .section-container--{{ section.id }} {
+        margin-top: {{ section.settings.margin_top | append: 'px' }};
+        margin-bottom: {{ section.settings.margin_bottom | append: 'px' }};
+        padding-top: {{ section.settings.padding_top | append: 'px' }};
+        padding-bottom: {{ section.settings.padding_bottom | append: 'px' }};
+        background-color: {{ section.settings.bg-color }};
+        overflow: hidden;
+
+        .product-card__container {
+          padding-bottom: 10px;
+        }
+
+        .--top-block {
+          display: grid;
+          grid-template-columns: repeat(1, minmax(0, 1fr));
+          gap: var(--Spacing-Container-xxs);
+          align-items: end;
+          margin-bottom: var(--Spacing-Container-xxl);
+
+          {% if section.settings.title == blank and section.settings.subtitle == blank %}
+            display: none;
+          {% endif %}
+
+          @media (max-width: 600px) {
+            grid-template-columns: minmax(0, 1fr);
+            gap: var(--Spacing-Container-xs);
+          }
+        }
+
+        h2.--section-title {
+          color: #000;
+          /* text-align: center; */
+          font-family: var(--font-family-Title, "Sainte Colombe");
+          font-size: var(--Font-Size-Heading-H3, 32px);
+          font-style: normal;
+          font-weight: 400;
+          line-height: var(--Line-Height-Heading-H3, 40px);
+          letter-spacing: -0.64px;
+          margin-block: 0;
+          /* color: #9CA3AF; */
+          font-family: var(--font-family-Heading, Gotham);
+          font-size: var(--Font-Size-Heading-H2, 40px);
+          font-style: normal;
+          font-weight: 700;
+          line-height: var(--Line-Height-Heading-H2, 40px);
+          letter-spacing: 0;
+          text-transform: uppercase;
+          position: relative;
+          padding: 0 12px;
+          border: 0;
+          margin: 0;
+        }
+
+        .--section-subtitle {
+          color: var(--Content-Base-main, #1F2937);
+          font-size: var(--Font-Size-Paragraph-Medium);
+          line-height: var(--Line-Height-Paragraph-Medium);
+        }
+
+
+
+
+
+        .collection-wrapper {
+          position: relative;
+        }
+
+
+
+      }
+
+      @media screen and (max-width: 768px) {
+        .section-container--{{ section.id }} {
+          margin-top: {{ section.settings.margin_top_m | append: 'px' }};
+          margin-bottom: {{ section.settings.margin_bottom_m | append: 'px' }};
+          padding-top: {{ section.settings.padding_top_m | append: 'px' }};
+          padding-bottom: {{ section.settings.padding_bottom_m | append: 'px' }};
+        }
+
+      }
+
+
+
+
+      .collection-wrapper-{{ section.id }}{
+        .swiper-wrapper{
+          -webkit-transition-timing-function:linear!important;
+          transition-timing-function:linear!important;
+          position: relative;
+        }
+      }
+      .section-container--{{ section.id }}.paused .swiper-wrapper {
+        /* transition-duration: 0s !important;
+        transition-delay: 0 !important; */
+      }
+      .section-container--{{ section.id }} .play-pause-button {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+      }
+      .section-container--{{ section.id }} .play-pause-button svg {
+        width: 24px;
+        height: 24px;
+      }
+      .section-container--{{ section.id }} .play-icon, .section-container--{{ section.id }} .pause-icon {
+        transition: opacity 0.3s ease;
+      }
+
+      @media screen and (max-width: 768px){
+        .section-container--{{ section.id }} .play-pause-button{
+          order: 2;
+        }
+        .--text-content{
+          order: 1;
+        }
+        .--slider-nav-wrapper{
+          width: 100%;
+          justify-content: space-between;
+        }
+      }
+
+    /* Swiper styles starts */
+  .section-container--{{ section.id }} {
+    .swiper-scrollbar-{{ section.id }} {
+      position: relative !important;
+      left: 0 !important;
+      bottom: 0 !important;
+      margin:  0;
+      height: 1px !important;
+      opacity: 1 !important;
+      width: 100% !important;
+      cursor: pointer;
+      padding-block: 8px;
+      background: transparent;
+      padding-block: var(--Spacing-Container-xxl);
+      @media(width < 768px) {
+
+      }
+      .swiper-scrollbar-drag {
+        background: #1F2937;
+        display: block !important;
+        height: 1px;
+      }
+    }
+    .swiper-scrollbar-{{ section.id }}::before {
+      position: absolute;
+      content: "";
+      background: rgb(31 41 55 / 10%);
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 1px;
+    }
+    .--nav-button-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+     .swiper-button-disabled {
+        opacity: .5;
+    }
+     .--nav-icon.swiper-button-lock {
+        display: none;
+    }
+     .--nav-icon {
+        display: flex;
+        min-width: 36px;
+        width: 36px;
+        height: 36px;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        {% comment %} border: 1px solid var(--Border-Base-dense, #4B5563); {% endcomment %}
+        background: #FFF;
+        position: absolute;
+        top: 40%;
+        z-index: 1;
+        cursor: pointer;
+        transition: 0.5s ease;
+          svg path{
+          transition: 0.5s ease;
+          }
+          @media(max-width: 768px){
+          /* display: none; */
+          position: relative;
+          border: 1px solid var(--Border-Base-dense, #4B5563);
+        }
+    }
+
+     @media(min-width: 769px) {
+      .--nav-icon:hover{
+          background: #1F2937;
+          svg path{
+            fill: #fff;
+          }
+        }
+      }
+
+    .swiper-prev-{{section.id }}.--desktop-nav {
+        left: -38px;
+        @media(max-width: 768px){
+          display: none;
+        }
+    }
+    .swiper-next-{{section.id }}.--desktop-nav {
+        right: -38px;
+         @media(max-width: 768px){
+          display: none;
+        }
+
+    }
+    .swiper-prev-{{section.id }}.--mobile-nav ,
+    .swiper-next-{{section.id }}.--mobile-nav {
+      @media(min-width: 768px){
+          display: none;
+      }
+    }
+  }
+    /* Swiper styles ends */
+</style>
+
+<recommendation-product
+  data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}"
+  data-product-id="{{ product.id }}"
+  data-section-id="{{ section.id }}"
+  data-wrapper-el="recommendation-container"
+>
+  <section class="section-container--{{ section.id }}">
+    <div class="section-wrapper--{{ section.id }} page-width recommendation-container">
+      <div class="--top-block">
+        <div class="--text-content">
+          <h2 class="--section-title">{{ section.settings.title }}</h2>
+          <div class="--section-subtitle">{{ section.settings.subtitle }}</div>
+        </div>
+      </div>
+      <div class="collection-wrapper collection-wrapper-{{ section.id }}" id="featured-collection-hs">
+        <div class="swiper swiper-{{ section.id }}">
+          <div class="swiper-wrapper">
+            {%- for recommendation in recommendations.products -%}
+              {% unless recommendation == product %}
+                <div class="swiper-slide-{{ section.id }} swiper-slide">
+                  {% render 'product-card-v3', product: recommendation %}
+                </div>
+              {% endunless %}
+            {% endfor %}
+          </div>
+          <div class="--nav-button-wrapper">
+            <div class="swiper-scrollbar-{{ section.id }} swiper-scrollbar"></div>
+            <div class="swiper-prev-{{ section.id }} --nav-icon --mobile-nav">
+              {%- render 'header-icons', name: 'left' -%}
+            </div>
+            <div class="swiper-next-{{ section.id }} --nav-icon --mobile-nav">
+              {%- render 'header-icons', name: 'right' -%}
+            </div>
+          </div>
+        </div>
+
+        {% comment %} starts Desktop Navigation Starts {% endcomment %}
+        <div class="swiper-prev-{{ section.id }} --nav-icon --desktop-nav">
+          {%- render 'header-icons', name: 'left' -%}
+        </div>
+        <div class="swiper-next-{{ section.id }} --nav-icon --desktop-nav">
+          {%- render 'header-icons', name: 'right' -%}
+        </div>
+        {% comment %} starts Desktop Navigation Ends {% endcomment %}
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      class RecommendationProduct extends HTMLElement {
+        constructor() {
+          super();
+          this.wrapperEL = `.${this.dataset.wrapperEl}`;
+          this.section = document.querySelector(`#shopify-section-${this.dataset.sectionId}`);
+          this.swiperInstance = null;
+          this.renderSection();
+        }
+
+        renderSection() {
+          let prevThis = this;
+          fetch(this.dataset.url)
+            .then((response) => response.text())
+            .then((data) => {
+              let html = new DOMParser().parseFromString(data, 'text/html');
+              if (this.section) {
+                this.section.querySelector(this.wrapperEL).innerHTML = html.querySelector(this.wrapperEL).innerHTML;
+              }
+            })
+            .catch((error) => console.error('Error fetching recommendations:', error))
+            .finally(() => {
+              prevThis.initSwiper();
+              if (typeof window.initializeQuickViewButtons === 'function') {
+                window.initializeQuickViewButtons();
+              }
+
+              {% comment %} window.cardProductFunc(); {% endcomment %}
+
+              setEqualHeightv2('.section-container--{{ section.id }}', '.--product-info');
+              yotpoWidgetsContainer.initWidgets();
+              
+            });
+        }
+
+        initSwiper() {
+          const isMobile = window.innerWidth <= 768;
+          const navClass = isMobile ? '--mobile-nav' : '--desktop-nav';
+          this.swiperInstance = new Swiper(`.swiper-${this.dataset.sectionId}`, {
+            slidesPerView: 1.2,
+            spaceBetween: 16,
+            breakpoints: {
+              600: {
+                slidesPerView: 2.5,
+                spaceBetween: 24,
+              },
+              1200: {
+                slidesPerView: 3.2,
+                spaceBetween: 24,
+              },
+            },
+            scrollbar: {
+              el: '.swiper-scrollbar-{{ section.id }}.swiper-scrollbar',
+              draggable: true,
+            },
+            navigation: {
+              nextEl: ` .swiper-next-{{ section.id }}.${navClass}`,
+              prevEl: ` .swiper-prev-{{ section.id }}.${navClass}`,
+            },
+          });
+        }
+      }
+      customElements.define('recommendation-product', RecommendationProduct);
+    });
+  </script>
+  <script>
+    {% comment %} function adjustSliderNav() {
+      const sliderNavMbl = document.querySelector('.--slider-nav-mbl');
+      const sliderNavLg = document.querySelector('.--slider-nav-lg');
+
+      if (window.innerWidth > 768) {
+        if (sliderNavMbl) {
+          sliderNavMbl.remove();
+        }
+      } else {
+        if (sliderNavLg) {
+          sliderNavLg.remove();
+        }
+      }
+    }
+
+    window.addEventListener('load', adjustSliderNav);
+    window.addEventListener('resize', adjustSliderNav); {% endcomment %}
+  </script>
+</recommendation-product>
+
+{% schema %}
+{
+  "name": "Related Products",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "id_nav",
+      "label": "Id for Navigtion"
+    },
+    {
+      "type": "header",
+      "content": "Section Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Related Products"
+    }
+  ]
+}
+{% endschema %}

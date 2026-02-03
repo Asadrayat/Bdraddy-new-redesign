@@ -1,0 +1,205 @@
+{% liquid
+  assign child_count = 0
+  for child in link.links
+    assign child_count = child_count | plus: 1
+  endfor
+%}
+
+<div class="mega__menu">
+  <div class="{% unless has_images %}nav__mega-menu {% elsif has_images and  child_count < 4 %}stretched__mega-menu-wrapper{% endunless %} mega__menu-wrapper page-width">
+    {% if link.links != blank %}
+      <div class="mega__nav">
+        <div class="mega__child-container">
+          {% liquid
+            assign has_grandchild = false
+            for child in link.links
+              if child.links != blank
+                assign has_grandchild = true
+                break
+              endif
+            endfor
+          %}
+
+          <ul class="mega__child {% if has_grandchild == false %}no-grandchild{% endif %} {% if has_images == false and has_grandchild == false %}no__border-right{% endif %}">
+            {% for child in link.links %}
+              <li
+                class="{% if child.active %}link-active{% endif %}"
+                mega__child-li
+                data-child="{{ child.title | handleize }}"
+              >
+                <a href="{{ child.url }}"><span>{{ child.title }}</span></a>
+                {% if child.links != blank %}
+                  <ul class="mega__grand-child {% if forloop.first %}active{% endif %}">
+                    {% for grandchild in child.links %}
+                      <li class="{% if grandchild.active %}link-active{% endif %}">
+                        <a href="{{ grandchild.url }}"><span>{{ grandchild.title }}</span></a>
+                      </li>
+                    {% endfor %}
+                    {% unless child.url == '#' %}
+                      <li class="grand__parent">
+                        <a href="{{ child.url }}">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="6" height="12" viewBox="0 0 6 12" fill="none">
+                            <path d="M5.89062 12L5.38893 11.7746L0.668393 6.00163L0.66706 6L0.668393 5.99837L5.38893 0.225367L5.89062 0L3.22925 5.99837L3.22871 5.99973V6.00027L3.22925 6.00163L5.89062 12Z" fill="#1F2937"/>
+                          </svg>
+                          <span>Shop All {{ child.title }}</span>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="6" height="12" viewBox="0 0 6 12" fill="none">
+                            <path d="M0.443359 0L0.945059 0.225368L5.66559 5.99837L5.66692 6L5.66559 6.00163L0.945059 11.7746L0.443359 12L3.10474 6.00163L3.10528 6.00027L3.10528 5.99973L3.10474 5.99837L0.443359 0Z" fill="#1F2937"/>
+                          </svg>
+                        </a>
+                      </li>
+                    {% endunless %}
+                  </ul>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% comment %}
+          {% if has_grand_child %}
+            <div class="mega__grand-container">
+              {% for child in link.links %}
+                {% if child.links != blank %}
+                  <div
+                    data-child="{{ child.title | handleize }}"
+                    class="mega__grand-wrapper"
+                  >
+                    <div class="mega__grand">
+                      <ul class="mega__grand-child">
+                        {% for grandchild in child.links %}
+                          <li>
+                            <a href="{{ grandchild.url }}">{{ grandchild.title }}</a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endcomment %}
+      </div>
+    {% endif %}
+    {% if has_images %}
+      <div class="mega__items">
+        <div class="mega__items-wrapper">
+          {% liquid
+            assign title_handle = link.title | handleize
+            assign has_mega_item = false
+          %}
+          {% for block in section.blocks %}
+            {% if block.type == 'mega-menu' %}
+              {% liquid
+                assign menu_title = block.settings.heading | handleize
+
+                if menu_title == blank or menu_title != title_handle
+                  continue
+                endif
+                if menu_title == title_handle
+                  assign has_mega_item = true
+                endif
+              %}
+              {% if has_mega_item %}
+                <div class="swiper">
+                  <div class="swiper-wrapper">
+                  {% for i in (1..5) %}
+                      {% liquid
+                        capture collection
+                          echo 'collection_' | append: i
+                        endcapture
+                        capture image
+                          echo 'image_' | append: i
+                        endcapture
+                      %}
+                      {% if block.settings[collection] != blank %}
+                        <div class="swiper-slide">
+                          <div class="swipe-mega__menu-item mega__menu-item">
+                            <div class="mega__menu-item-image">
+                              {% if block.settings[image] %}
+                                {{ block.settings[image] | image_url: width: 600 | image_tag:  loading: 'lazy', decoding: 'async', alt: block.settings[collection].title }}
+                              {% elsif block.settings[collection].image %}
+                                {{
+                                  block.settings[collection].image
+                                  | image_url: width: 600
+                                  | image_tag: loading: 'lazy', decoding: 'async', alt: block.settings[collection].title
+                                }}
+                              {% endif %}
+                            </div>
+                            <p>{{ block.settings[collection].title }}</p>
+                            <a href="{{ block.settings[collection].url }}"></a>
+                          </div>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                  <div class="swiper-pagination"></div>
+                </div>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+  {% if has_mega_item %}
+    {% liquid
+      assign title_handle = link.title | handleize
+      assign has_mega_item = false
+      assign has_bottom_bar = false
+    %}
+    {% for block in section.blocks %}
+      {% if block.type == 'mega-menu' %}
+        {% liquid
+          assign menu_title = block.settings.heading | handleize
+          if menu_title == blank or menu_title != title_handle
+            continue
+          endif
+        %}
+        {% if menu_title == title_handle %}
+          {% for i in (1..7) %}
+            {% liquid
+              capture title
+                echo 'title_' | append: i
+              endcapture
+              capture link
+                echo 'link_' | append: i
+              endcapture
+              if block.settings[title] != blank
+                assign has_bottom_bar = true
+              endif
+            %}
+          {% endfor %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    {% if has_bottom_bar %}
+      <div class="mega__menu-bottom-bar page-width {{ has_bottom_bar }}">
+        <div class="mega__menu-bottom-bar-wrapper ">
+          {% for block in section.blocks %}
+            {% liquid
+              assign menu_title = block.settings.heading | handleize
+              if menu_title == blank or menu_title != title_handle
+                continue
+              endif
+            %}
+            {% if menu_title == title_handle %}
+              {% for i in (1..7) %}
+                {% liquid
+                  capture title
+                    echo 'title_' | append: i
+                  endcapture
+                  capture link
+                    echo 'link_' | append: i
+                  endcapture
+                %}
+                {% if block.settings[title] != blank and block.settings[link] != blank %}
+                  <a href="{{ block.settings[link] }}"><span>{{ block.settings[title] }}</span></a>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
+</div>

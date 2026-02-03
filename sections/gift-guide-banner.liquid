@@ -1,0 +1,406 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  #shopify-section-{{id}} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+    overflow: hidden;
+  }
+
+  @media(max-width: 768px) {
+    #shopify-section-{{id}} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+  .contents-{{ id }}{
+    position: relative;
+  }
+  .contents-{{ id }}:after{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.3);
+    z-index: 1;
+  }
+  .contents-{{ id }} img{
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-height: 650px;
+    min-height: 650px;
+    object-fit: cover;
+  }
+  .texts-{{ id }}{
+    position: absolute;
+    bottom: 65px;
+    {% if section.settings.width != blank %}
+    max-width: {{ section.settings.width | append: 'px' }};
+    {% endif %}
+    z-index: 2;
+  }
+  .texts-{{ id }} h4{
+    font-size: 48px;
+    line-height: 56px;
+    color: #F3F4F6;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .texts-{{ id }} p{
+    font-size: 18px;
+    line-height: 26px;
+    color: #F3F4F6;
+    text-transform: uppercase;
+    margin: 0 0 24px;
+  }
+  .medias-{{ id }}{
+    border-bottom: 1px solid #E4D9C9;
+    background: #F5F1EB;
+    padding: 32px 0;
+  }
+  .medias-wrapper-{{ id }} .swiper{
+    opacity: 0;
+    transition: opacity .3s ease;
+  }
+  .medias-wrapper-{{ id }} .swiper.swiper-initialized{
+    opacity: 1;
+  }
+  .media-item-{{ id }} {
+    position: relative;
+  }
+  .media-item-image-{{ id }} img{
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    aspect-ratio: 158.86/198.57;
+  }
+  .media-item-{{ id }} h4{
+    font-size: 14px;
+    line-height: 20px;
+    color: #1F2937;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+    margin: 16px 0 0;
+  }
+  .media-item-{{ id }} a{
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  @media screen and (min-width: 990px){
+    {% comment %} .medias-wrapper-{{ id }}{
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      grid-gap: 16px;
+    }
+    .medias-sm{
+      display: none !important;
+    } {% endcomment %}
+  }
+  @media screen and (max-width: 989px){
+    .medias-lg{
+      display: none !important;
+    }
+    .contents-{{ id }} img{
+      min-height: 650px;
+    }
+    .texts-{{ id }}{
+      {% comment %} text-align: center; {% endcomment %}
+    }
+    .texts-{{ id }} h4{
+      font-size: 30px;
+      line-height: 36px;
+    }
+    .texts-{{ id }} p{
+      font-size: 16px;
+      line-height: 24px;
+      margin: 0 0 12px;
+    }
+    .medias-{{ id }}{
+      width: 100%;
+      overflow: hidden;
+      padding: 24px 0;
+    }
+    .media-item-{{ id }} h4{
+      font-size: 14px;
+    }
+  }
+</style>
+
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      <div class="contents-{{ id }}">
+        <div class="texts-{{ id }} page-width">
+          {% if section.settings.title != blank %}
+            <p>{{ section.settings.title }}</p>
+          {% else %}
+            <p>{{ collection.title }}</p>
+          {% endif %}
+          {% if section.settings.text != blank %}
+            <h4>{{ section.settings.text }}</h4>
+          {% elsif collection.description != blank %}
+            <h4>{{ collection.description }}</h4>
+          {% endif %}
+        </div>
+        {% if collection.image %}
+          {{ collection.image | image_url: width: collection.image.width | image_tag }}
+        {% elsif section.settings.image %}
+          {% liquid
+            assign image = section.settings.image
+            assign image_mbl = section.settings.image_m
+
+            if image_mbl == blank
+              assign image_mbl = image
+            endif
+          %}
+          {% unless image == blank %}
+            <picture>
+              <source media="(min-width: 989)" srcset="{{ image | image_url: width: image.width }}">
+              {{ image_mbl | image_url: width: image_mbl.width | image_tag: loading: 'lazy' }}
+            </picture>
+          {% endunless %}
+        {% endif %}
+      </div>
+      {% comment %}
+        <div class="medias-{{ id }} medias-lg">
+          <div class="medias-wrapper-{{ id }}">
+            {% for block in section.blocks %}
+              <div class="media-item-{{ id }}">
+                <div class="media-item-image-{{ id }}">
+                  {% if block.settings.image %}
+                      {{ block.settings.image | image_url: width: block.settings.image.width | image_tag }}
+                  {% endif %}
+                </div>
+                <p>{{ block.settings.collection.title }}</p>
+                <a href="{{ block.settings.collection.url }}"></a>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endcomment %}
+      <div class="medias-{{ id }} medias-sm--">
+        <div class="medias-wrapper-{{ id }} page-width">
+          <div class="swiper">
+            <div class="swiper-wrapper">
+              {% for block in section.blocks %}
+                <div class="swiper-slide">
+                  <div class="media-item-{{ id }}">
+                    <div class="media-item-image-{{ id }}">
+                      {% if block.settings.image %}
+                        {{ block.settings.image | image_url: width: block.settings.image.width | image_tag }}
+                      {% endif %}
+                    </div>
+                    <h4>
+                      {% if block.settings.title != blank %}
+                        {{ block.settings.title }}
+                      {% elsif block.settings.collection.title != blank %}
+                        {{ block.settings.collection.title }}
+                      {% endif %}
+                    </h4>
+                    <a href="{{ block.settings.collection.url | append: '?view=' | append: template.suffix }}"></a>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var swiper = new Swiper('.medias-wrapper-{{ id }} .swiper', {
+      loop: true,
+      slidesPerView: 1.2,
+      spaceBetween: 16,
+      breakpoints: {
+        768: {
+          slidesPerView: 2.5,
+          spaceBetween: 20,
+        },
+        1024: {
+          slidesPerView: 4.5,
+          spaceBetween: 20,
+        },
+        1300: {
+          slidesPerView: 7,
+          spaceBetween: 24,
+        },
+      },
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Gift Guide Banner",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_m",
+      "label": "Image(Mobile)"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "width",
+      "label": "Text Content Width",
+      "info": "Input 500 which will be 500px"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gift Guide Banner"
+    }
+  ]
+}
+{% endschema %}

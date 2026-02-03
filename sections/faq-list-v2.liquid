@@ -1,0 +1,224 @@
+{{ 'faq-list-v2.css' | asset_url | stylesheet_tag }}
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  .section-container--{{ id }}{
+    margin-top: {{ section.settings.margin_top | append:'px' }};
+    margin-bottom: {{ section.settings.margin_bottom | append:'px' }};
+    padding-top: {{ section.settings.padding_top | append:'px' }};
+    padding-bottom: {{ section.settings.padding_bottom | append:'px' }};
+    background-color: {{ section.settings.bg-color }};
+    overflow: hidden;
+  }
+  @media screen and (max-width: 768px){
+    .section-container--{{ id }}{
+      margin-top: {{ section.settings.margin_top_mobile | append:'px' }};
+      margin-bottom: {{ section.settings.margin_bottom_mobile | append:'px'  }};
+      padding-top: {{ section.settings.padding_top_mobile | append:'px' }};
+      padding-bottom: {{ section.settings.padding_bottom_mobile | append:'px' }};
+    }
+  }
+  .section-container--{{ id }}{
+
+  }
+</style>
+<section class="section-container--{{ id }} belongsToNav faq__list-v2-container" id="{{ section.settings.sec_id | downcase }}">
+  <div class="section-wrapper--{{ id }} {% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="main">
+      <div class="info">
+        <h2 class="heading">{{ section.settings.heading }}</h2>
+      </div>
+      <div class="accordion-wrapper">
+        <div class="accordion-wrapper-first--abc accordion-wrapper--custom">
+          {% for block in section.blocks %}
+            {% if block.type == 'item' %}
+              <div class="accordion--custom">
+                <div class="acr-title">
+                  <h4 class="faq-question">{{ block.settings.title }}</h4>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M21.6419 11.5808L18.7507 11.124C18.3542 8.07366 15.9288 5.65178 12.8775 5.26027L12.4187 2.3576C12.3863 2.15162 12.2087 2 11.9998 2C11.7908 2 11.6137 2.15162 11.5808 2.3576L11.122 5.26176C8.07715 5.65876 5.65876 8.07715 5.26176 11.122L2.3576 11.5808C2.15162 11.6132 2 11.7908 2 11.9998C2 12.2087 2.15162 12.3858 2.3576 12.4187L5.26027 12.8775C5.65228 15.9293 8.07416 18.3542 11.124 18.7507L11.5808 21.6419C11.6132 21.8479 11.7908 21.9995 11.9998 21.9995C12.2087 21.9995 12.3858 21.8479 12.4187 21.6419L12.8755 18.7522C15.9323 18.3607 18.3612 15.9318 18.7527 12.875L21.6424 12.4182C21.8484 12.3858 22 12.2082 22 11.9993C22 11.7903 21.8479 11.6137 21.6419 11.5808ZM17.8719 10.9853L13.6775 10.3225L13.0162 6.13855C15.4874 6.56248 17.443 8.51505 17.8719 10.9853ZM17.9597 12.0062C17.9597 12.0516 17.9592 12.097 17.9582 12.1424L13.2406 12.888C13.0591 12.9169 12.9169 13.0591 12.888 13.2406L12.1424 17.9582C12.097 17.9592 12.0516 17.9597 12.0062 17.9597C11.9564 17.9597 11.907 17.9592 11.8571 17.9577L11.1115 13.2401C11.0826 13.0586 10.9404 12.9164 10.7589 12.8875L6.05376 12.1439C6.05277 12.098 6.05177 12.0521 6.05177 12.0057C6.05177 11.9554 6.05227 11.905 6.05376 11.8546L10.7584 11.111C10.9399 11.0821 11.0821 10.9399 11.111 10.7584L11.8546 6.05376C11.905 6.05227 11.9549 6.05177 12.0057 6.05177C12.0521 6.05177 12.098 6.05227 12.1439 6.05376L12.8875 10.7589C12.9164 10.9404 13.0586 11.0826 13.2401 11.1115L17.9577 11.8571C17.9592 11.9065 17.9597 11.9564 17.9597 12.0062ZM11.9998 5.13957L12.0102 5.20441C12.0087 5.20441 12.0077 5.20441 12.0062 5.20441C12.0007 5.20441 11.9953 5.20441 11.9898 5.20441L11.9998 5.13957ZM10.9833 6.14055L10.3225 10.322L6.14104 10.9828C6.56946 8.51854 8.51854 6.56946 10.9833 6.14055ZM5.13957 11.9998L5.20491 11.9893V12.0057V12.0097L5.13957 11.9998ZM6.13855 13.0162L10.3225 13.6775L10.9853 17.8719C8.51505 17.443 6.56248 15.4874 6.13855 13.0162ZM11.9998 18.8599L11.9913 18.8076H12.0057H12.0077L11.9998 18.8599ZM13.0137 17.8739L13.677 13.677L17.8739 13.0137C17.45 15.4909 15.4909 17.45 13.0137 17.8739ZM18.8076 12.0082C18.8076 12.0077 18.8076 12.0067 18.8076 12.0062C18.8076 12.0012 18.8076 11.9963 18.8076 11.9918L18.8599 12.0002L18.8076 12.0082Z" fill="black"/>
+                  </svg>
+                </div>
+                <div class="acr-content">
+                  {% unless block.settings.heading == blank %}
+                    <h4>{{ block.settings.heading }}</h4>
+                  {% endunless %}
+                  <div class="faq__content">
+                    {{ block.settings.text }}
+                  </div>
+                  {% unless block.settings.btn_label == blank %}
+                    <a class="button" href="{{ block.settings.btn_link }}">{{ block.settings.btn_label }}</a>
+                  {% endunless %}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="{{ 'faq-list-v2.js' | asset_url }}" defer="defer"></script>
+
+{% schema %}
+{
+  "name": "FAQ List v2",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "FAQ"
+    },
+    {
+      "type": "text",
+      "id": "sec_id",
+      "label": "Section ID"
+    },    
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "bg-color",
+      "label": "Background Color"
+    },
+    {
+      "type": "header",
+      "content": "Desktop Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Mobile Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Top (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Bottom (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Top  (Mobile)",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Bottom  (Mobile)",
+      "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Item",
+      "type": "item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "heading"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        },
+        {
+          "type": "text",
+          "id": "btn_label",
+          "label": "Button Label"
+        },
+        {
+          "type": "url",
+          "id": "btn_link",
+          "label": "Button Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ List v2"
+    }
+  ]
+}
+{% endschema %}

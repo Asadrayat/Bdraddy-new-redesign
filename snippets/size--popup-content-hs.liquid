@@ -1,0 +1,138 @@
+{% liquid
+  assign id = 'size--popup-content'
+%}
+
+<style>
+  .sec-{{ id }}{
+    .sec--title-wrapper p{
+      color: var(--Content-Base-main, #1F2937);
+      font-family: var(--font-family-Heading, "Sainte Colombe");
+      font-size: var(--Font-Size-Heading-H2, 40px);
+      font-style: normal;
+      font-weight: 700;
+      line-height: var(--Line-Height-Heading-H2, 40px); /* 100% */
+      text-transform: uppercase;  
+      margin: 0 0 var(--Spacing-Container-xxl, 32px);
+      display: none;
+      @media(max-width: 768px){
+        display: block;
+      }
+    }
+    .block-title-wrapper p{
+      color: var(--Content-Base-main, #1F2937);
+      font-family: var(--font-family-Heading, "Sainte Colombe");
+      font-size: var(--Font-Size-Heading-H2, 40px);
+      font-style: normal;
+      font-weight: 700;
+      line-height: var(--Line-Height-Heading-H2, 40px); /* 100% */
+      text-transform: uppercase;  
+      margin: 0 0 var(--Spacing-Container-xxl, 48px);
+      display: block;
+      @media(max-width: 768px){
+        display: none;
+      }
+    }
+    .img-wrapper img{
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+    .wrapper-{{ id }}{
+      display: grid;
+      {% comment %} grid-template-columns: repeat(2, minmax(0, 1fr)); {% endcomment %}
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 2fr);
+      gap: 24px;
+      {% comment %} gap: var(--Spacing-Container-xxl, 48px); {% endcomment %}
+      @media(max-width: 768px){
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    .content--container{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .block--container{
+      display: flex;
+      flex-direction: column;
+      {% comment %} gap: var(--Spacing-Container-xl, 32px); {% endcomment %}
+    }
+    .block--wrapper{
+      {% comment %} display: grid;
+      grid-template-columns: 88px minmax(0, auto); {% endcomment %}
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-bottom: 1px solid #eaeaea;
+      padding: 16px 0;   
+      max-width: 90%;
+      @media(max-width: 768px){
+        max-width: unset;
+      }
+    }
+    .block--title{
+      color: var(--Content-Base-main, #1F2937);
+      font-family: var(--font-family-Body, Gotham);
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: var(--Line-Height-Paragraph-Medium, 24px); /* 150% */   
+      margin: 0;
+    }
+    .block--text{
+      color: var(--Content-Base-base, #4B5563);
+      margin: 0;
+      font-family: var(--font-family-Body, Gotham);
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: var(--Line-Height-Paragraph-Medium, 24px); /* 150% */
+    }
+  }
+</style>
+{% assign size_charts_type = product.metafields.custom.shop_for.value %}
+
+  {% for size_type in size_charts_type %}
+    {% assign type = size_type | downcase %}
+<div class="sec-{{ id }}">
+  <div class="">
+    <div class="wrapper-{{ id }}">
+      <div class="img-wrapper">
+        
+        {% if type ==  'men' %}
+        <img src="https://cdn.shopify.com/s/files/1/0031/4920/1526/files/Men.png?v=1758635660">
+        {% elsif type ==  'women' %}
+        <img src="https://cdn.shopify.com/s/files/1/0031/4920/1526/files/Women.png?v=1758635734">
+        {% endif %}
+
+      </div>
+      <div class="content--container">
+        <div class="block--container">
+              <div class="block--wrapper">
+                <p class="block--title">1. NECK</p>
+                <p class="block--text">Measure around the middle of your neck, just above the collarbone, leaving a little space for comfort.</p>
+              </div>
+              <div class="block--wrapper">
+                <p class="block--title">2. SLEEVE</p>
+                <p class="block--text">Measure from the top of your shoulder to your wrist with your arm bent slightly. </p>
+              </div>
+              <div class="block--wrapper">
+                <p class="block--title">3. CHEST</p>
+                <p class="block--text">Measure around the fullest part of your chest, keeping the tape level.</p>
+              </div>
+              <div class="block--wrapper">
+                <p class="block--title">4. WAIST</p>
+                <p class="block--text">Measure around the smallest part of your waist, just above your hips.</p>
+              </div>
+              <div class="block--wrapper">
+                <p class="block--title">5. HIP</p>
+                <p class="block--text">Measure around the fullest part of your hips, keeping the tape level.</p>
+              </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  {% endfor %}
+
+

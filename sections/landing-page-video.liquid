@@ -1,0 +1,391 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  #shopify-section-{{ id }} {
+    box-sizing: border-box;
+    margin-top: {{ section.settings.margin_top | append: 'px' }};
+    margin-bottom: {{ section.settings.margin_bottom | append: 'px' }};
+    padding-top: {{ section.settings.padding_top | append: 'px' }};
+    padding-bottom: {{ section.settings.padding_bottom | append: 'px' }};
+    {% if section.settings.bg_image %}
+      background-image: url("{{ section.settings.bg_image | image_url }}");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+    {% endif %}
+    min-height: 960px;
+  }
+  @media (max-width: 768px) {
+    #shopify-section-{{ id }} {
+      margin-top: {{ section.settings.margin_top_m | append: 'px' }};
+      margin-bottom: {{ section.settings.margin_bottom_m | append: 'px' }};
+      padding-top: {{ section.settings.padding_top_m | append: 'px' }};
+      padding-bottom: {{ section.settings.padding_bottom_m | append: 'px' }};
+      {% if section.settings.bg_image_m %}
+        background-image: url("{{ section.settings.bg_image_m | image_url }}");
+      {% endif %}
+      {% comment %} min-height: 600px; {% endcomment %}
+      min-height: max-content;
+    }
+  }
+  .header-{{ id }}{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    grid-gap: 48px;
+    margin: 0 0 64px;
+  }
+  .header-{{ id }} h4{
+    font-size: 40px;
+    line-height: 40px;
+    color: #F3F4F6;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .header-{{ id }} p{
+    font-size: 16px;
+    line-height: 24px;
+    color: #F3F4F6;
+    margin: 0;
+  }
+  .video-{{ id }} {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    margin: 0 0 48px;
+  }
+  .video-{{ id }} video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    {% if section.settings.image == blank %}
+      opacity: 1;
+    {% else %}
+      opacity: 0;
+    {% endif %}
+    transition: opacity .25s ease;
+  }
+  .video-{{ id }}.is-playing video {
+    opacity: 1;
+  }
+  .poster-{{ id }} {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    transition: opacity .2s ease, visibility .2s ease;
+    z-index: 2;
+  }
+  .poster-{{ id }} img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .play-btn-{{ id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 3;
+    width: 64px;
+    height: 64px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.30);
+    backdrop-filter: blur(8px);
+    border: 0;
+    cursor: pointer;
+    {% if section.settings.video == blank %}
+      display: none;
+    {% endif %}
+  }
+  .video-{{ id }}.is-playing .poster-{{ id }} {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .btn-{{ id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn-{{ id }} a {
+    display: inline-block;
+    color: #1F2937;
+    font-size: 18px;
+    line-height: 18px;
+    font-weight: 700;
+    padding: 16px 32px;
+    border: 1px solid #4B5563;
+    background: #FFF;
+    text-transform: uppercase;
+  }
+  @media screen and (max-width: 768px){
+    .header-{{ id }}{
+      grid-template-columns: 1fr;
+      grid-gap: 32px;
+      margin: 0 0 32px;
+    }
+    .header-{{ id }} h4{
+      font-size: 28px;
+      line-height: 32px;
+    }
+    .header-{{ id }} p{
+      font-size: 13px;
+      line-height: 20px;
+    }
+    .video-{{ id }} {
+      margin: 0 0 32px;
+    }
+    .play-btn-{{ id }} {
+      width: 40px;
+      height: 40px;
+    }
+    .btn-{{ id }} a {
+      font-size: 14px;
+      line-height: 14px;
+      padding: 12px 24px;
+    }
+  }
+</style>
+
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      <div class="header-{{ id }}">
+        {% if section.settings.title != blank %}
+          <h4>{{ section.settings.title }}</h4>
+        {% endif %}
+        {% if section.settings.text != blank %}
+          <p>{{ section.settings.text }}</p>
+        {% endif %}
+      </div>
+
+      
+        <div class="video-{{ id }}">
+          <div class="poster-{{ id }}">
+            {% if section.settings.image %}
+              {{ section.settings.image | image_url: width: section.settings.image.width | image_tag }}
+            {% endif %}
+            {% if section.settings.video != blank %}
+              <button class="play-btn-{{ id }}" type="button" aria-label="Play video">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="18" viewBox="0 0 15 18" fill="none">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M3.92203 1.33613C3.932 1.34277 3.94199 1.34943 3.95202 1.35612L12.7426 7.21652C12.997 7.38606 13.2328 7.54325 13.4139 7.68933C13.603 7.84177 13.8258 8.05317 13.9541 8.36242C14.1236 8.77118 14.1236 9.23057 13.9541 9.63932C13.8258 9.94858 13.603 10.16 13.4139 10.3124C13.2328 10.4585 12.997 10.6157 12.7427 10.7852L3.92206 16.6656C3.61116 16.8729 3.33159 17.0593 3.09437 17.1879C2.85698 17.3165 2.53114 17.4635 2.15083 17.4408C1.66437 17.4118 1.21499 17.1713 0.920983 16.7826C0.69113 16.4788 0.632704 16.1261 0.608068 15.8572C0.58345 15.5885 0.583473 15.2526 0.583498 14.8789L0.583499 3.1589C0.583499 3.14684 0.583498 3.13483 0.583498 3.12286C0.583473 2.7492 0.58345 2.4132 0.608068 2.14451C0.632704 1.87563 0.69113 1.52297 0.920983 1.21913C1.21499 0.830478 1.66437 0.589978 2.15083 0.560932C2.53114 0.538225 2.85698 0.685233 3.09437 0.813883C3.33159 0.942439 3.61114 1.12884 3.92203 1.33613Z" fill="white"/>
+                </svg>
+              </button>
+            {% endif %}
+          </div>
+          {% if section.settings.video != blank %}
+            {{
+              section.settings.video
+              | video_tag:
+                image_size: '1100x',
+                autoplay: false,
+                loop: false,
+                controls: false,
+                muted: false
+            }}
+          {% endif %}
+      
+        </div>
+      
+      {% if section.settings.btn_text != blank %}
+        <div class="btn-{{ id }}">
+          <a href="{{ section.settings.link | default: '#' }}">{{ section.settings.btn_text }}</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+  window.initLandingVideo = function () {
+    const root = document.querySelector('.sec-{{ id }}');
+    if (!root) return;
+    const wrap = root.querySelector('.video-{{ id }}');
+    if (!wrap) return;
+    const video = wrap.querySelector('video');
+    if (!video) return;
+    const poster = wrap.querySelector('.poster-{{ id }}');
+    const btn = wrap.querySelector('.play-btn-{{ id }}');
+    const posterImg = poster ? poster.querySelector('img') : null;
+
+    const showPoster = () => {
+      wrap.classList.remove('is-playing');
+      if (!video.paused) video.pause();
+      video.currentTime = 0;
+    };
+
+    const playVideo = () => {
+      wrap.classList.add('is-playing');
+      video.play();
+    };
+
+    if (posterImg) video.setAttribute('poster', posterImg.getAttribute('src') || '');
+
+    if (poster) poster.addEventListener('click', playVideo);
+    if (btn) btn.addEventListener('click', playVideo);
+
+    video.addEventListener('play', () => wrap.classList.add('is-playing'));
+    video.addEventListener('pause', showPoster);
+    video.addEventListener('ended', showPoster);
+
+    video.addEventListener('click', () => {
+      if (!video.paused) showPoster();
+    });
+  };
+
+  document.addEventListener('DOMContentLoaded', window.initLandingVideo);
+</script>
+
+
+
+{% schema %}
+  {
+    "name": "Landing page video",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "full_width",
+        "label": "Full Width Section",
+        "default": true
+      },
+      {
+        "type": "image_picker",
+        "id": "bg_image",
+        "label": "Background Image"
+      },
+      {
+        "type": "image_picker",
+        "id": "bg_image_m",
+        "label": "Background Image(Mobile)"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      },
+      {
+        "type": "text",
+        "id": "text",
+        "label": "Text"
+      },
+      {
+        "type": "video",
+        "id": "video",
+        "label": "Video"
+      },
+      { 
+        "type": "image_picker",
+        "id": "image",
+        "label": "Poster Image"
+      },
+      {
+        "type": "text",
+        "id": "btn_text",
+        "label": "Button Text"
+      },
+      {
+        "type": "url",
+        "id": "link",
+        "label": "Button Link"
+      },
+      {
+        "type": "header",
+        "content": "Section Spacing Desktop"
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Top",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Bottom",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Top",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Bottom",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Section Spacing Mobile"
+      },
+      {
+        "type": "range",
+        "id": "margin_top_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Top",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Bottom",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "padding_top_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Top",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Bottom",
+        "default": 0
+      }
+    ],
+
+    "presets": [
+      {
+        "name": "Landing page video"
+      }
+    ]
+  }
+{% endschema %}

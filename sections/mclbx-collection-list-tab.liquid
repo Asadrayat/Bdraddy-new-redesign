@@ -1,0 +1,846 @@
+{% assign id = section.id %}
+
+{{ 'mclbx-collection-card-v3.css' | asset_url | stylesheet_tag }}
+{% style %}
+      #shopify-section-{{id}} {
+        box-sizing: border-box;
+        margin-top: {{section.settings.margin_top | append: 'px'}};
+        margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+        padding-top: {{section.settings.padding_top | append: 'px'}};
+        padding-bottom: {{section.settings.padding_bottom | append: 'px'}};       
+      }
+      #shopify-section-{{section.id}} {
+        box-sizing: border-box;
+        {% unless section.settings.background_image == blank %}
+          background-image: url({{section.settings.background_image | image_url: width: section.settings.background_image.width }});
+          background-repeat: no-repeat;
+          background-size: cover;
+        {% else %}
+          background-color: {{ section.settings.bg_color }};
+        {% endunless %}
+
+
+        .hidden-collection{
+          display: none;
+        }
+
+        .full-width{
+          padding-inline: 40px;
+          @media(max-width: 768px){
+            padding-inline: 15px;
+          }
+        }
+
+        .new-fc-wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: var(--Spacing-Container-xl);
+          @media(max-width: 768px) {
+            /* gap: 24px; */
+          }
+        }
+          @media(max-width: 768px) {
+            gap: 24px;
+          }
+        }
+        .new-fc-header {
+          display: flex;
+          align-items: center;
+          gap: calc(8px + var(--Spacing-Container-md, 24px));
+          justify-content: space-between;
+          margin-bottom: var(--Spacing-Container-xxl, 48px);
+
+          @media(max-width: 768px) {
+            display: flex;
+            gap: 0;
+            align-items: start;
+            flex-direction: column;
+          }
+        }
+        .fct__top {
+            max-width: 100%;
+        }
+        .new-fc-header h2, h2.heading__{
+          margin: 0;
+          color: #000;
+          text-align: left;
+          font-family: var(--font-family-Title, "Sainte Colombe");
+          font-size: var(--Font-Size-Heading-H2, 48px);
+          font-style: normal;
+          font-weight: 400;
+          line-height: var(--Line-Height-Heading-H2, 56px);
+          letter-spacing: 0;
+
+          @media(max-width: 768px) {
+            text-align: left;
+            font-size: var(--Font-Size-Heading-H2, 30px);
+            line-height: var(--Line-Height-Heading-H2, 36px);
+            letter-spacing: 0;
+          }
+        }
+        .new-fc-list {
+          display: flex;
+          align-items: flex-start;
+          /* gap: var(--Spacing-Container-md, 24px); */
+          position: relative;
+          @media(max-width: 1200px) {
+            overflow: auto;
+            scrollbar-width: none;
+          }
+        }
+        .new-fc-list:after{
+          position: absolute;
+          content: "";
+          background: #E5E7EB;
+          width: 100%;
+          height: 2px;
+          bottom: -8px;
+          left: 0;
+          z-index: 1;
+            @media(max-width: 1200px) {
+              bottom: 0;
+            }
+        }
+        .new-fc-body .swiper-slide{
+          height: auto !important;
+        }
+        .new-fc-list-btn:first-child {
+            padding: 0 12px 0px 0px;
+            @media(max-width: 1200px) {
+              padding: 12px 12px 12px 0px;
+            }
+        }
+        .new-fc-list-btn.border__none.active:after {
+            width: 0;
+        }
+        .new-fc-list-btn {
+          color: #9CA3AF;
+          font-family: var(--font-family-Heading, Gotham);
+          font-size: var(--Font-Size-Heading-H2, 40px);
+          font-style: normal;
+          font-weight: 700;
+          line-height: var(--Line-Height-Heading-H2, 40px);
+          letter-spacing: 0;
+          text-transform: uppercase;
+          position: relative;
+          padding: 0 12px;
+          border: 0;
+          margin: 0;
+          @media(max-width: 1200px) {
+            text-wrap: nowrap;
+            padding: 12px;
+          }
+        }
+        .new-fc-list.heading__three .new-fc-list-btn {
+          font-size: var(--Font-Size-Heading-H3, 40px);
+          line-height: var(--Line-Height-Heading-H3, 40px);
+          transition: color .1s ease-in;
+        }
+        .new-fc-list-btn:after {
+          position: absolute;
+          content: "";
+          width: 0%;
+          background: #1f2937;
+          height: 2px;
+          left: 0%;
+          /* transform: translateX(-50%); */
+          bottom: -8px;
+          transition: width .1s ease-in;
+          z-index: 2;
+            @media(max-width: 1200px) {
+              bottom: 0;
+              width: 100%;
+              background: #9CA3AF;
+            }
+        }
+        .new-fc-list-btn.active,.new-fc-list-btn:hover {          
+          color: #1f2937;
+        }
+
+       /* .new-fc-list-btn:hover:after, */
+        .new-fc-list-btn.active:after {
+          width: 100%;
+            @media(max-width: 1200px) {
+              background: #1f2937;
+            }
+        }
+        .next-{{ section.id }} {
+          right: 0
+        }
+        .new-fc-btn__wrap {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+        }
+        .new-fc-btn__wrap::after {
+          /* position: absolute;
+          content: "";
+          bottom: -4px;
+          left: 0;
+          width: 0%;
+          height: 1px;
+          background: #1F2937;             
+          transition: all 0.15s ease-in-out; */
+        }
+        .new-fc-btn__wrap:hover::after {
+          /* width: 100%; */
+        }
+        .new-fc-view-all-btn {
+          display: block;
+          color: var(--Content-Base-main, #1f2937);
+          text-align: center;
+          font-family: var(--font-family-Control, "Archivo Expanded");
+          font-size: var(--Font-Size-UI-Controls-Control-Button-Small, 16px);
+          font-style: normal;
+          font-weight: 400;
+          line-height: var(--Line-Height-UI-Controls-Control-Button-Small, 16px);
+          text-decoration-line: underline;
+          text-decoration-style: solid;
+          text-decoration-skip-ink: none;
+          text-decoration-thickness: auto;
+          text-underline-offset: auto;
+          text-underline-position: from-font;
+          text-transform: uppercase;
+          margin: 0;
+        }
+        .swiper-scrollbar-{{ section.id }} {
+          position: relative !important;
+          left: 0 !important;
+          bottom: 0 !important;
+          margin:  0;
+          height: 1px !important;
+          opacity: 1 !important;
+          width: 100% !important;
+          cursor: pointer;
+          padding-block: 8px;
+          background: transparent;
+          padding-block: var(--Spacing-Container-xxl);
+          @media(width < 768px) {
+
+          }
+          .swiper-scrollbar-drag {
+            background: #00094b;
+            display: block !important;
+            height: 1px;
+          }
+        }
+        .swiper-scrollbar-{{ section.id }}::before {
+          position: absolute;
+          content: "";
+          background: var(--swiper-scrollbar-bg-color, rgba(0, 0, 0, .1));
+          top: 50%;
+          left: 0;
+          width: 100%;
+          height: 1px;
+        }
+      }
+
+
+
+    .new-fc-btn__wrap.mobile__only .btn-{{section.id}}.button{
+
+        width: 100%;
+        max-width: 100%;
+
+    }
+
+
+  .section-{{section.id }} .new-fc-body {
+      position: relative;
+  }
+  .--nav-button-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+  .section-{{section.id }} .swiper-button-disabled {
+      opacity: .5;
+  }
+  .section-{{section.id }} .--nav-icon.swiper-button-lock {
+      display: none;
+  }
+  .section-{{section.id }} .--nav-icon {
+      display: flex;
+      min-width: 36px;
+      width: 36px;
+      height: 36px;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--Border-Base-dense, #4B5563);
+      background: #FFF;
+      position: absolute;
+      top: 40%;
+      z-index: 1;
+      cursor: pointer;
+      transition: 0.5s ease;
+        svg path{
+        transition: 0.5s ease;
+        }
+        @media(max-width: 768px){
+        /* display: none; */
+        position: relative;
+      }
+  }
+   @media(min-width: 769px){
+    .section-{{section.id }} .--nav-icon:hover{
+      background: #1F2937;
+      svg path{
+        fill: #fff;
+      }
+    }
+
+    }
+  
+  .swiper-prev-{{section.id }}.--desktop-nav {
+      left: -38px;
+      @media(max-width: 768px){
+        display: none;
+      }
+  }
+  .swiper-next-{{section.id }}.--desktop-nav {
+      right: -38px;
+       @media(max-width: 768px){
+        display: none;
+      }
+
+  }
+  .swiper-prev-{{section.id }}.--mobile-nav ,
+  .swiper-next-{{section.id }}.--mobile-nav {
+    @media(min-width: 768px){
+        display: none;
+    }
+  }
+  .new-fc-body.card_view--stack {
+    .--image-wrapper {
+      height: unset;
+    }
+    .--card-text-container {
+      position: relative;
+      height: unset;
+      background: unset;
+      margin-top: var(--Spacing-Container-md);
+      * {
+        color: #000 !important;
+      }
+      .arrow_btn:before {
+        background: url("https://cdn.shopify.com/s/files/1/0031/4920/1526/files/Vector_3.svg?v=1756290884" ) no-repeat;
+      }
+      .arrow_btn:after {
+         background: url("https://cdn.shopify.com/s/files/1/0031/4920/1526/files/Vector_2.svg?v=1756290887" ) no-repeat;
+      }
+      .--card-title, .--card-subtitle,  .arrow_btn{
+        margin-inline: 0;
+      }
+    }
+  }
+@media(max-width: 768px) {
+    #shopify-section-{{id}} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }  
+}
+{% endstyle %}
+{% assign category_blocks = section.blocks | where: 'type', 'category' %}
+{% assign selected_category = category_blocks.first.settings.category %}
+
+
+<div
+  id="{{ section.settings.nav_id }}"
+  class="{% if section.settings.full_width_section %}full-width{% else %}page-width{% endif %} section-{{section.id }}"
+>
+  <div class="new-fc-wrapper">
+    {% if category_blocks.size > 1 %}
+      <h2 class="heading__">{{ section.settings.heading }}</h2>
+    {% endif %}
+    <div class="new-fc-header">
+      {% if category_blocks.size == 1 %}
+        <h2>{{ section.settings.heading }}</h2>
+      {% endif %}
+      <div class="fct__top">
+        <div class="new-fc-list fc-list-{{ section.id }} {% if section.blocks.size > 1 or section.settings.heading != blank %}heading__three{% endif %}">
+          {% for block in category_blocks %}
+            <button
+              class="new-fc-list-btn {% if forloop.first %}active{% endif %} {% if forloop.length == 1 %}hidden{% endif %}"
+              data-category="{{ block.settings.category | handle }}"
+              data-collection="{{ block.settings.collection.handle }}"
+              data-url="{{ block.settings.url }}"
+            >
+              {{ block.settings.category }}
+            </button>
+
+          {% endfor %}
+        </div>
+      </div>
+      {% unless section.settings.view_all_btn_text == blank %}
+        <div class="new-fc-btn__wrap ">
+          <a
+            class="_btn-{{section.id}} arrow_btn desktop__only"
+            href="{{ section.settings.view_all_btn_url | default: section.blocks.first.settings.collection.url }}"
+          >
+            {{- section.settings.view_all_btn_text -}}
+          </a>
+        </div>
+      {% endunless %}
+    </div>
+  </div>
+  <div class="new-fc-body card_view--{{ section.settings.card_view }}">
+    <div class="swiper swiper-{{ section.id }}">
+      <div class="swiper-wrapper">
+        {% assign collection_blocks = section.blocks | where: 'type', 'collection' %}
+        {% for block in collection_blocks %}
+          <div
+            class="swiper-slide swiper-slide--{{ section.id }} {% unless selected_category == block.settings.category %}hidden-collection{% endunless %}"
+            data-collection="{{ block.settings.collection.handle }}"
+            data-category="{{ block.settings.category | handle }}"
+          >
+            {% render 'mclbx-collection-card-v3', section: section, block: block %}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="--nav-button-wrapper">
+        <div class="swiper-scrollbar-{{ section.id }} swiper-scrollbar"></div>
+        <div class="swiper-prev-{{ section.id }} --nav-icon --mobile-nav">{%- render 'header-icons', name: 'left' -%}</div>
+        <div class="swiper-next-{{ section.id }} --nav-icon --mobile-nav">{%- render 'header-icons', name: 'right' -%}</div>
+      </div>
+      <div class="swiper-scrollbar-{{ section.id }} swiper-scrollbar"></div>
+    </div>
+
+    <div class="swiper-prev-{{ section.id }} --nav-icon --desktop-nav">{%- render 'header-icons', name: 'left' -%}</div>
+    <div class="swiper-next-{{ section.id }} --nav-icon --desktop-nav">{%- render 'header-icons', name: 'right' -%}</div>    
+
+  </div>
+  {% unless section.settings.view_all_btn_text == blank %}
+    <div class="new-fc-btn__wrap mobile__only">
+      <a
+        class="btn-{{section.id}} button "
+        href="{{ section.settings.view_all_btn_url | default: section.blocks.first.settings.collection.url }}"
+      >
+        {{- section.settings.view_all_btn_text -}}
+      </a>
+    </div>
+  {% endunless %}
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", e => {
+  swiperSlider['{{section.id}}'] = {};
+
+  if (window.innerWidth < 768) {
+    // Slider for Mobile
+    swiperSlider['{{section.id}}'].swiperInit = () =>
+    (swiperSlider['{{section.id}}'].swiper = new Swiper('.swiper-{{section.id}}', {
+      slidesPerView: 3.2,
+      spaceBetween: 40,
+
+      scrollbar: {
+        el: '.swiper-scrollbar-{{ section.id }}.swiper-scrollbar',
+        draggable: true,
+        hide: false,
+      },
+      navigation: {
+        nextEl: '.swiper-next-{{ section.id }}.--mobile-nav',
+        prevEl: '.swiper-prev-{{ section.id }}.--mobile-nav',
+      },
+      breakpoints: {
+        200: {
+          slidesPerView: 1.2,
+          spaceBetween: 20,
+        },
+        768: {
+          slidesPerView: 3,
+          spaceBetween: 20,
+        },
+        1024: {
+          slidesPerView: 3,
+          spaceBetween: 25,
+        },
+        1200: {
+          slidesPerView: 3.2,
+          spaceBetween: 30,
+        },
+        1400: {
+          slidesPerView: 4,
+          spaceBetween: 40,
+        },
+        1600: {
+          slidesPerView: 4,
+          spaceBetween: 40,
+        },
+      },
+    }));
+
+  } else {
+    // Slider for Desktop
+    swiperSlider['{{section.id}}'].swiperInit = () =>
+    (swiperSlider['{{section.id}}'].swiper = new Swiper('.swiper-{{section.id}}', {
+      slidesPerView: 3.2,
+      spaceBetween: 40,
+
+      scrollbar: {
+        el: '.swiper-scrollbar-{{ section.id }}.swiper-scrollbar',
+        draggable: true,
+        hide: false,
+      },
+      navigation: {
+        nextEl: '.swiper-next-{{ section.id }}.--desktop-nav',
+        prevEl: '.swiper-prev-{{ section.id }}.--desktop-nav',
+      },
+      breakpoints: {
+        200: {
+          slidesPerView: 1.2,
+          spaceBetween: 20,
+        },
+        768: {
+          slidesPerView: 3,
+          spaceBetween: 20,
+        },
+        1024: {
+          slidesPerView: 3,
+          spaceBetween: 25,
+        },
+        1200: {
+          slidesPerView: 3,
+          spaceBetween: 30,
+        },
+        1400: {
+          slidesPerView: 3,
+          spaceBetween: 40,
+        },
+        1600: {
+          slidesPerView: 3,
+          spaceBetween: 40,
+        },
+      },
+    }));
+
+  }    
+
+  swiperSlider['{{section.id}}'].swiperInit();
+
+  swiperSlider['{{section.id}}'].lists = document.querySelectorAll(`.fc-list-{{section.id}} button`);
+  swiperSlider['{{section.id}}'].slides = document.querySelectorAll(
+    `.swiper-{{section.id}} .swiper-slide--{{ section.id }}`
+  );
+  {% comment %} swiperSlider['{{section.id}}'].viewAllBtn = document.querySelector(`.btn-{{section.id}}`); {% endcomment %}
+  swiperSlider['{{section.id}}'].viewAllBtn = document.querySelectorAll(`.btn-{{section.id}}`);
+
+  swiperSlider['{{section.id}}'].updateSlider = (handle) => {
+    console.log('handle', handle);
+    if (swiperSlider['{{section.id}}'].slides) {
+      swiperSlider['{{section.id}}'].slides.forEach((slide) => {
+        slide.dataset.category === handle
+          ? slide.classList.remove('hidden-collection')
+          : slide.classList.add('hidden-collection');
+      });
+    }
+
+    if (swiperSlider['{{section.id}}'].swiper) swiperSlider['{{section.id}}'].swiper.destroy(true, true);
+    swiperSlider['{{section.id}}'].swiperInit();
+  };
+
+  if (swiperSlider['{{section.id}}'].lists) {
+    swiperSlider['{{section.id}}'].lists.forEach((list, index) => {
+      list.addEventListener('click', (e) => {
+        swiperSlider['{{section.id}}'].updateSlider(list.dataset?.category);
+        swiperSlider['{{section.id}}'].lists.forEach((l, i) =>
+          index === i ? l.classList.add('active') : l.classList.remove('active')
+        );
+        console.log('Section: ',list.dataset?.url)
+        
+        document.querySelectorAll(`._btn-{{section.id}}`).forEach((button) => {
+          console.log(button)
+          if (list.dataset?.url) {
+            button.setAttribute('href', list.dataset.url);
+          }
+        });
+        document.querySelectorAll(`.btn-{{section.id}}`).forEach((button) => {
+          console.log(button)
+          if (list.dataset?.url) {
+            button.setAttribute('href', list.dataset.url);
+          }
+        });
+      });
+    });
+  }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Collection List Tab",
+  "settings": [
+    {
+      "type": "text",
+      "id": "nav_id",
+      "label": "Navigation ID"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width_section",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "card_view",
+      "label": "Card View",
+      "options": [
+        {
+          "value": "overlay",
+          "label": "Overlay",
+        },
+        {
+          "value": "stack",
+          "label": "Stack",
+        }
+      ],
+      "default": "overlay"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "header",
+      "content": "View All Button"
+    },
+    {
+      "type": "text",
+      "id": "view_all_btn_text",
+      "label": "Button Text",
+      "default": "Explore more"
+    },
+    {
+      "type": "url",
+      "id": "view_all_btn_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }    
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "category",
+          "label": "Category"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Url"
+        }
+      ]
+    },
+    {
+      "type": "collection",
+      "name": "Collection",
+      "limit": 10,
+      "settings": [
+        {
+          "type": "text",
+          "id": "category",
+          "label": "Category"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection"
+        },
+        {
+          "type": "url",
+          "id": "custom_url",
+          "label": "Custom Url"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Select Image",
+          "info": "aspact: 4/5"
+        },
+        {
+          "type": "header",
+          "content": "Info"
+        },
+        {
+          "type": "select",
+          "id": "info_align",
+          "label": "Info Align ",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "center"
+        },        
+        {
+          "type": "select",
+          "id": "info_align_m",
+          "label": "Info Align Mobile",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "center"
+        },        
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Lorem Ipsum"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection Tab",
+      "blocks": [
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        },
+        {
+          "type": "collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,14 @@
+<div class="sticky__sm-nav">
+  <div class="sticky__sm-nav-wrapper">
+    {% for nav in mini_navs %}
+      {% assign collection_title = nav.settings.title %}
+      {% assign collection_url = nav.settings.link %}
+      {% assign current_url = request.path %}
+      {% if collection_title != blank %}
+        <a class="{% if current_url == collection_url %}active{% endif %}" href="{{ collection_url | default:  '#' }}">
+          {{- collection_title -}}
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>

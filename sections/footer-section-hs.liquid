@@ -1,0 +1,880 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  #shopify-section-{{id}} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+    color: #1F2937;
+    {% comment %} background: #f5f5eb; {% endcomment %}
+    background: {{ section.settings.bg_color }};
+    p{
+      margin: 0;
+    }
+    * {
+      color: {{ section.settings.font_color }} !important;
+    }
+  }
+  #shopify-section-{{id}} *{
+    box-sizing: border-box;
+  }
+  @media(max-width: 768px) {
+    #shopify-section-{{id}} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+  #shopify-section-{{id}} {
+    .footer__section {
+      min-height: 0; /* Allow dynamic adjustment */
+    }
+    .wrapper-{{ id }}{
+      display: flex;
+      flex-direction: column;
+    }
+    .main__navigation {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      padding-block: var(--Spacing-Container-xxl, 48px);
+      gap: var(--Spacing-Container-xxl, 48px);
+      border-top: 1px solid {{ section.settings.font_color }};
+      @media(max-width: 768px){
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        border-top: unset;
+        padding-top: 0;
+      }
+    }
+    .main__menu-title {
+      color: inherit;
+      {% comment %} color: var(--Content-Inverted-main, #F3F4F6); {% endcomment %}
+      font-family: var(--font-family-Body, Gotham);
+      font-size: 18px;
+      line-height: 120%;
+      font-style: normal;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: var(--Spacing-Container-lg, 24px);
+      @media(max-width: 768px){
+        font-size: var(--Font-Size-Heading-H3, 17px);
+        line-height: var(--Line-Height-Heading-H3, 20px); /* 117.647% */
+      }
+    }
+    .footer__invitation--container .button:hover {
+        border: 1px solid #F3F4F6;
+    }
+    .footer__invitation-title {
+      {% comment %} color: var(--Content-Inverted-main, #F3F4F6); {% endcomment %}
+      font-family: var(--font-family-Body, Gotham);
+      color: inherit;
+      font-size: 18px;
+      line-height: 120%;
+      font-style: normal;
+      font-weight: 700;
+      {% comment %} line-height: var(--Line-Height-Heading-H3, 24px); /* 120% */ {% endcomment %}
+      text-transform: uppercase;
+      @media(max-width: 768px){
+        {% comment %} font-size: var(--Font-Size-Heading-H3, 17px);
+        line-height: var(--Line-Height-Heading-H3, 20px); /* 117.647% */ {% endcomment %}
+      }
+    }
+    .main__manu-wrapper{
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--Spacing-Container-sm, 12px);
+      align-self: stretch;
+      @media(max-width: 768px){
+
+      }
+    }
+    .main__manu-wrapper:not(:last-child){
+      border-right: 1px solid {{ section.settings.font_color }};
+      padding-right: var(--Spacing-Container-xl, 32px);
+      @media(max-width: 768px){
+        border-right: unset;
+      }
+    }
+    .main__manu-wrapper:nth-child(1) {
+      @media(max-width: 768px){
+        border-right: 1px solid {{ section.settings.font_color }};
+      }
+    }
+    .main__manu-wrapper:nth-child(3) {
+      @media(max-width: 768px){
+        border-top: 1px solid {{ section.settings.font_color }};
+        padding-top: var(--Spacing-Container-xl, 32px);
+        grid-column: 1/-1;
+      }
+    }
+    .footer__invitation--container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--Spacing-Container-lg, 24px);
+      @media(max-width: 768px){
+        grid-row: 1;
+        grid-column: 1/-1;
+        padding-bottom: var(--Spacing-Container-xxl, 32px);
+        border-bottom: 1px solid {{ section.settings.font_color }};
+      }
+    }
+    .main__manu-wrapper .mian__menu, .footer__invitation-description {
+      {% comment %} color: var(--Content-Inverted-main, #F3F4F6); {% endcomment %}
+      color: inherit;
+      font-family: var(--font-family-Body, Gotham);
+      font-size: var(--Font-Size-Paragraph-Large, 16px);
+      font-style: normal;
+      font-weight: 400;
+      line-height: var(--Line-Height-Paragraph-Large, 28px); /* 175% */
+      transition: all 0.3s;
+      opacity: 0.7;
+      &:hover{
+        opacity: 0.5;
+      }
+      @media(max-width: 768px){
+        {% comment %} font-size: var(--Font-Size-Paragraph-Large, 15px);
+        line-height: var(--Line-Height-Paragraph-Large, 24px); /* 160% */ {% endcomment %}
+      }
+    }
+    .footer__bottom {
+      display: flex;
+      padding-block: var(--Spacing-Container-xxl, 48px);
+      justify-content: space-between;
+      align-items: center;
+      align-self: stretch;
+      justify-content: space-between;
+      border-top: 1px solid {{ section.settings.font_color }};
+      @media(max-width: 768px){
+        flex-direction: column-reverse;
+        align-items: start;
+        gap: var(--Spacing-Container-xl, 32px);
+      }
+    }
+    .footer__bottom p{
+      {% comment %} color: var(--Content-Inverted-main, #F3F4F6); {% endcomment %}
+      color: inherit;
+      font-family: var(--font-family-Body, Gotham);
+      font-size: var(--Font-Size-Paragraph-Medium, 14px);
+      font-style: normal;
+      font-weight: 400;
+      opacity: 0.7;
+      line-height: var(--Line-Height-Paragraph-Medium, 22px); /* 157.143% */
+      text-transform: uppercase;
+      @media(max-width: 768px){
+        font-size: var(--Font-Size-Paragraph-Medium, 13px);
+        line-height: var(--Line-Height-Paragraph-Medium, 20px); /* 153.846% */
+      }
+    }
+    .footer__bottom .copyright-text--container{
+      @media(max-width: 768px){
+        padding-top: var(--Spacing-Container-xxl, 32px);
+        border-top: 1px solid {{ section.settings.font_color }};
+        width: 100%;
+      }
+    }
+    .--external-link.button{
+        cursor: pointer !important;
+        background: {{ section.settings.btn_bgcolor }};
+        border: 0.5px solid {{ section.settings.btn_color }};
+        color: {{ section.settings.btn_color }} !important;    
+        @media(max-width: 768px){
+          width: 100%;
+        }
+    }
+    @media(min-width: 768px) {
+        .--external-link.button:hover{
+            background: {{ section.settings.btn_color }};
+            border: 0.5px solid {{ section.settings.btn_bgcolor }};
+            color: {{ section.settings.btn_bgcolor }} !important;    
+        }    
+    }
+    .privacy--container{
+      @media(max-width: 768px){
+        width: 100%;
+      }
+    }
+    .footer__bottom .privacy--arrow_btn{
+      {% comment %} color: var(--Content-Inverted-main, #F3F4F6); {% endcomment %}
+      color: inherit;
+      font-family: var(--font-family-Body, Gotham);
+      font-size: var(--Font-Size-Paragraph-Medium, 16px);
+      font-style: normal;
+      font-weight: 700;
+      line-height: var(--Line-Height-Paragraph-Medium, 28px);
+      text-transform: uppercase;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      opacity: 0.7;
+      @media(max-width: 768px){
+        font-size: var(--Font-Size-Paragraph-Large, 15px);;
+        line-height: var(--Line-Height-Paragraph-Large, 24px); /* 160% */
+        width: 100%;
+        justify-content: space-between;
+        {% comment %} padding-top: var(--Spacing-Container-xxl, 32px);
+        border-top: 1px solid {{ section.settings.font_color }}; {% endcomment %}
+      }
+    }
+    .top-navigation--container{
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      padding-block: var(--Spacing-Container-xxl, 48px);
+      gap: var(--Spacing-Container-xxl, 48px);
+      @media(max-width: 768px){
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+    }
+    .top-navigation--wrapper{
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--Spacing-Container-md, 16px);
+      @media(max-width: 768px){
+        padding-bottom: var(--Spacing-Container-xl, 24px);
+        border-bottom: 1px solid {{ section.settings.font_color }};
+      }
+    }
+    .top-navigation--wrapper:not(:last-child){
+      padding-right: var(--Spacing-Container-xxl, 48px);
+      border-right: 1px solid {{ section.settings.font_color }};
+      @media(max-width: 768px){
+        padding-right: unset;
+        border-right: unset;
+      }
+    }
+    .top-navigation--wrapper .top-navigation--btn{
+      color: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      path {
+        fill: {{ section.settings.font_color }};
+      }
+    }
+    .top-navigation--wrapper .top-navigation--btn span{
+      color: inherit;
+      font-family: var(--font-family-Heading, Gotham);
+      font-size: var(--Font-Size-Heading-H3, 20px);
+      font-style: normal;
+      font-weight: 700;
+      line-height: var(--Line-Height-Heading-H3, 24px); /* 120% */
+      text-transform: uppercase;
+      @media(max-width: 768px){
+        font-size: var(--Font-Size-Heading-H3, 17px);
+        line-height: var(--Line-Height-Heading-H3, 20px); /* 117.647% */
+      }
+    }
+    .top-navigation--wrapper .top-navigation--des{
+      color: inherit;
+      font-family: var(--font-family-Body, Gotham);
+      font-size: var(--Font-Size-Paragraph-Medium, 14px);
+      font-style: normal;
+      font-weight: 400;
+      line-height: var(--Line-Height-Paragraph-Medium, 22px); /* 157.143% */
+      opacity: 0.7;
+      em{
+        display: block;
+        font-style: normal;
+        @media(max-width: 768px){
+          display: unset;
+        }
+      }
+      @media(max-width: 768px){
+        font-size: var(--Font-Size-Paragraph-Medium, 13px);
+        line-height: var(--Line-Height-Paragraph-Medium, 20px); /* 153.846% */
+      }
+    }
+    .footer__bottom--{{ section.id }}{
+      .privacy--dropdown {
+        position: relative;
+      }
+
+      .privacy--dropdown-menu {
+        position: relative;
+        /* Position above the button by default */
+        left: 0;
+        {% comment %} background: #f5f5eb; {% endcomment %}
+        background: {{ section.settings.bg_color }};
+        border: 1px solid #1F2937;
+        border-radius: 4px;
+        {% comment %} box-shadow: 0 2px 5px rgba(0,0,0,0.1); {% endcomment %}
+        min-width: 200px;
+        z-index: 10;
+        margin-top: 5px;
+        list-style: none;
+        padding: 0;
+      }
+
+      .privacy--dropdown-menu li {
+        margin: 0;
+      }
+
+      .privacy--dropdown-menu a {
+        display: block;
+        padding: 10px 6px;
+        color: inherit;
+        text-decoration: none;
+        font-size: 14px;
+      }
+
+      .privacy--dropdown-menu a:hover {
+        background: #242e3d;
+        color: #fff !important;
+      }
+
+      .dropdown-arrow {
+        transition: transform 0.2s ease;
+        rotate: -90deg;
+
+        @media(max-width: 1200px) {
+          rotate: 0deg;
+        }
+        path {
+        fill: #1f2937;
+      }
+      }
+
+      .dropdown-arrow.active {
+        transform: rotate(180deg);
+      }
+
+      @media (max-width: 768px) {
+        .privacy--dropdown-menu {
+          width: 100%;
+          left: 0;
+          right: 0;
+          flex-direction: column;
+          position: absolute;
+          top: 100%; 
+        }
+      } 
+    }
+
+  }
+
+  @media(min-width: 1200px) {
+    #shopify-section-{{id}} .--external-link.button:before, #shopify-section-{{id}} .--external-link.button:after {
+       content: unset;
+    }
+    #shopify-section-{{id}} .--external-link.button:hover {
+        background: inherit;
+        border: 0.1px solid #1F2937 !important;
+        color: #1F2937 !important;
+    }
+    #shopify-section-{{id}}   .privacy--dropdown {
+      display: flex !important;
+      align-items: center !important;          
+    }     
+    #shopify-section-{{id}}  .privacy--dropdown-menu {
+      margin-top: 0 !important;
+    }  
+    #shopify-section-{{id}} .footer__section {
+      min-height: max-content !important;
+    }        
+    #shopify-section-{{id}} .privacy--dropdown-menu a {
+      padding: 0 6px !important;
+    }        
+  }  
+
+</style>
+
+
+<div class="sec-{{ id }} footer__section">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      <div class="top-navigation--container">
+        {% for block in section.blocks %}
+          {% if block.type == 'top_navigation' %}
+            <div class="top-navigation--wrapper">
+              {% if block.settings.top_navigation_label %}
+                <a href="{{ block.settings.top_navigation_url }}" class="top-navigation--btn">
+                  <span>{{ block.settings.top_navigation_label }}</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="7" height="14" viewBox="0 0 7 14" fill="none">
+                    <path d="M0.874756 0.3361L1.4322 0.586508L6.67724 7.00095L6.67872 7.00277L6.67724 7.00458L1.4322 13.419L0.874756 13.6694L3.83184 7.00458L3.83244 7.00306V7.00247L3.83184 7.00095L0.874756 0.3361Z" fill="white"/>
+                  </svg>
+                </a>
+              {% endif %}
+              {% if block.settings.top_navigation_des %}
+                <p class="top-navigation--des">{{ block.settings.top_navigation_des }}</p>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="main__navigation--container">
+        <div class="main__navigation">
+          {% for block in section.blocks %}
+            {% if block.type == 'navigation' %}
+              {% assign title = block.settings.menu_title %}
+              {% assign menu = block.settings.nav_menu %}
+              <div class="main__manu-wrapper">
+                {% if title != blank %}
+                  <p class="main__menu-title">{{ title | escape }}</p>
+                {% else %}
+                  <p class="main__menu-title">{{ menu.title }}</p>
+                {% endif %}
+                {% for link in menu.links %}
+                  <a class="mian__menu" href="{{ link.url }}">{{ link.title }}</a>
+                {% endfor %}
+              </div>
+            {% endif %}
+          {% endfor %}
+
+          {% for block in section.blocks %}
+            {% if block.type == 'invitation' %}
+              {% assign invitation_title = block.settings.invitation_title %}
+              {% assign invitation_des = block.settings.invitation_des %}
+              {% assign invitation_label = block.settings.invitation_label %}
+              {% assign invitation_url = block.settings.invitation_url %}
+              {% assign show_popup = block.settings.show_popup %}
+              <div class="footer__invitation--container">
+                {% if invitation_title != blank %}
+                  <p class="footer__invitation-title">{{ invitation_title | escape }}</p>
+                {% endif %}
+                {% if invitation_des != blank %}
+                  <p class="footer__invitation-description">{{ invitation_des | escape }}</p>
+                {% endif %}
+                {% if invitation_label != blank %}
+                  <a
+                    {% if show_popup %}
+                      onclick="openKlaviyoForm()"
+                    {% else %}
+                      href="{{ invitation_url }}"
+                    {% endif %}
+                    class="--external-link button"
+                  >
+                    {{- invitation_label -}}
+                  </a>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      {% comment %} <div class="footer__bottom">
+        {% if section.settings.copyright != blank %}
+          <div class="copyright-text--container">
+            <p>{{ section.settings.copyright }}</p>
+          </div>
+        {% endif %}
+
+        {% if section.settings.privacy_label != blank %}
+          <div class="privacy--container">
+            <a href="{{ section.settings.privacy_url }}" class="privacy--arrow_btn">
+              {{ section.settings.privacy_label }}
+               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="7" viewBox="0 0 14 7" fill="none">
+                <path d="M13.664 0.208008L13.4136 0.765452L6.99911 6.01049L6.99729 6.01197L6.99548 6.01049L0.581035 0.765452L0.330627 0.208008L6.99548 3.1651L6.997 3.1657H6.99759L6.99911 3.1651L13.664 0.208008Z" fill="white"/>
+              </svg> 
+            </a>
+          </div>
+        {% endif %}
+      </div>  {% endcomment %}
+
+      <div class="footer__bottom footer__bottom--{{ section.id }}">
+        {% if section.settings.copyright != blank %}
+          <div class="copyright-text--container">
+            <p>{{ section.settings.copyright }}</p>
+          </div>
+        {% endif %}
+        {% if section.settings.privacy_label != blank %}
+          <div class="privacy--container">
+            <div class="privacy--dropdown">
+              <button class="privacy--arrow_btn" aria-expanded="false" aria-controls="privacy-dropdown-{{ id }}">
+                {{ section.settings.privacy_label }}
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="7" viewBox="0 0 14 7" fill="none" class="dropdown-arrow">
+                  <path d="M13.664 0.208008L13.4136 0.765452L6.99911 6.01049L6.99729 6.01197L6.99548 6.01049L0.581035 0.765452L0.330627 0.208008L6.99548 3.1651L6.997 3.1657H6.99759L6.99911 3.1651L13.664 0.208008Z" fill="white"/>
+                </svg>
+              </button>
+              <ul id="privacy-dropdown-{{ id }}" class="privacy--dropdown-menu" style="display: none;">
+                {% if section.settings.option_one %}
+                  <li><a href="{{ section.settings.option_one_url }}">{{ section.settings.option_one }}</a></li>
+                {% endif %}
+                {% if section.settings.option_two %}
+                  <li><a href="{{ section.settings.option_two_url }}">{{ section.settings.option_two }}</a></li>
+                {% endif %}
+                {% if section.settings.option_three %}
+                  <li><a href="{{ section.settings.option_three_url }}">{{ section.settings.option_three }}</a></li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        {% endif %}
+      </div> 
+
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const button = document.querySelector('.footer__bottom--{{ section.id }} .privacy--arrow_btn');
+  const menu = document.querySelector('.footer__bottom--{{ section.id }} .privacy--dropdown-menu');
+  const arrow = document.querySelector('.footer__bottom--{{ section.id }} .dropdown-arrow');
+  const footerSection = document.querySelector('.footer__section');
+  let initialHeight = 0; 
+
+  if (button && menu && footerSection) {
+    initialHeight = footerSection.offsetHeight;
+
+    button.addEventListener('click', function() {
+      const isExpanded = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', !isExpanded);
+      menu.style.display = isExpanded ? 'none' : 'flex';
+      arrow.classList.toggle('active');
+
+      if (!isExpanded) {
+        const currentHeight = footerSection.offsetHeight;
+        const menuHeight = menu.offsetHeight;
+        let newMinHeight;
+        if(window.innerWidth > 768){
+          newMinHeight = currentHeight + menuHeight + 10;      
+          console.log(newMinHeight)   
+        }else{
+          newMinHeight = currentHeight + 40; 
+          console.log(newMinHeight)
+        } 
+        console.log(window.innerWidth)
+        {% comment %} const newMinHeight = currentHeight + menuHeight + 10;      {% endcomment %}
+        footerSection.style.minHeight = `${newMinHeight}px`;
+      } else {
+        footerSection.style.transition = 'min-height 0.5s ease-in-out'; // Add transition
+        footerSection.style.minHeight = `${initialHeight}px`;
+        // Remove transition after the animation (using setTimeout)
+        setTimeout(() => {
+          footerSection.style.transition = ''; 
+        }, 500); 
+      }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      if (!button.contains(event.target) && !menu.contains(event.target)) {
+        button.setAttribute('aria-expanded', 'false');
+        menu.style.display = 'none';
+        arrow.classList.remove('active');
+        // Apply transition only when closing
+        footerSection.style.transition = 'min-height 0.5s ease-in-out'; 
+        footerSection.style.minHeight = `${initialHeight}px`;
+        setTimeout(() => {
+          footerSection.style.transition = ''; 
+        }, 500); 
+      }
+    });
+  }
+});
+</script>
+
+{% comment %} <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const button = document.querySelector('.footer__bottom--{{ section.id }} .privacy--arrow_btn');
+    const menu = document.querySelector('.footer__bottom--{{ section.id }} .privacy--dropdown-menu');
+    const arrow = document.querySelector('.footer__bottom--{{ section.id }} .dropdown-arrow');
+
+    if (button && menu) {
+      button.addEventListener('click', function() {
+        const isExpanded = button.getAttribute('aria-expanded') === 'true';
+        button.setAttribute('aria-expanded', !isExpanded);
+        menu.style.display = isExpanded ? 'none' : 'block';
+        arrow.classList.toggle('active');
+        // Adjust position if near the bottom of the viewport
+        {% comment %} const rect = button.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        if (rect.bottom + menu.offsetHeight > viewportHeight) {
+          menu.style.bottom = '100%';
+          menu.style.top = 'auto';
+        } else {
+          menu.style.bottom = 'auto';
+          menu.style.top = '100%';
+        } {% endcomment %}
+      });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!button.contains(event.target) && !menu.contains(event.target)) {
+          button.setAttribute('aria-expanded', 'false');
+          menu.style.display = 'none';
+          arrow.classList.remove('active');
+        }
+      });
+    }
+  });
+</script> {% endcomment %}
+
+
+<script>
+  //Klayview__script
+  function isMobileDevice() {
+    const isMobileWidth = window.innerWidth <= 768;
+    const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
+    return isMobileWidth || isMobileUserAgent;
+  }
+
+  function openKlaviyoForm() {
+    window._klOnsite = window._klOnsite || [];
+
+    const formId = isMobileDevice() ? 'YkLkP2' : 'S9rriV';
+
+    window._klOnsite.push(['openForm', formId]);
+
+    console.log(`Klaviyo form triggered - Device: ${isMobileDevice() ? 'Mobile' : 'PC'}, Form ID: ${formId}`);
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Footer Section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#f5f5eb"
+    },
+    {
+      "type": "color",
+      "id": "font_color",
+      "label": "Font Color"
+    },
+    {
+      "type": "color",
+      "id": "btn_color",
+      "label": "Button Color",
+      "default": "#F3F4F6"
+    },
+    {
+      "type": "color",
+      "id": "btn_bgcolor",
+      "label": "Button Background Color"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "copyright",
+      "label": "Copyright",
+      "default": "© Bdraaddy. All rights reserved 2013-2025"
+    },
+    {
+      "type": "text",
+      "id": "privacy_label",
+      "label": "Privacy Dropdown Label",
+      "default": "Privacy"
+    },
+    {
+      "type": "text",
+      "id": "option_one",
+      "label": "Option One Label"
+    },
+    {
+      "type": "url",
+      "id": "option_one_url",
+      "label": "Option One Link"
+    },
+    {
+      "type": "text",
+      "id": "option_two",
+      "label": "Option Two Label"
+    },
+    {
+      "type": "url",
+      "id": "option_two_url",
+      "label": "Option Two Link"
+    },
+    {
+      "type": "text",
+      "id": "option_three",
+      "label": "Option Three Label"
+    },
+    {
+      "type": "url",
+      "id": "option_three_url",
+      "label": "Option Three Link"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "navigation",
+      "name": "Navigation Menu",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "menu_title",
+          "label": "Menu Title",
+          "info": "In case you want to display a custom title, otherwise, the title will be retrieved from the menu content"
+        },
+        {
+          "type": "link_list",
+          "id": "nav_menu",
+          "label": "Navigation Menu"
+        }
+      ]
+    },
+    {
+      "type": "invitation",
+      "name": "Invitation",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "invitation_title",
+          "label": "Invitation Title"
+        },
+        {
+          "type": "text",
+          "id": "invitation_des",
+          "label": "Invitation Description"
+        },
+        {
+          "type": "text",
+          "id": "invitation_label",
+          "label": "Invitation Button Label"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_popup",
+          "label": "Show Email Popup"
+        },
+        {
+          "type": "text",
+          "id": "invitation_url",
+          "label": "Invitation Button Link"
+        }
+      ]
+    },
+    {
+      "type": "top_navigation",
+      "name": "Top Navigation",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "top_navigation_label",
+          "label": "Top Navigation Button Label"
+        },
+        {
+          "type": "url",
+          "id": "top_navigation_url",
+          "label": "Top Navigation Button Link"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "top_navigation_des",
+          "label": "Top Navigation Description",
+          "info": "Use Italic For Line Break"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer Section"
+    }
+  ]
+}
+{% endschema %}

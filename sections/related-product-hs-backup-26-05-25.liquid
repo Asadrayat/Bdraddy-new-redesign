@@ -1,0 +1,543 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{% liquid
+  assign id = section.id
+%}
+<style>
+  
+.section-container--{{ section.id }} {
+  margin-top: {{ section.settings.margin_top | append: 'px' }};
+  margin-bottom: {{ section.settings.margin_bottom | append: 'px' }};
+  padding-top: {{ section.settings.padding_top | append: 'px' }};
+  padding-bottom: {{ section.settings.padding_bottom | append: 'px' }};
+  background-color: {{ section.settings.bg-color }};
+  overflow: hidden;
+
+  .product-card__container {
+    padding-bottom: 10px;
+  }
+
+  .--top-block {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--Spacing-Container-xxs);
+    align-items: end;
+    margin-bottom: var(--Spacing-Container-md);
+
+    {% if section.settings.title == blank and section.settings.subtitle == blank %}
+      display: none;
+    {% endif %}
+
+    @media (max-width: 600px) {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--Spacing-Container-xs);
+    }
+  }
+
+  h2.--section-title {
+    color: #000;
+    text-align: center;
+    font-family: var(--font-family-Title, "Sainte Colombe");
+    font-size: var(--Font-Size-Heading-H3, 32px);
+    font-style: normal;
+    font-weight: 400;
+    line-height: var(--Line-Height-Heading-H3, 40px); /* 125% */
+    letter-spacing: -0.64px;
+    margin-block: 0;
+  }
+
+  .--section-subtitle {
+    color: var(--Content-Base-main, #1F2937);
+    font-size: var(--Font-Size-Paragraph-Medium);
+    line-height: var(--Line-Height-Paragraph-Medium);
+  }
+
+  .--button-wrapper {
+    display: flex;
+    gap: var(--Spacing-Container-sm);
+    justify-content: flex-end;
+
+    @media (max-width: 600px) {
+      justify-content: flex-start;
+    }
+  }
+
+  a.--button {
+    display: block;
+    color: #fff;
+    text-align: center;
+    font-size: var(--Font-Size-UI-Controls-Control-Button-Small);
+    line-height: var(--Line-Height-UI-Controls-Control-Button-Small);
+    text-transform: capitalize;
+    padding: var(--Spacing-Container-xs) var(--Spacing-Container-sm);
+    border: 2px solid var(--Content-Base-main);
+    background: #004027;
+  }
+
+  .collection-wrapper {
+    position: relative;
+  }
+  .--slider-nav{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .--slider-nav-wrapper{
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .--nav-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    position: static;
+    z-index: 1;
+    transform: unset;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    svg{
+      width: 8px;
+      height: auto !important;
+    }
+  }
+
+  .--nav-icon.swiper-button-disabled {
+    display: none;
+  }
+
+  .prev-{{ section.id }}.--nav-icon {
+    left: 0px;
+  }
+
+  .next-{{ section.id }}.--nav-icon {
+    right: 0px;
+  }
+}
+
+@media screen and (min-width: 769px){
+  .--slider-nav-mbl{
+    display: none !important;
+  }
+}
+@media screen and (max-width: 768px) {
+  .section-container--{{ section.id }} {
+    margin-top: {{ section.settings.margin_top_m | append: 'px' }};
+    margin-bottom: {{ section.settings.margin_bottom_m | append: 'px' }};
+    padding-top: {{ section.settings.padding_top_m | append: 'px' }};
+    padding-bottom: {{ section.settings.padding_bottom_m | append: 'px' }};
+  }
+  .--slider-nav-lg{
+    display: none !important;
+  }
+}
+
+.swiper-scrollbar-{{ section.id }} {
+  display: none !important;
+  position: relative !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  margin: var(--Spacing-Container-xl) 0;
+  height: 1px !important;
+  opacity: 1 !important;
+  width: 100% !important;
+  cursor: pointer;
+  padding-block: 8px;
+  background: transparent;
+
+  .swiper-scrollbar-drag {
+    background: #00094b;
+    display: block !important;
+    height: 1px;
+  }
+
+  &::before {
+    position: absolute;
+    content: "";
+    background: var(--swiper-scrollbar-bg-color, rgba(0, 0, 0, .1));
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+  }
+}
+
+
+.collection-wrapper-{{ section.id }}{
+  .swiper-wrapper{
+    -webkit-transition-timing-function:linear!important;
+    transition-timing-function:linear!important; 
+    position: relative;
+  }
+}
+.section-container--{{ section.id }}.paused .swiper-wrapper {
+  /* transition-duration: 0s !important;
+  transition-delay: 0 !important; */
+}
+.section-container--{{ section.id }} .play-pause-button {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.section-container--{{ section.id }} .play-pause-button svg {
+  width: 24px;
+  height: 24px;
+}
+.section-container--{{ section.id }} .play-icon, .section-container--{{ section.id }} .pause-icon {
+  transition: opacity 0.3s ease;
+}
+
+@media screen and (max-width: 768px){
+  .section-container--{{ section.id }} .play-pause-button{
+    order: 2;
+  }
+  .--text-content{
+    order: 1;
+  }
+  .--slider-nav-wrapper{
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+</style>
+
+<recommendation-product
+  data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}"
+  data-product-id="{{ product.id }}"
+  data-section-id="{{ section.id }}"
+  data-wrapper-el="recommendation-container"
+>
+  <section class="section-container--{{ section.id }}">
+    <div class="section-wrapper--{{ section.id }} page-width recommendation-container">
+      <div class="--top-block">
+        <div class="play-pause-button play-pause-{{ section.id }}">
+          <svg class="play-icon" style="display: none;" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 5V19L19 12L8 5Z" fill="currentColor"/>
+          </svg>
+          <svg class="pause-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 4H10V20H6V4Z" fill="currentColor"/>
+            <path d="M14 4H18V20H14V4Z" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="--text-content">
+          <h2 class="--section-title">{{ section.settings.title }}</h2>
+          <div class="--section-subtitle">{{ section.settings.subtitle }}</div>
+        </div>
+        {% if section.settings.button_label != blank and section.settings.secondary_button_label != blank %}
+          <div class="--button-wrapper">
+            {% if section.settings.button_label != blank and section.settings.button_url != blank %}
+              <a class="--button" href="{{ section.settings.button_url }}"> {{ section.settings.button_label }} </a>
+            {% endif %}
+            {% if section.settings.secondary_button_label != blank and section.settings.secondary_button_url != blank %}
+              <a class="--button" href="{{ section.settings.secondary_button_url }}">
+                {{ section.settings.secondary_button_label }}
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+        <div class="--slider-nav --slider-nav-lg">
+          <div class="--slider-nav-wrapper">
+            <div class="prev-{{ section.id }} --nav-icon">
+              {% render 'card-icons', name: 'prev' %}
+            </div>
+            <div class="next-{{ section.id }} --nav-icon">
+              {% render 'card-icons', name: 'next' %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="collection-wrapper collection-wrapper-{{ section.id }}" id="featured-collection-hs">
+        <div class="swiper swiper-{{ section.id }}">
+          <div class="swiper-wrapper">
+            {%- for recommendation in recommendations.products -%}
+              <div class="swiper-slide-{{ section.id }} swiper-slide">
+                {% render 'product-card-new-v1', product: recommendation, loading: true %}
+              </div>
+            {% endfor %}
+            {%- for recommendation in recommendations.products -%}
+              <div class="swiper-slide-{{ section.id }} swiper-slide swiper-slide-duplicate">
+                {% render 'product-card-new-v1', product: recommendation, loading: true %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="--slider-nav --slider-nav-mbl">
+          <div class="--slider-nav-wrapper">
+            <div class="prev-{{ section.id }} --nav-icon">
+              {% render 'card-icons', name: 'prev' %}
+            </div>
+            <div class="next-{{ section.id }} --nav-icon">
+              {% render 'card-icons', name: 'next' %}
+            </div>
+          </div>
+        </div>
+
+        <div class="swiper-scrollbar-{{ section.id }} swiper-scrollbar"></div>
+      </div>
+    </div>
+  </section>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+      class RecommendationProduct extends HTMLElement {
+        constructor() {
+          super();
+          this.wrapperEL = `.${this.dataset.wrapperEl}`;
+          this.section = document.querySelector(`#shopify-section-${this.dataset.sectionId}`);
+          this.swiperInstance = null;
+          this.renderSection();
+        }
+
+        renderSection() {
+          let prevThis = this;
+          fetch(this.dataset.url)
+            .then((response) => response.text())
+            .then((data) => {
+              let html = new DOMParser().parseFromString(data, 'text/html');
+              if (this.section) {
+                this.section.querySelector(this.wrapperEL).innerHTML = html.querySelector(this.wrapperEL).innerHTML;
+              }
+            })
+            .catch((error) => console.error("Error fetching recommendations:", error))
+            .finally(() => {
+              prevThis.initSwiper();
+              {% comment %} window.cardProductFunc(); {% endcomment %}
+            });
+        }
+
+        initSwiper() {
+          this.swiperInstance = new Swiper(`.swiper-${this.dataset.sectionId}`, {
+            slidesPerView: 1.2,
+            spaceBetween: 16,
+            loop: true,
+            speed: 6000,
+            autoplay: {
+              delay: 0,
+              disableOnInteraction: true,
+            },
+            breakpoints: {
+              600: {
+                slidesPerView: 3.2,
+                spaceBetween: 40,
+              },
+            },
+            scrollbar: {
+              el: `.swiper-scrollbar-${this.dataset.sectionId}.swiper-scrollbar`,
+              draggable: true,
+              hide: false,
+            },
+            navigation: {
+              nextEl: `.next-${this.dataset.sectionId}`,
+              prevEl: `.prev-${this.dataset.sectionId}`,
+            },
+          });
+
+          // Play/Pause button functionality
+          const playPauseButton = this.section.querySelector(`.play-pause-${this.dataset.sectionId}`);
+          const playIcon = playPauseButton.querySelector('.play-icon');
+          const pauseIcon = playPauseButton.querySelector('.pause-icon');
+          const collectionWrapper = this.section.querySelector(`.collection-wrapper-${this.dataset.sectionId}`);
+          
+          playPauseButton.addEventListener('click', () => {
+            if (this.swiperInstance.autoplay.running) {
+              this.swiperInstance.autoplay.stop();
+              collectionWrapper.classList.add('paused');
+              playIcon.style.display = 'block';
+              pauseIcon.style.display = 'none';
+            } else {
+              collectionWrapper.classList.remove('paused');
+              this.swiperInstance.autoplay.start();
+              playIcon.style.display = 'none';
+              pauseIcon.style.display = 'block';
+            }
+          });
+
+          // Pause on mouse enter
+          collectionWrapper.addEventListener('mouseenter', () => {
+            collectionWrapper.classList.add('paused');
+            this.swiperInstance.autoplay.stop();
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+          });
+
+          collectionWrapper.addEventListener('mouseleave', () => {
+            collectionWrapper.classList.remove('paused');
+            this.swiperInstance.autoplay.start();
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'block';
+          });
+        }
+      }
+      customElements.define('recommendation-product', RecommendationProduct);
+    });
+  </script>
+  <script>
+      function adjustSliderNav() {
+        const sliderNavMbl = document.querySelector('.--slider-nav-mbl');
+        const sliderNavLg = document.querySelector('.--slider-nav-lg');
+      
+        if (window.innerWidth > 768) {
+          if (sliderNavMbl) {
+            sliderNavMbl.remove();
+          }
+        } else {
+          if (sliderNavLg) {
+            sliderNavLg.remove();
+          }
+        }
+      }
+      
+      window.addEventListener('load', adjustSliderNav);
+      window.addEventListener('resize', adjustSliderNav);
+  </script>
+</recommendation-product>
+
+{% schema %}
+{
+  "name": "Related Products Backup",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+       {
+      "type": "text",
+      "id": "id_nav",
+      "label": "Id for Navigtion"
+    },
+    {
+      "type": "header",
+      "content": "Section Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button Url"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_label",
+      "label": "Secondary Button Label"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_url",
+      "label": "Secondary Button Url"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Related Products Backup"
+    }
+  ]
+}
+{% endschema %}

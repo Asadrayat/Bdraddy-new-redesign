@@ -1,0 +1,202 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  .sec-{{ id }} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+    .wrapper-{{ id }} {
+        display: flex;
+        flex-direction: column;
+        gap: var(--Spacing-Container-xl);        
+    }
+    .icon__wrap {
+        display: flex;
+        justify-content: center;
+        align-items: center; 
+        gap: var(--Spacing-Container-lg, 24px);
+    }
+    .icon__ {
+        border-radius: 32px;
+        border: 1px solid #F3EEE7;
+        background: #FFF;
+        box-shadow: 0 5px 15px 0 rgba(29, 79, 55, 0.65);
+        position: relative;
+        display: flex;
+        width: 56px;
+        height: 56px;
+        padding: 3px 4px;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        aspect-ratio: 1/1;
+        margin: auto;
+        @media(max-width: 768px) {
+            width: 48px;
+            height: 48px;            
+        }
+    }    
+    .divider__left, .divider__right {
+        background: linear-gradient(90deg, rgba(102, 102, 102, 0.00) 0%, #000 100%);
+        width: 100%;
+        height: 1px;                
+        display: block;
+    }
+    .divider__right {
+        background: linear-gradient(90deg, #000 0%, rgba(102, 102, 102, 0.00) 100%);        
+    }
+    svg {
+        width: 20.12px;
+        height: 20.613px;
+        flex-shrink: 0;
+    }    
+    h3, p {
+      margin: 0;
+    }
+  }
+
+  @media(max-width: 600px) {
+    .sec-{{ id }} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+</style>
+
+<div class="sec-{{ id }}" id="{{ section.settings.sec_id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+        <div class="icon__wrap"><span class="divider__left"></span><span class="icon__">{% render 'all-icons', name: 'leaf' %}</span><span class="divider__right"></span></div>
+        <h3>{{ section.settings.title }}</h3>
+        <p>{{ section.settings.desc }}</p>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured info",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "sec_id",
+      "label": "Section Id"
+    },
+    {
+        "type": "inline_richtext",
+        "id": "title",
+        "label": "Title"
+    },
+    {
+        "type": "inline_richtext",
+        "id": "desc",
+        "label": "Description"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured info"
+    }
+  ]
+}
+{% endschema %}

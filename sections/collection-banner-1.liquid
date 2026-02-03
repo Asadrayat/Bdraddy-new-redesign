@@ -1,0 +1,438 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+    #shopify-section-{{ id }} {
+      box-sizing: border-box;
+      {% unless collection.image %}
+        margin-top: {{ section.settings.margin_top | append: 'px' }};
+        padding-top: {{ section.settings.padding_top | append: 'px' }};
+      {% endunless %}
+      margin-bottom: {{ section.settings.margin_bottom | append: 'px' }};
+      padding-bottom: {{ section.settings.padding_bottom | append: 'px' }};
+    }
+
+    @media (max-width: 989px) {
+      #shopify-section-{{ id }} {
+        {% unless collection.image %}
+          margin-top: {{ section.settings.margin_top_m | append: 'px' }};
+          padding-top: {{ section.settings.padding_top_m | append: 'px' }};
+        {% endunless %}
+        margin-bottom: {{ section.settings.margin_bottom_m | append: 'px' }};
+        padding-bottom: {{ section.settings.padding_bottom_m | append: 'px' }};
+      }
+    }
+
+    .info-container-{{ id }} {
+      {% if collection.image %}
+        background: #1F2937;
+      {% endif %}
+    }
+    .no-collection-image .info-container-{{ id }}{
+      margin: 0 0 24px;
+    }
+    .image-{{ id }} img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      max-height: 600px;
+      object-fit: cover;
+    }
+
+    .has-collection-image .bdcmb-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 24px;
+      @media(max-width: 768px){
+        margin: 0 0 16px;
+      }
+    }
+
+    .has-collection-image .bdcmb-wrapper a {
+      color: #F3F4F6;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .has-collection-image .info__wrap--{{ id }} {
+      padding: 32px;
+    }
+
+    .info__wrap--{{ id }} h2{
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 40px;
+      letter-spacing: -1.2px;
+      text-transform: uppercase;
+      margin: 0 0 24px;
+    }
+    .has-collection-image .info__wrap--{{ id }} h2 {
+      color: #F3F4F6;
+    }
+    .info__wrap--{{ id }} p {
+      font-size: 16px;
+      line-height: 28px;
+      margin: 0;
+    }
+    .has-collection-image .info__wrap--{{ id }} p {
+      color: #F3F4F6;
+    }
+    .has-collection-image .info__wrap--{{ id }}{
+      color: #F3F4F6 !important;
+    }
+    .no-collection-image .info__wrap--{{ id }}{
+      max-width: 700px;
+      margin: 0 auto;
+      * {
+        text-align: center;
+      }
+    }
+    .no-collection-image .info__wrap--{{ id }} h2{
+      color: #1F2937;
+    }
+    .no-collection-image .info__wrap--{{ id }} p{
+      color: #1F2937;
+    }
+
+
+    .items-{{ id }} {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: auto;
+      gap: 16px;
+      padding: 8px 16px;
+      border-top: 1px solid #4B5563;
+      border-bottom: 1px solid #4B5563;
+    }
+
+    @media screen and (max-width: 989px) {
+      .items-{{ id }} {
+        justify-content: flex-start;
+      }
+    }
+
+    .items-{{ id }} a {
+      text-align: center;
+      display: inline-block;
+      color: #4B5563;
+      font-size: 14px;
+      line-height: 22px;
+      padding: 8px 16px;
+      min-width: max-content;
+      text-decoration: none;
+    }
+
+    .items-{{ id }} a.active {
+      color: #fff;
+      border-color: #1F2937;
+      background: #1F2937;
+    }
+
+    .items-{{ id }} a span {
+      position: relative;
+    }
+
+    .items-{{ id }} a span::after {
+      content: "";
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background-color: {% if section.settings.image or collection.image %}#1F2937{% else %}#1F2937{% endif %};
+      transition: width 0.3s ease;
+    }
+    .items-{{ id }} a.active span::after {
+      background-color: {% if section.settings.image or collection.image %}#fff{% else %}#1F2937{% endif %};
+
+    }
+
+    .items-{{ id }} a:hover span::after {
+      width: 100%;
+    }
+
+    @media screen and (min-width: 990px) {
+      .has-collection-image .info-container-{{ id }} {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: center;
+      }
+    }
+
+    @media screen and (max-width: 989px) {
+      .bdcmb-wrapper {
+        margin: 0 0 16px;
+      }
+
+      .bdcmb-wrapper a {
+        font-size: 13px;
+        line-height: 20px;
+      }
+
+      .has-collection-image .info__wrap--{{ id }} {
+        padding: 24px;
+      }
+
+      .info__wrap--{{ id }} h2 {
+        font-size: 28px;
+        line-height: 32px;
+        margin: 0 0 16px;
+      }
+
+      .info__wrap--{{ id }} p {
+        line-height: 24px;
+      }
+
+      .items-{{ id }} {
+        justify-content: space-between;
+        overflow-x: auto;
+        gap: 12px;
+        padding: 8px 12px;
+      }
+
+      .items-{{ id }} a {
+        font-size: 13px;
+        line-height: 20px;
+        padding: 8px 12px;
+      }
+    }
+
+
+
+   .shopify-section-{{ id }} .--embroidery-collection-banner {
+      background: #1F2937;
+      padding: 10px;
+      margin: 10px auto;
+      text-align: center;
+      color: #fff;
+      {% comment %} max-width: var(--page-width);
+      {% if collection.image %}
+        padding-inline:4rem;
+
+      {% endif %} {% endcomment %}
+  }
+</style>
+
+<div class="shopify-section-{{ id }}">
+  <div class="{% unless collection.image %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }} {% if collection.image %}has-collection-image{% else %}no-collection-image{% endif %}">
+      <div class="info-container-{{ id }}">
+        {% if collection.image %}
+          <div class="image-{{ id }}">
+            {% comment %} {{ collection.image | image_url: width: 600 | image_tag }} {% endcomment %}
+            <picture>
+              <source media="(min-width: 1900px)" srcset="{{ collection.image | image_url: width: 1000 }}">
+              <source media="(min-width: 1600px)" srcset="{{ collection.image | image_url: width: 900 }}">
+               <source media="(min-width: 1200px)" srcset="{{ collection.image | image_url: width: 700 }}">
+              <source media="(min-width: 769px)" srcset="{{ collection.image | image_url: width: 600 }}">
+             
+              
+              {{ collection.image | image_url: width: 400 | image_tag: loading: 'eager', alt: collection.title }}
+            </picture>
+          </div>
+        {% endif %}
+        <div class="info__wrap--{{ id }}">
+          {% if collection.image %}
+            <div class="bdcmb">
+              <div class="bdcmb-wrapper">
+                <a href="/">Home</a>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path d="M4.5 2.5L8 6L4.5 9.5" stroke="#E5E7EB" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <a href="{{ collection.url }}">{{ collection.title }}</a>
+              </div>
+            </div>
+          {% endif %}
+          <h2>{{ collection.title | downcase }}</h2>
+          {% if collection.description != blank %}
+            <p>{{ collection.description }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if collection.metafields.custom.related_collection.value != blank %}
+        <div class="items-container-{{ id }} page-width- ">
+          <div class="items-{{ id }}">
+            {% for xcollection in collection.metafields.custom.related_collection.value %}
+              <a
+                class="{% if xcollection.url == collection.url %}active{% endif %}"
+                href="{{ xcollection.url }}"
+              >
+                <span>{{ xcollection.title }}</span>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      {% elsif collection.metafields.custom.fallback_related_collection != blank %}
+        <div class="items-container-{{ id }} page-width- ">
+          <div class="items-{{ id }}">
+            {% for xcollection in collection.metafields.custom.fallback_related_collection.value.metafields.custom.related_collection.value %}
+              <a
+                class="{% if xcollection.url == collection.url %}active{% endif %}"
+                href="{{ xcollection.url }}"
+              >
+                <span>{{ xcollection.title }}</span>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      {% else %}
+        {% comment %}
+          {% if section.blocks.size > 0 %}
+            <div class="items-container-{{ id }} page-width-">
+              <div class="items-{{ id }}">
+                {% for block in section.blocks %}
+                  {% assign collection_url = block.settings.collection.url %}
+                  {% assign current_url = request.path %}
+                  <a
+                    class="{% if current_url == collection_url %}active{% endif %}"
+                    href="{{ block.settings.collection.url }}"
+                  >
+                    <span>{{ block.settings.collection.title }}</span>
+                  </a>
+                {% endfor %}
+              </div>
+            </div>
+          {% endif %}
+        {% endcomment %}
+      {% endif %}
+
+      {% if collection.metafields.custom.is_embroidery_collection == true and collection.id != 458963517690 %}
+        {% if collection.image %}
+          <div class="page-width">
+        {% endif %}
+        <div class="--embroidery-collection-banner ">
+           {{ settings.embroidery_message_collection_page }}
+          
+        </div>
+        {% if collection.image %}
+          </div>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection Banner 1",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Banner 1"
+    }
+  ]
+}
+{% endschema %}

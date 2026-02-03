@@ -1,0 +1,612 @@
+{% liquid
+  assign id = section.id
+%}
+{% comment %} {% assign shop_the_look_v2_metaobject = product.metafields.custom.shop_the_look_v2_metaobject.value %} {% endcomment %}
+{% assign shop_the_look_product_list = product.metafields.custom.outfit_products.value %}
+
+
+<style>
+      .sec-{{ id }} {
+        box-sizing: border-box;
+        margin-top: {{section.settings.margin_top | append: 'px'}};
+        margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+        padding-top: {{section.settings.padding_top | append: 'px'}};
+        padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+        {% if shop_the_look_product_list == blank %}
+           display: none;
+        {% endif %}
+      }
+
+      @media(max-width: 600px) {
+        .sec-{{ id }} {
+          margin-top: {{section.settings.margin_top_m | append: 'px'}};
+          margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+          padding-top: {{section.settings.padding_top_m | append: 'px'}};
+          padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+        }
+      }
+    .swiper.swiper-{{ section.id }}:not(.swiper-initialized) {
+      .swiper-slide.swiper-slide-active{
+      opacity: 0;
+      pointer-events: none;
+      }
+
+    }
+
+    .sec-{{ id }}{
+    .wrapper-{{ id }}{
+      position: relative;
+    }
+    .--section-title {
+        margin: 0 0 32px;
+        em {
+            margin-right: 10px;
+        }
+    }
+  .--image-product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      grid-template-rows: minmax(0, 1fr);
+      gap: 16px;
+      position: relative;
+      max-height: 100%;
+      max-width: 100%;
+      
+      @media(max-width: 768px){
+              grid-template-columns: minmax(0,1fr);
+      }
+  }
+  .--image-product-grid .swiper {
+     display: grid; 
+    grid-template-columns: 1fr;
+    max-width: 100%; 
+  }
+    .--main-product-image-wrapper {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background-image: url("{{ product.selected_or_first_available_variant.image | image_url }}");
+      background-size: 100%;
+        background-position: center;
+      @media(max-width: 768px){
+        display: none;
+        }
+    }
+
+      .--single-slide-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 8px;
+          @media(max-width: 768px){
+          grid-template-columns: 1fr;
+          }
+      }
+      .--set-product-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+         grid-template-rows: 1fr 1fr;
+         @media(max-width: 768px){
+        {% if shop_the_look_product_list.size < 4 %}
+          grid-template-rows: auto;
+        {% endif %}
+        }
+        
+
+  
+        {% comment %} grid-template: 1fr 1fr/ 1fr 1fr; {% endcomment %}
+        gap: 8px;
+    }
+
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .swiper-slide {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    h4.--set-serial-title {
+        margin: 0;
+    }
+    .--single-set-product {
+        position: relative;
+        overflow: hidden;
+    }
+    img.--set-product-image {
+        aspect-ratio: 1;
+        {% comment %} aspect-ratio: 4/5; {% endcomment %}
+    }
+    h4.-set-product-title {
+        margin: 0;
+        position: relative;
+    }
+    .--text-wrapper {
+        box-sizing: border-box;
+        position: absolute;
+        left: 0;
+        bottom: -100%;
+        background: #fff;
+        width: 100%;
+        padding: 8px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        transition: 0.5s ease;
+        z-index: 2;
+        @media(max-width: 768px){
+        display: none;
+        }
+    }
+    @media(min-width: 769px){
+    .--single-set-product:hover .--text-wrapper{
+      bottom: 0;
+    }
+    }
+
+    .--view-item {
+        background: #212b36;
+        color: #fff;
+        text-align: center;
+        font-weight: 600;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+    button.--quick-add.--quick-add-mobile.--quick-add-trigger,
+    a.--quick-add.--quick-add-mobile.--quick-add-trigger
+    {
+        position: absolute;
+        right: 5px;
+        bottom: 5px;
+        display: block;
+        background: #1f2937;
+        width: 40px;
+        height: 40px;
+        border: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        @media(min-width: 769px){
+        display: none;
+        }
+    }
+
+
+
+    }
+    .section-{{section.id }} .swiper-button-disabled {
+          {% comment %} opacity: .5; {% endcomment %}
+          opacity: 0;
+           @media(max-width: 768px){
+                opacity: 0.5;
+            }
+      }
+      .section-{{section.id }} .--nav-icon.swiper-button-lock {
+          display: none;
+      }
+      .section-{{section.id }} .--nav-icon {
+          display: flex;
+          min-width: 36px;
+          width: 36px;
+          height: 36px;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+          border: 1px solid var(--Border-Base-dense, #4B5563);
+          background: #FFF;
+          position: absolute;
+          top: 50%;
+          z-index: 1;
+          cursor: pointer;
+          transition: 0.5s ease;
+            svg path{
+            transition: 0.5s ease;
+            }
+            @media(max-width: 768px){
+            /* display: none; */
+            position: relative;
+          }
+      }
+      .swiper-prev-{{section.id }}.--desktop-nav {
+          left: -38px;
+          @media(max-width: 768px){
+            display: none;
+          }
+      }
+      .swiper-next-{{section.id }}.--desktop-nav {
+          right: -38px;
+           @media(max-width: 768px){
+            display: none;
+          }
+
+      }
+      .swiper-prev-{{section.id }}.--mobile-nav ,
+      .swiper-next-{{section.id }}.--mobile-nav {
+        @media(min-width: 768px){
+            display: none;
+        }
+      }
+      @media(min-width: 769px){
+          .section-{{section.id }} .--nav-icon:hover{
+            background: #1F2937;
+            svg path{
+              fill: #fff;
+            }
+          }
+        }
+        .swiper.swiper-{{ section.id }} {
+            max-width: -webkit-fill-available;
+        }
+        .swiper.swiper-{{ section.id }} .swiper-wrapper{
+            @media(max-width: 768px){
+            height: unset;
+          }
+        }
+        .swiper-scrollbar-{{ section.id }} {
+              position: relative !important;
+              left: 0 !important;
+              bottom: 0 !important;
+              margin:  0;
+              height: 1px !important;
+              opacity: 1 !important;
+              width: 100% !important;
+              cursor: pointer;
+              padding-block: 8px;
+              background: transparent;
+              padding-block: var(--Spacing-Container-xxl);
+
+              .swiper-scrollbar-drag {
+                background: #00094b;
+                display: block !important;
+                height: 1px;
+              }
+            }
+            .swiper-scrollbar-{{ section.id }}::before {
+              position: absolute;
+              content: "";
+              background: var(--swiper-scrollbar-bg-color, rgba(0, 0, 0, .1));
+              top: 50%;
+              left: 0;
+              width: 100%;
+              height: 1px;
+            }
+
+    .section-{{section.id }} .desktop__only {
+        @media (max-width: 768px) {
+            display: none!important;
+        }
+      }
+</style>
+{% comment %} <h1>{{ shop_the_look_product_list.size }}</h1> {% endcomment %}
+<div id="shop_the_look" class="sec-{{ id }} section-{{section.id }} ">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      <h2 class="--section-title">{{ section.settings.title }}</h2>
+      <div class="--image-product-grid">
+        <div class="--main-product-image-wrapper">
+          {% comment %}
+            <div class="--product-image desktop__only">
+              {{ product.selected_or_first_available_variant.image | image_url: width: 1000 | image_tag }}
+            </div>
+          {% endcomment %}
+        </div>
+
+        <div class="swiper swiper-{{ section.id }}">
+          {% comment %}
+            <div class="swiper-wrapper">
+              {% for i in (1..4) %}
+                {% capture set_serial %}set_{{ i }}{% endcapture %}
+                {% assign set = shop_the_look_v2_metaobject[set_serial].value %}
+                {% if set != blank %}
+                  <div class="swiper-slide">
+                      {% comment %} <h4 class="--set-serial-title">Set {{ i }}</h4> {% endcomment %}
+                    <div class="--set-product-grid">
+                      {% for xproduct in set limit: 4 %}
+                        {% if xproduct != blank %}
+                          <div class="--single-set-product">
+                            <a
+                              class="absolute-link desktop__only"
+                              href="{{ xproduct.selected_or_first_available_variant.url | within: collection }}"
+                            ></a>
+
+                            {% comment %} {{ xproduct.featured_image | image_url: width: 500 | image_tag: class: '--set-product-image'  }} {% endcomment %}
+                            <img
+                              class="--quick-add-trigger --set-product-image"
+                              src="{{ xproduct.featured_image | image_url: width: 500 }}"
+                              data-url="{{ xproduct.selected_or_first_available_variant.url | within: collection }}"
+                              alt="{{ xproduct.title | escape }}"
+                            >
+                            <div class="--text-wrapper">
+                              <h4 class="-set-product-title">
+                                {{ xproduct.title }}
+                                <a
+                                  class="absolute-link desktop__only"
+                                  href="{{ xproduct.selected_or_first_available_variant.url | within: collection }}"
+                                ></a>
+                              </h4>
+                              <div>{{ xproduct.price | money }}</div>
+                              <div
+                                class="--view-item --quick-add-trigger"
+                                data-url="{{ xproduct.selected_or_first_available_variant.url | within: collection }}"
+                              >
+                                View Item
+                              </div>
+                            </div>
+                            <button
+                              class="--quick-add --quick-add-mobile --quick-add-trigger "
+                              data-url="{{ product.selected_or_first_available_variant.url | within: collection }}"
+                            >
+                              {% render 'all-icons', name: 'test-bag' %}
+                            </button>
+                          </div>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endcomment %}
+           <div class="swiper-wrapper">
+            {% for xproduct in shop_the_look_product_list %}
+            {% assign divisible_by_four = forloop.index0 | modulo: 4 %}
+            {% if forloop.index0 == 0 or divisible_by_four == 0 %}
+              <div class="swiper-slide">
+                <div class="--set-product-grid">
+            {% endif %}
+
+            {% comment %} Individual product card {% endcomment %}
+
+            {% if xproduct != blank %}
+              <div class="--single-set-product">
+                <a
+                  class="absolute-link --desktop__only"
+                  href="{{ xproduct.selected_or_first_available_variant.url | within: collection }}"
+                ></a>
+
+                {% comment %} {{ xproduct.featured_image | image_url: width: 500 | image_tag: class: '--set-product-image'  }} {% endcomment %}
+                <img
+                  class="--quick-add-trigger --set-product-image"
+                  src="{{ xproduct.featured_image | image_url: width: 500 }}"
+                  data-url="{{ xproduct.selected_or_first_available_variant.url | within: collection }}"
+                  alt="{{ xproduct.title | escape }}"
+                >
+                <div class="--text-wrapper">
+                  <h4 class="-set-product-title">
+                    {{ xproduct.title }}
+                    <a
+                      class="absolute-link desktop__only"
+                      href="{{ xproduct.selected_or_first_available_variant.url | within: collection }}"
+                    ></a>
+                  </h4>
+                  <div>{{ xproduct.price | money }}</div>
+                  {% comment %} <div
+                    class="--view-item --quick-add-trigger"
+                    data-url="{{ xproduct.selected_or_first_available_variant.url | within: collection }}"
+                  >
+                    View Item
+                  </div> {% endcomment %}
+                  <a
+                    class="--view-item --quick-add-trigger"
+                    data-url="{{ xproduct.selected_or_first_available_variant.url | within: collection }}"
+                    href="{{ xproduct.selected_or_first_available_variant.url | within: collection }}"
+                  >
+                    View Item
+                  </a>
+                </div>
+                {% comment %} <button
+                  class="--quick-add --quick-add-mobile --quick-add-trigger "
+                  data-url="{{ xproduct.selected_or_first_available_variant.url | within: collection }}"
+                >
+                  {% render 'all-icons', name: 'test-bag' %}
+                </button> {% endcomment %}
+                <a
+                  class="--quick-add --quick-add-mobile --quick-add-trigger hidden"
+                  data-url="{{ xproduct.selected_or_first_available_variant.url | within: collection }}"
+                  href="{{ xproduct.selected_or_first_available_variant.url | within: collection }}"
+                >
+                  {% render 'all-icons', name: 'test-bag' %}
+                </a>
+              </div>
+            {% endif %}
+
+            {% assign next_of_divisible_by_four = forloop.index1 | modulo: 4 %}
+            {% if forloop.last or divisible_by_four == 3 %}
+              </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+           </div>
+          
+
+          <div class="--nav-button-wrapper">
+            <div class="swiper-scrollbar-{{ section.id }} swiper-scrollbar --mobile"></div>
+            <div class="swiper-prev-{{ section.id }} --nav-icon --mobile-nav">
+              {%- render 'header-icons', name: 'left' -%}
+            </div>
+            <div class="swiper-next-{{ section.id }} --nav-icon --mobile-nav">
+              {%- render 'header-icons', name: 'right' -%}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="swiper-prev-{{ section.id }} --nav-icon --desktop-nav">
+        {%- render 'header-icons', name: 'left' -%}
+      </div>
+      <div class="swiper-next-{{ section.id }} --nav-icon --desktop-nav">
+        {%- render 'header-icons', name: 'right' -%}
+      </div>
+      <div class="swiper-scrollbar-{{ section.id }} swiper-scrollbar --desktop"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+ 
+  swiperSlider['{{ id }}'] = {};
+
+  if (window.innerWidth < 768) {
+    // Slider for Mobile
+    swiperSlider['{{ id }}'].slider = new Swiper('.swiper-{{ id }}', {
+      slidesPerView: 1,
+      spaceBetween: 20,
+      scrollbar: {
+        el: '.swiper-scrollbar-{{ section.id }}.swiper-scrollbar.--mobile',
+        draggable: true,
+        hide: false,
+      },
+      navigation: {
+        nextEl: '.swiper-next-{{ section.id }}.--mobile-nav',
+        prevEl: '.swiper-prev-{{ section.id }}.--mobile-nav',
+      },
+      breakpoints: {
+        768: {
+          slidesPerView: 1,
+          spaceBetween: 40,
+        },
+      },
+    });
+  } else {
+    //Slider for Desktop
+    swiperSlider['{{ id }}'].slider = new Swiper('.swiper-{{ id }}', {
+      slidesPerView: 1,
+      spaceBetween: 20,
+      scrollbar: {
+        el: '.swiper-scrollbar-{{ section.id }}.swiper-scrollbar.--desktop',
+        draggable: true,
+        hide: false,
+      },
+      navigation: {
+        nextEl: '.swiper-next-{{ section.id }}.--desktop-nav',
+        prevEl: '.swiper-prev-{{ section.id }}.--desktop-nav',
+      },
+      breakpoints: {
+        768: {
+          slidesPerView: 1,
+          spaceBetween: 40,
+        },
+      },
+    });
+  }
+   });
+</script>
+
+{% schema %}
+{
+  "name": "Shop The Look v4",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Style it with"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Shop The Look v4"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,147 @@
+{% comment %} Sort is the first tabbable element when filter type is vertical {% endcomment %}
+<div class="filter__header page-width">
+  <div class="filter__header-wrapper">
+    <div class="filter__opener-result">
+      <button filter-opener>
+        Filter
+        {% render 'header-icons', name: 'down' %}
+      </button>
+      {% comment %}
+        <div class="filtered__result">
+          <facet-filters-form class="facets facets-vertical-sort  small-hide--">
+            <form class="facets-vertical-form" id="FacetSortForm">
+              <div class="product-count-vertical light" role="status">
+                <h2 class="product-count__text text-body">
+                  <span id="ProductCountDesktop">
+                    (
+                    {%- if collection.results_count -%}
+                      {{
+                        'templates.search.results_with_count'
+                        | t: terms: collection.terms, count: collection.results_count
+                      }}
+                    {%- elsif collection.products_count == collection.all_products_count -%}
+                      {{ 'products.facets.product_count_simple' | t: count: collection.products_count }}
+                    {%- else -%}
+                      {{
+                        'products.facets.product_count'
+                        | t: product_count: collection.products_count, count: collection.all_products_count
+                      }}
+                    {%- endif -%}
+                    )
+                  </span>
+                </h2>
+                {%- render 'loading-spinner' -%}
+              </div>
+            </form>
+          </facet-filters-form>
+        </div>
+      {% endcomment %}
+      {%- if section.settings.enable_sorting and section.settings.filter_type == 'vertical' -%}
+        <div class="custom__sort">
+          <div class="custom__sort-wrapper">
+            <button sort-opener>
+              Sort
+              {% render 'header-icons', name: 'down' %}
+            </button>
+            <div sort-body class="custom__sort-options">
+              <div class="sort__options-wrapper">
+                <div class="sort__option-header">
+                  <h4>Sort By</h4>
+                  <button sort-close>{% render 'all-icons', name: 'close' %}</button>
+                </div>
+                <div class="sort__options-inner">
+                  <facet-filters-form class="facets facets-vertical-sort  small-hide--">
+                    <form class="facets-vertical-form" id="FacetSortForm">
+                      <div class="facet-filters sorting caption">
+                        <div class="facet-filters__field">
+                          <div class="facet-filters__radio-container">
+                            {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+                            {%- for option in collection.sort_options -%}
+                              <div class="facet-filters__radio-option">
+                                <input
+                                  type="radio"
+                                  name="sort_by"
+                                  id="SortBy-{{ option.value | escape }}"
+                                  value="{{ option.value | escape }}"
+                                  class="facet-filters__sort caption-large"
+                                  {% if option.value == sort_by %}
+                                    checked="checked"
+                                  {% endif %}
+                                  aria-describedby="a11y-refresh-page-message"
+                                >
+                                <label for="SortBy-{{ option.value | escape }}">
+                                  <span class="active__sort">
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="12"
+                                      height="12"
+                                      viewBox="0 0 12 12"
+                                      fill="none"
+                                    >
+                                      <path d="M10 3L4.5 8.5L2 6" stroke="white" stroke-width="1.6666" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                  </span>
+                                  <span class="sort__option-name">{{ option.name | escape }}</span>
+                                </label>
+                              </div>
+                            {%- endfor -%}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="product-count-vertical light hidden" role="status">
+                        <h2 class="product-count__text text-body">
+                          <span id="ProductCountDesktop">
+                            {%- if collection.results_count -%}
+                              {{
+                                'templates.search.results_with_count'
+                                | t: terms: collection.terms, count: collection.results_count
+                              }}
+                            {%- elsif collection.products_count == collection.all_products_count -%}
+                              {{ 'products.facets.product_count_simple' | t: count: collection.products_count }}
+                            {%- else -%}
+                              {{
+                                'products.facets.product_count'
+                                | t: product_count: collection.products_count, count: collection.all_products_count
+                              }}
+                            {%- endif -%}
+                          </span>
+                        </h2>
+                        {%- render 'loading-spinner' -%}
+                      </div>
+                    </form>
+                  </facet-filters-form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="filter__layout">
+      <div class="column__switch-lg column__switcher">
+        <div class="column__switch-lg-wrapper">
+          <button data-column="3" lg__three="">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 16 16" fill="none">
+              <path d="M6 11.3333V4.66665M6 11.3333C6 12.0697 5.40305 12.6666 4.66667 12.6666H3.33333C2.59695 12.6666 2 12.0697 2 11.3333V4.66665C2 3.93027 2.59695 3.33331 3.33333 3.33331H4.66667C5.40305 3.33331 6 3.93027 6 4.66665M6 11.3333C6 12.0697 6.59695 12.6666 7.33333 12.6666H8.66667C9.40305 12.6666 10 12.0697 10 11.3333M6 4.66665C6 3.93027 6.59695 3.33331 7.33333 3.33331H8.66667C9.40305 3.33331 10 3.93027 10 4.66665M10 11.3333V4.66665M10 11.3333C10 12.0697 10.597 12.6666 11.3333 12.6666H12.6667C13.403 12.6666 14 12.0697 14 11.3333V4.66665C14 3.93027 13.403 3.33331 12.6667 3.33331H11.3333C10.597 3.33331 10 3.93027 10 4.66665" stroke="#4B5563" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button data-column="4" lg__four="">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 16 16" fill="none">
+              <path d="M2 6.66667H14M2 9.33333H14M8 6.66667V12M3.33333 12H12.6667C13.403 12 14 11.403 14 10.6667V5.33333C14 4.59695 13.403 4 12.6667 4H3.33333C2.59695 4 2 4.59695 2 5.33333V10.6667C2 11.403 2.59695 12 3.33333 12Z" stroke="#4B5563"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    {% comment %}
+      {% render 'highligts', section %}
+    {% endcomment %}
+  </div>
+
+  <div class="active__filters">
+    <div class="active__filters-wrapper">
+      {% render 'active-facets', results: results %}
+    </div>
+  </div>
+</div>

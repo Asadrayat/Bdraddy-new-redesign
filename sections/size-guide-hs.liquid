@@ -1,0 +1,404 @@
+{% liquid
+  assign id = section.id
+%}
+{{ 'size-chart-style.css' | asset_url | stylesheet_tag }}
+<style>
+      .sec-{{ id }} {
+        box-sizing: border-box;
+        margin-top: {{section.settings.margin_top | append: 'px'}};
+        margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+        padding-top: {{section.settings.padding_top | append: 'px'}};
+        padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+      }
+
+    .sec-{{ id }}{
+        .nested-tabs .size--chart-nested-tab-btn{
+            background: var(--Content-Inverted-main, #F3F4F6);
+            color: #1F2937;
+        }
+        .nested-tabs .size--chart-nested-tab-btn.active{
+            background: #1F2937;
+            color: var(--Content-Inverted-main, #F3F4F6);
+        }
+    }
+</style>
+
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      <div class="sizecharts">
+        <!-- Tab Buttons -->
+        {% comment %} <div class="sizechart-tabs">
+          <button class="size--chart-tab--btn active" data-target="men">Men</button>
+          <button class="size--chart-tab--btn" data-target="ladies">Ladies</button>
+          <button class="size--chart-tab--btn" data-target="infants">Infants</button>
+          <button class="size--chart-tab--btn" data-target="juniors">Juniors</button>
+        </div> {% endcomment %}
+        <!-- Nested Ladies Tabs -->
+        <div class="nested-tabs size--chart-ladies-nested" style="display: none;">
+          <button class="size--chart-nested-tab-btn active" data-target="ladies-top">Ladies Top</button>
+          <button class="size--chart-nested-tab-btn" data-target="ladies-bottom">Ladies Bottom</button>
+        </div>
+
+        <!-- MEN -->
+        <div class="--single-chart size--chart-tab-content men active">
+          <div class="--top-block">
+            <h3 class="--chart-title">Men Body Measurement</h3>
+            <p class="--chart-content">These measurements reflect body size in inches.</p>
+          </div>
+          <div class="size-chart-wrapper">
+            <div class="size-chart men">
+            <!-- Table__header Row -->
+            <div class="body-col">SIZING</div>
+            <div class="table__header">WAIST</div>
+            <div class="table__header">CHEST</div>
+            <div class="table__header">NECK</div>
+            <div class="table__header">SLEEVE</div>
+            <!-- Row 1 -->
+            <div class="body-col">SMALL</div>
+            <div class="cell">29 - 31</div>
+            <div class="cell">35 - 37</div>
+            <div class="cell">14 - 14.5</div>
+            <div class="cell">32 - 33</div>
+            <!-- Row 2 -->
+            <div class="body-col">MEDIUM</div>
+            <div class="cell">32 - 34</div>
+            <div class="cell">38 - 40</div>
+            <div class="cell">15 - 15.5</div>
+            <div class="cell">33 - 34</div>
+            <!-- Row 3 -->
+            <div class="body-col">LARGE</div>
+            <div class="cell">36 - 38</div>
+            <div class="cell">42 - 44</div>
+            <div class="cell">16 - 16.5</div>
+            <div class="cell">34 - 35</div>
+            <!-- Row 4 -->
+            <div class="body-col">XLARGE</div>
+            <div class="cell">40 - 42</div>
+            <div class="cell">44 - 46</div>
+            <div class="cell">17 - 17.5</div>
+            <div class="cell">35 - 36</div>
+            <!-- Row 5 -->
+            <div class="body-col">XXL</div>
+            <div class="cell">44 - 46</div>
+            <div class="cell">48 - 50</div>
+            <div class="cell">18 - 18.5</div>
+            <div class="cell">36 - 37</div> 
+            </div>
+          </div>
+        </div>
+
+        <!-- LADIES TOP -->
+        <div class="--single-chart size--chart-tab-content ladies ladies-top" style="display: none;">
+          <div class="--top-block">
+            <h3 class="--chart-title">Ladies (Tops) Body Measurement</h3>
+            <p class="--chart-content">These measurements reflect body size in inches.</p>
+          </div>
+          <div class="size-chart-wrapper women">
+            <div class="size-chart">
+            <!-- Header row -->
+            <div class="table__header body-col">BODY SIZING</div>
+            <div class="table__header">BUST</div>
+            <div class="table__header">WAIST</div>
+            <div class="table__header">HIP</div>
+            <!-- Row 1 -->
+            <div class="body-col">XSMALL</div>
+            <div class="body-col second">2</div>
+            <div>33</div>
+            <div>24.5</div>
+            <div>35</div>
+            <!-- Row 2 -->
+            <div class="body-col">SMALL</div>
+            <div class="body-col second">4 - 6</div>
+            <div>34 - 35</div>
+            <div>25.5 - 26.5</div>
+            <div>36 - 37</div>
+            <!-- Row 3 -->
+            <div class="body-col">MEDIUM</div>
+            <div class="body-col second">8 - 10</div>
+            <div>36 - 37</div>
+            <div>27.5 - 28.5</div>
+            <div>38 - 39</div>
+            <!-- Row 4 -->
+            <div class="body-col">LARGE</div>
+            <div class="body-col second">12 - 14</div>
+            <div>38.5 - 40</div>
+            <div>30 - 31.5</div>
+            <div>40.5 - 42</div>
+            <!-- Row 5 -->
+            <div class="body-col">XLARGE</div>
+            <div class="body-col second">16</div>
+            <div>41.5</div>
+            <div>33</div>
+            <div>43.5</div>
+            <!-- Row 6 -->
+            <div class="body-col">XXL</div>
+            <div class="body-col second">18</div>
+            <div>42.5</div>
+            <div>34</div>
+            <div>45</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LADIES BOTTOM -->
+        <div class="--single-chart size--chart-tab-content ladies ladies-bottom" style="display: none;">
+          <div class="--top-block">
+            <h3 class="--chart-title">Ladies (Bottom) Body Measurement</h3>
+            <p class="--chart-content">These measurements reflect body size in inches.</p>
+          </div>
+          <div class="size-chart-wrapper women">
+            <div class="size-chart">
+            <!-- Header row -->
+            <div class="table__header body-col">BODY SIZING</div>
+            <div class="table__header">NATURAL WAIST</div>
+            <div class="table__header">HIGH HIP ( 4" BELOW WAIST)</div>
+            <div class="table__header">LOW HIP ( 8" BELOW WAIST)</div>
+            <!-- Row 1 -->
+            <div class="body-col">XSMALL</div>
+            <div class="body-col second">0 - 2</div>
+            <div>23 - 25</div>
+            <div>31.5 - 32.5</div>
+            <div>34.5 - 35.5</div>
+            <!-- Row 2 -->
+            <div class="body-col">SMALL</div>
+            <div class="body-col second">4 - 6</div>
+            <div>26 - 27</div>
+            <div>33.5 - 34.5</div>
+            <div>36.5 - 37.5</div>
+            <!-- Row 3 -->
+            <div class="body-col">MEDIUM</div>
+            <div class="body-col second">8 - 10</div>
+            <div>28 - 29</div>
+            <div>35.5 - 36.5</div>
+            <div>38.5 - 39.5</div>
+            <!-- Row 4 -->
+            <div class="body-col">LARGE</div>
+            <div class="body-col second">12 - 14</div>
+            <div>30.5 - 32</div>
+            <div>37.5 - 39</div>
+            <div>40.5 - 42</div>
+            <!-- Row 5 -->
+            <div class="body-col">XLARGE</div>
+            <div class="body-col second">16</div>
+            <div>33.5 - 35.5</div>
+            <div>40 - 41.5</div>
+            <div>43 - 44.5</div>
+            <!-- Row 5 -->
+            <div class="body-col">XXL</div>
+            <div class="body-col second">18</div>
+            <div>36.5 - 37.5</div>
+            <div>42.5 - 44</div>
+            <div>45.5 - 47</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- INFANTS -->
+        <div class="--single-chart size--chart-tab-content infants" style="display: none;">
+          <div class="--top-block">
+            <h3 class="--chart-title">Baby Body Measurement</h3>
+            <p class="--chart-content">These measurements reflect body size in inches.</p>
+          </div>
+          <div class="size-chart-wrapper kids">
+            <div class="size-chart infants">
+        <!-- Header row -->
+        <div class="table__header body-col">AGE RANGE</div>
+        <div class="table__header">WEIGHT (lb)</div>
+        <div class="table__header">LENGTH (Inches)</div>
+        {% comment %} <div class="table__header">
+          SLEEVE <small> {{ '(<4 WAIST)' }}</small>
+        </div> {% endcomment %}
+        <!-- Row 1 -->
+        <div class="body-col">0-3M</div>
+        <div class="body-col_">7-12 lb</div>
+        <div>18-23 in</div>
+        {% comment %} <div>21.5 - 22</div> {% endcomment %}
+        <!-- Row 2 -->
+        <div class="body-col">3-6M</div>
+        <div class="body-col_">12-17 lb</div>
+        <div>23-27 in</div>
+        {% comment %} <div>24 - 24.5</div> {% endcomment %}
+        <!-- Row 3 -->
+        <div class="body-col">6-9M</div>
+        <div class="body-col_">17-22lb</div>
+        <div>27-29 in</div>
+        {% comment %} <div>26 - 26.5</div> {% endcomment %}
+        <!-- Row 4 -->
+        <div class="body-col">9-12M</div>
+        <div class="body-col_">22-27 lb</div>
+        <div>29-31 in </div>
+        {% comment %} <div>27 - 27.5</div> {% endcomment %}
+        <!-- Row 5 -->
+        <div class="body-col">12-18M</div>
+        <div class="body-col_">27-30 lb</div>
+        <div>31-33 in</div>
+        {% comment %} <div>28.15 - 29.15</div> {% endcomment %}
+            </div>
+          </div>
+        </div>
+
+        <!-- JUNIORS -->
+        <div class="--single-chart size--chart-tab-content juniors" style="display: none;">
+          <div class="--top-block">
+            <h3 class="--chart-title">Juniors Body Measurement</h3>
+            <p class="--chart-content">These measurements reflect body size in inches.</p>
+          </div>
+          <div class="size-chart-wrapper kids">
+            <div class="size-chart">
+        <!-- Header row -->
+        <div class="table__header body-col">Age</div>
+        <div class="table__header">HEIGHT</div>
+        <div class="table__header">CHEST</div>
+        <div class="table__header">
+          SLEEVE <small> {{ '(<4 WAIST)' }}</small>
+        </div>
+        <!-- Row 1 -->
+        <div class="body-col">4 - 6</div>
+        <div class="body-col_">39 - 45</div>
+        <div>22 - 24</div>
+        <div>21.5 - 22</div>
+        <!-- Row 2 -->
+        <div class="body-col">7 - 8</div>
+        <div class="body-col_">45 - 51</div>
+        <div>25 - 26</div>
+        <div>24 - 24.5</div>
+        <!-- Row 3 -->
+        <div class="body-col">9 - 12</div>
+        <div class="body-col_">51 - 54</div>
+        <div>27 - 28</div>
+        <div>26 - 26.5</div>
+        <!-- Row 4 -->
+        <div class="body-col">13 - 14</div>
+        <div class="body-col_">54 - 57</div>
+        <div>29 - 30</div>
+        <div>27 - 27.5</div>
+        <!-- Row 5 -->
+        <div class="body-col">15 - 16</div>
+        <div class="body-col_">57 - 60</div>
+        <div>31 - 32</div>
+        <div>28.5 - 29.5</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const buttons = document.querySelectorAll('.size--chart-tab--btn');
+    const nestedButtons = document.querySelectorAll('.sec-{{ id }} .size--chart-nested-tab-btn');
+    const contents = document.querySelectorAll('.sec-{{ id }} .size--chart-tab-content');
+    const ladiesNested = document.querySelector('.sec-{{ id }} .size--chart-ladies-nested');
+
+    // Function to reset all content visibility
+    function resetContent() {
+      contents.forEach((content) => {
+        content.classList.remove('active');
+        content.style.display = 'none';
+      });
+    }
+
+    // Handle main tab buttons
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        // Reset all main tabs
+        buttons.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Reset all content and nested tabs
+        resetContent();
+        ladiesNested.style.display = 'none';
+        nestedButtons.forEach((nb) => nb.classList.remove('active'));
+
+        // Handle Ladies tab
+        if (btn.dataset.target === 'ladies') {
+          ladiesNested.style.display = 'flex';
+          // Activate Ladies Top by default
+          const ladiesTopBtn = document.querySelector('.sec-{{ id }} .size--chart-nested-tab-btn[data-target="ladies-top"]');
+          ladiesTopBtn.classList.add('active');
+          const ladiesTopContent = document.querySelector('.sec-{{ id }} .ladies-top');
+          ladiesTopContent.classList.add('active');
+          ladiesTopContent.style.display = 'block';
+        } else {
+          // Show the selected tab content
+          const targetContent = document.querySelector('.' + btn.dataset.target);
+          targetContent.classList.add('active');
+          targetContent.style.display = 'block';
+        }
+      });
+    });
+
+    // Handle nested tab buttons
+    nestedButtons.forEach((nb) => {
+      nb.addEventListener('click', () => {
+        // Reset nested buttons and content
+        nestedButtons.forEach((b) => b.classList.remove('active'));
+        resetContent();
+
+        // Activate selected nested tab
+        nb.classList.add('active');
+        const targetContent = document.querySelector('.' + nb.dataset.target);
+        targetContent.classList.add('active');
+        targetContent.style.display = 'block';
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Size Guide V3",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "Size Guide V3"
+    }
+  ]
+}
+{% endschema %}

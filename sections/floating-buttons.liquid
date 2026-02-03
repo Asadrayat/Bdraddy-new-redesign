@@ -1,0 +1,292 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+#shopify-section-{{ id}} {
+    position: sticky;
+    top: 98px;
+    z-index: 2;
+    @media(max-width: 1250px) {
+      {% comment %} top: 117px; {% endcomment %}
+      top: 108px;
+    }
+  }
+  .sec-{{ id }} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+    background: #fff;  
+  }
+  .wrapper-{{ id }}{
+    display: flex;
+    padding: 0 var(--Spacing-Section-Horizontal-Padding, 128px);
+    justify-content: center;
+    align-items: center;
+    gap: var(--Spacing-Container-sm);
+    align-self: stretch;
+    @media(max-width: 1024px) {
+        justify-content: start;
+        max-width: 100%;
+        overflow: auto;
+        scrollbar-width: none;        
+    }
+    .button__wrap {
+        display: flex;
+        padding: var(--Spacing-Container-sm, 12px) var(--Spacing-Container-lg, 24px);
+        align-items: center; // Better vertical centering
+        gap: var(--Spacing-Container-xs, 12px);
+        border-radius: 0;
+        background-color: transparent;
+        transition: background-color 0.25s ease, color 0.25s ease;
+        min-width: max-content;
+        gap: 8px; 
+        &:hover,
+        &.active {
+            background-color: #1F3E2F;
+            span {
+                color: #fff;
+            }
+
+            img {
+                filter: invert(1);
+                transition: filter 0.25s ease;
+            }
+        }
+
+
+        span {
+            color: #000;
+            font-family: var(--font-family-Body, Gotham);
+            font-size: var(--Font-Size-Paragraph-Medium, 16px);
+            font-style: normal;
+            font-weight: 400;
+            line-height: var(--Line-Height-Paragraph-Medium, 24px);
+            margin: 0;
+            transition: color 0.25s ease;
+        }
+    }
+
+
+  }
+  @media(max-width: 600px) {
+    .sec-{{ id }} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+</style>
+
+<div class="sec-{{ id }}" data-floatbtns-container id="{{ section.settings.sec_id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+        {% for block in section.blocks %}
+           {% unless block.settings.label == blank or block.settings.icon == blank %}
+              <a data-float-btn class="button__wrap {% if forloop.first %}active{% endif %}" href="{{ block.settings.url }}">{{ block.settings.icon | image_url: width: 24, height: 24 | image_tag }}<span>{{ block.settings.label }}</span></a>
+           {% endunless %}
+        {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+   const isMobile = window.innerWidth <= 768;
+    const offset = isMobile ? 150 : 180;
+  const rootSection = document.querySelector('[data-floatbtns-container]');
+  if (!rootSection) return;
+
+  const links = Array.from(rootSection.querySelectorAll('.button__wrap[href^="#"]'));
+  if (!links.length) return;
+
+  const targets = links.map(link => {
+    const hash = link.getAttribute('href');
+    try {
+      const el = document.querySelector(hash);
+      return el ? { link, el, hash } : null;
+    } catch { return null; }
+  }).filter(Boolean);
+
+  const setActive = (link) => {
+    links.forEach(a => a.classList.remove('active'));
+    if (link) link.classList.add('active');
+  };
+
+  links.forEach(a => {
+    const href = a.getAttribute('href');
+    a.addEventListener('click', (e) => {
+      if (!href || !href.startsWith('#')) return;
+      e.preventDefault();
+      const target = document.querySelector(href);
+      if (target) {
+        history.replaceState(null, '', href);
+        {% comment %} target.scrollIntoView({ behavior: 'smooth', block: 'start' }); {% endcomment %}
+         const elementPosition = target.getBoundingClientRect().top + window.pageYOffset;
+                window.scrollTo({
+                    top: elementPosition - offset,
+                    behavior: 'smooth'
+                });
+        setActive(a);
+      }
+    });
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const item = targets.find(t => t.el === entry.target);
+      if (!item) return;
+      if (entry.isIntersecting) setActive(item.link);
+    });
+  }, {
+    rootSection: null,
+    rootSectionMargin: '-20% 0px 0px 0px',
+    threshold: 0.7
+  });
+
+  targets.forEach(t => observer.observe(t.el));
+
+  const init = window.location.hash &&
+               targets.find(t => t.hash === window.location.hash);
+  setActive(init ? init.link : links[0]);
+});
+</script>
+
+{% schema %}
+{
+  "name": "Floating button",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "sec_id",
+      "label": "Section Id"
+    },    
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "button",
+      "name": "Button",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+            "type": "text",
+            "id": "label",
+            "label": "Label"
+        },
+        {
+            "type": "url",
+            "id": "url",
+            "label": "Url"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Floating button"
+    }
+  ]
+}
+{% endschema %}

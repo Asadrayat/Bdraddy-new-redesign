@@ -1,0 +1,564 @@
+{% doc %}
+  @prompt
+    Create an interactive image gallery section with two clickable toggle buttons labeled "Studio" and "Campaign" positioned above the images. When "Studio" is selected, display studio/product images. When "Campaign" is selected, display lifestyle/campaign images. The toggle should switch between the two image sets either on hover or click. Include customizable options for uploading separate images for studio view and campaign view, and style the toggle buttons to clearly indicate which view is active.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-toggle-gallery-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: 40px 20px;
+  }
+
+  .ai-toggle-gallery-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-toggle-gallery-header-{{ ai_gen_id }} {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .ai-toggle-gallery-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    margin: 0 0 20px;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-toggle-gallery-buttons-{{ ai_gen_id }} {
+    display: inline-flex;
+    gap: 0;
+    border: 2px solid {{ block.settings.button_border_color }};
+    border-radius: {{ block.settings.button_radius }}px;
+    overflow: hidden;
+  }
+
+  .ai-toggle-gallery-button-{{ ai_gen_id }} {
+    padding: 12px 32px;
+    background-color: {{ block.settings.button_bg_color }};
+    color: {{ block.settings.button_text_color }};
+    border: none;
+    cursor: pointer;
+    font-size: {{ block.settings.button_text_size }}px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border-right: 2px solid {{ block.settings.button_border_color }};
+  }
+
+  .ai-toggle-gallery-button-{{ ai_gen_id }}:last-child {
+    border-right: none;
+  }
+
+  .ai-toggle-gallery-button-{{ ai_gen_id }}.active {
+    background-color: {{ block.settings.button_active_bg_color }};
+    color: {{ block.settings.button_active_text_color }};
+  }
+
+  .ai-toggle-gallery-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_bg_color }};
+    color: {{ block.settings.button_hover_text_color }};
+  }
+
+  .ai-toggle-gallery-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat({{ block.settings.columns_desktop }}, 1fr);
+    gap: {{ block.settings.gap }}px;
+    position: relative;
+  }
+
+  .ai-toggle-gallery-view-{{ ai_gen_id }} {
+    display: none;
+    grid-template-columns: repeat({{ block.settings.columns_desktop }}, 1fr);
+    gap: {{ block.settings.gap }}px;
+  }
+
+  .ai-toggle-gallery-view-{{ ai_gen_id }}.active {
+    display: grid;
+  }
+
+  .ai-toggle-gallery-item-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+    border-radius: {{ block.settings.image_radius }}px;
+    aspect-ratio: {{ block.settings.image_aspect_ratio }};
+  }
+
+  .ai-toggle-gallery-item-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-toggle-gallery-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-toggle-gallery-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 200px;
+    max-height: 200px;
+  }
+
+  .ai-toggle-gallery-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-toggle-gallery-grid-{{ ai_gen_id }},
+    .ai-toggle-gallery-view-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_mobile }}, 1fr);
+    }
+
+    .ai-toggle-gallery-button-{{ ai_gen_id }} {
+      padding: 10px 24px;
+      font-size: {{ block.settings.button_text_size | times: 0.9 }}px;
+    }
+
+    .ai-toggle-gallery-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.8 }}px;
+    }
+  }
+{% endstyle %}
+
+<toggle-gallery-{{ ai_gen_id }} class="ai-toggle-gallery-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-toggle-gallery-container-{{ ai_gen_id }}">
+    <div class="ai-toggle-gallery-header-{{ ai_gen_id }}">
+      {% if block.settings.title != blank %}
+        <h2 class="ai-toggle-gallery-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+      {% endif %}
+
+      <div class="ai-toggle-gallery-buttons-{{ ai_gen_id }}">
+        <button
+          class="ai-toggle-gallery-button-{{ ai_gen_id }} active"
+          data-view="studio"
+          aria-pressed="true"
+        >
+          {{ block.settings.studio_label }}
+        </button>
+        <button
+          class="ai-toggle-gallery-button-{{ ai_gen_id }}"
+          data-view="campaign"
+          aria-pressed="false"
+        >
+          {{ block.settings.campaign_label }}
+        </button>
+      </div>
+    </div>
+
+    <div class="ai-toggle-gallery-view-{{ ai_gen_id }} active" data-view-content="studio">
+      {% for i in (1..8) %}
+        {% liquid
+          assign image_key = 'studio_image_' | append: i
+          assign image = block.settings[image_key]
+        %}
+        <div class="ai-toggle-gallery-item-{{ ai_gen_id }}">
+          {% if image %}
+            <img
+              src="{{ image | image_url: width: 800 }}"
+              alt="{{ image.alt | escape }}"
+              loading="lazy"
+              width="{{ image.width }}"
+              height="{{ image.height }}"
+            >
+          {% else %}
+            <div class="ai-toggle-gallery-placeholder-{{ ai_gen_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+              <div class="ai-toggle-gallery-empty-state-{{ ai_gen_id }}">
+                Add studio image {{ i }}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="ai-toggle-gallery-view-{{ ai_gen_id }}" data-view-content="campaign">
+      {% for i in (1..8) %}
+        {% liquid
+          assign image_key = 'campaign_image_' | append: i
+          assign image = block.settings[image_key]
+        %}
+        <div class="ai-toggle-gallery-item-{{ ai_gen_id }}">
+          {% if image %}
+            <img
+              src="{{ image | image_url: width: 800 }}"
+              alt="{{ image.alt | escape }}"
+              loading="lazy"
+              width="{{ image.width }}"
+              height="{{ image.height }}"
+            >
+          {% else %}
+            <div class="ai-toggle-gallery-placeholder-{{ ai_gen_id }}">
+              {{ 'lifestyle-1' | placeholder_svg_tag }}
+              <div class="ai-toggle-gallery-empty-state-{{ ai_gen_id }}">
+                Add campaign image {{ i }}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</toggle-gallery-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ToggleGallery{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.buttons = this.querySelectorAll('.ai-toggle-gallery-button-{{ ai_gen_id }}');
+        this.views = this.querySelectorAll('.ai-toggle-gallery-view-{{ ai_gen_id }}');
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.buttons.forEach((button) => {
+          {% if block.settings.toggle_on_hover %}
+            button.addEventListener('mouseenter', () => this.switchView(button));
+          {% else %}
+            button.addEventListener('click', () => this.switchView(button));
+          {% endif %}
+        });
+      }
+
+      switchView(activeButton) {
+        const viewType = activeButton.getAttribute('data-view');
+
+        this.buttons.forEach((btn) => {
+          btn.classList.remove('active');
+          btn.setAttribute('aria-pressed', 'false');
+        });
+
+        activeButton.classList.add('active');
+        activeButton.setAttribute('aria-pressed', 'true');
+
+        this.views.forEach((view) => {
+          view.classList.remove('active');
+        });
+
+        const targetView = this.querySelector(`[data-view-content="${viewType}"]`);
+        if (targetView) {
+          targetView.classList.add('active');
+        }
+      }
+    }
+
+    customElements.define('toggle-gallery-{{ ai_gen_id }}', ToggleGallery{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Toggle image gallery",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Explore Our Collection"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#121212"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 800,
+      "max": 1800,
+      "step": 100,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "header",
+      "content": "Toggle buttons"
+    },
+    {
+      "type": "text",
+      "id": "studio_label",
+      "label": "Studio button label",
+      "default": "Studio"
+    },
+    {
+      "type": "text",
+      "id": "campaign_label",
+      "label": "Campaign button label",
+      "default": "Campaign"
+    },
+    {
+      "type": "checkbox",
+      "id": "toggle_on_hover",
+      "label": "Toggle on hover",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "label": "Button text size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "button_active_bg_color",
+      "label": "Active background",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "button_active_text_color",
+      "label": "Active text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Hover background",
+      "default": "#f3f3f3"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_text_color",
+      "label": "Hover text",
+      "default": "#121212"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Border color",
+      "default": "#121212"
+    },
+    {
+      "type": "range",
+      "id": "button_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Gallery layout"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columns on mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between images",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "image_aspect_ratio",
+      "label": "Image aspect ratio",
+      "options": [
+        {
+          "value": "1/1",
+          "label": "Square (1:1)"
+        },
+        {
+          "value": "3/4",
+          "label": "Portrait (3:4)"
+        },
+        {
+          "value": "4/3",
+          "label": "Landscape (4:3)"
+        },
+        {
+          "value": "16/9",
+          "label": "Wide (16:9)"
+        }
+      ],
+      "default": "3/4"
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "Image border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Studio images"
+    },
+    {
+      "type": "image_picker",
+      "id": "studio_image_1",
+      "label": "Studio image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "studio_image_2",
+      "label": "Studio image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "studio_image_3",
+      "label": "Studio image 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "studio_image_4",
+      "label": "Studio image 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "studio_image_5",
+      "label": "Studio image 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "studio_image_6",
+      "label": "Studio image 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "studio_image_7",
+      "label": "Studio image 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "studio_image_8",
+      "label": "Studio image 8"
+    },
+    {
+      "type": "header",
+      "content": "Campaign images"
+    },
+    {
+      "type": "image_picker",
+      "id": "campaign_image_1",
+      "label": "Campaign image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "campaign_image_2",
+      "label": "Campaign image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "campaign_image_3",
+      "label": "Campaign image 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "campaign_image_4",
+      "label": "Campaign image 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "campaign_image_5",
+      "label": "Campaign image 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "campaign_image_6",
+      "label": "Campaign image 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "campaign_image_7",
+      "label": "Campaign image 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "campaign_image_8",
+      "label": "Campaign image 8"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Toggle image gallery"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,60 @@
+{% if block.settings.ship_text != blank %}
+  <p class="text">{{ block.settings.ship_text }}</p>
+{% endif %}
+{% if block.settings.label != blank %}
+  <div data-shiping-btn class="shipping__link">
+    {{ block.settings.label -}}
+    <span>{% render 'all-icons', name: 'right_chevron' %}</span>
+  </div>
+{% endif %}
+
+<div class="product__shipping_drawer ">
+  <div class="pa_tab__title">
+    {% if block.settings.title != blank %}
+      <div class="pa__title active" data-order="1">
+        <p>{{ block.settings.title }}</p>
+      </div>
+    {% endif %}
+  </div>
+  {% if block.settings.rte != blank %}
+    <div class="pa__content first">{{ block.settings.rte }}</div>
+  {% endif %}
+  <div class="table__of_content-ps">
+    <div class="pa__title">
+      <h3 class="ps__table_title">{{ 'Shipping Options' }}</h3>
+    </div>
+    <table>
+      <tbody>
+        <tr class="--row heading__row">
+          <td class="--title">{{ block.settings.r1c1  }}</td>
+          <td class="--eta">{{ block.settings.r1c2 }}</td>
+          <td class="--fee">{{ block.settings.r1c3 }}</td>
+        </tr>
+
+        <tr class="--row">
+          <td class="--title">{{ block.settings.r2c1 }}</td>
+          <td class="--eta">{{ block.settings.r2c2 }}</td>
+          <td class="--fee">{{ block.settings.r2c3 }}</td>
+        </tr>
+
+        <tr class="--row">
+          <td class="--title">{{ block.settings.r3c1 }}</td>
+          <td class="--eta">{{ block.settings.r3c2 }}</td>
+          <td class="--fee">{{ block.settings.r3c3 }}</td>
+        </tr>
+
+        <tr class="--row">
+          <td class="--title">{{ block.settings.r4c1 }}</td>
+          <td class="--eta">{{ block.settings.r4c2 }}</td>
+          <td class="--fee">{{ block.settings.r4c3 }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <h3 class="ps__table_title bottom">{{ '*Free shipping offer applies to economy shipping methods only' }}</h3>
+  </div>
+  <div class="ps-icon__close">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M17 7L7 17M7 7L17 17" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</div>

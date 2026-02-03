@@ -1,0 +1,785 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  .location-track-section {
+    box-sizing: border-box;
+    margin-top: var(--section-margin-top);
+    margin-bottom: var(--section-margin-bottom);
+    padding-top: var(--section-padding-top);
+    padding-bottom: var(--section-padding-bottom);
+    @media(min-width: 1200px) {
+      height: calc(100vh - 98px);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .location-track-section {
+      margin-top: var(--section-margin-top-mobile);
+      margin-bottom: var(--section-margin-bottom-mobile);
+      padding-top: var(--section-padding-top-mobile);
+      padding-bottom: var(--section-padding-bottom-mobile);
+    }
+  }
+  .sec-{{ id }} {
+    .swiper-container  {
+      position: relative;
+    }
+    span#location_title__, #distance__from_my_location {
+        color: #000;
+        font-family: var(--font-family-Body, Gotham);
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 20px;
+        letter-spacing: 0.32px;
+        text-transform: capitalize;
+    }
+    h3#drawer-title {
+        color: var(--Content-Base-main, #1F2937);
+        font-family: var(--font-family-Heading, "Sainte Colombe");
+        font-size: var(--Font-Size-UI-Controls-Contextual-Tagline-Regular, 14px);
+        font-style: normal;
+        font-weight: 700;
+        line-height: var(--Line-Height-UI-Controls-Contextual-Tagline-Regular, 20px);
+        letter-spacing: 0.84px;
+        text-transform: uppercase;
+        margin: 0 0 var(--Spacing-Container-md);
+    }
+    .swiper-prev-{{section.id }} {
+        left: 0;
+        @media(max-width: 768px){
+          left: 0;
+        }
+    }
+    .swiper-next-{{section.id }} {
+        right: 0;
+        @media(max-width: 768px){
+          right: 0;
+        }
+    }
+    .--nav-icon {
+        display: flex;
+        min-width: 36px;
+        width: 36px;
+        height: 36px;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid var(--Border-Base-dense, #4B5563);
+        background: #FFF;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1;
+        cursor: pointer;
+        transition: 0.5s ease;
+          svg path{
+          transition: 0.5s ease;
+          }
+          @media(max-width: 768px){
+          /* display: none; */
+          {% comment %} position: relative; {% endcomment %}
+        }
+    }
+    .swiper-button-disabled {
+      opacity: 0.3;
+    }
+    .swiper-scrollbar-{{ section.id }} {
+      position: relative !important;
+      left: 0 !important;
+      bottom: 0 !important;
+      margin:  0;
+      height: 1px !important;
+      opacity: 1 !important;
+      width: 100% !important;
+      cursor: pointer;
+      padding-block: 8px;
+      background: transparent;
+      padding-block: var(--Spacing-Container-md);
+      @media(width < 768px) {
+
+      }
+      .swiper-scrollbar-drag {
+        /* background: {{ section.settings.font_color }}; */
+        display: block !important;
+        height: 1px;
+      }
+    }
+    .swiper-scrollbar-{{ section.id }}::before {
+      position: absolute;
+      content: "";
+      background: var(--swiper-scrollbar-bg-color, rgba(0, 0, 0, .3));
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 1px;
+    }
+    .location-track__drawer {
+        {% comment %} display: none; {% endcomment %}
+        position: fixed;
+        width: 50%;
+        height: 100%;
+        top: 0;
+        right: 0;
+        background: white;
+        box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
+        {% comment %} transition: transform 0.3s ease; {% endcomment %}
+        transform: translateX(100%);
+        z-index: 16;
+        padding: 20px;
+        transition: transform 0.4s ease-in-out;
+        @media(max-width: 768px){
+          width: 100%;
+        }
+    }
+    .location-track {
+        display: flex;
+        flex-direction: column;
+        gap: 80px;
+        justify-content: space-between;
+        height: 100%;
+        padding-block: 50px;
+    }
+    h2.location-track__heading {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      color: #000;
+      font-family: var(--font-family-Heading, "Sainte Colombe");
+      font-size: var(--Font-Size-Heading-H2, 40px);
+      font-style: normal;
+      font-weight: 700;
+      line-height: var(--Line-Height-Heading-H2, 40px);
+      text-transform: capitalize;
+      gap: 8px;
+      margin: 0;
+      p {
+          margin: 0;
+          line-height: 100%;
+          font-weight: 400;
+          font-family: var(--font-body-family);
+          text-transform: lowercase;
+      }
+    }
+    .wrapper-{{ id }} {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--Spacing-Container-xl, 32px);
+      justify-content: center;
+        @media(max-width: 768px){
+          flex-wrap: wrap;
+          gap: var(--Spacing-Container-md, 32px);
+        } 
+    }
+    .lh__block {
+        display: flex;
+        padding: var(--Spacing-Container-lg, 24px);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--Spacing-Container-xxl, 48px);
+        border: 1px solid #EFEAE1;
+        background: #F5F1EB;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.25s ease-in-out;
+        min-height: 150px;
+        justify-content: space-between;
+        @media(max-width: 768px){
+            flex: 0 0 calc(50% - var(--Spacing-Container-md, 32px));
+            min-height: 150px;
+            display: flex;
+            align-items: flex-start;
+            height: 100%;
+        }
+        &:hover, &.active {
+          background: #1F2937;
+          transition: all 0.25s ease-in-out;
+          * {
+            color: #fff !important;
+            transition: all 0.25s ease-in-out;
+          }
+        }
+    }
+    .index__ {
+      color: var(--Content-Base-main, #1F2937);
+
+      /* Headings/H1 */
+      font-family: var(--font-family-Heading, "Sainte Colombe");
+      font-size: var(--Font-Size-Heading-H1, 56px);
+      font-style: normal;
+      font-weight: 700;
+      line-height: var(--Line-Height-Heading-H1, 64px); /* 114.286% */
+      text-transform: capitalize;
+      margin: 0;
+    }
+    .lh__title__ {
+      color: var(--Content-Base-main, #1F2937);
+
+      /* Headings/H3 */
+      font-family: var(--font-family-Heading, "Sainte Colombe");
+      font-size: var(--Font-Size-Heading-H3, 20px);
+      font-style: normal;
+      font-weight: 700;
+      line-height: var(--Line-Height-Heading-H3, 24px); /* 120% */
+      margin: 0;
+     }
+  }
+    .lt-icon__close {
+        width: 24px;
+        height: 24px;
+        border: 1px solid #EFEAE1;
+        background: #F5F1EB;
+        cursor: pointer;
+        position: absolute;
+        right: 20px;
+    }
+    .location-track__drawer.open {
+      transform: translatex(0);
+      transition: transform 0.4s ease-in-out;
+      {% comment %} display: block; {% endcomment %}
+    }
+
+    .location-track__drawer-content {
+        max-width: 100%;
+        overflow: hidden;
+        img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            aspect-ratio: 4/5;
+        }
+    }
+
+    .location-track__drawer-header {
+      margin-bottom: 20px;
+    }
+    body.ip_drawer_open .pda__drawer__overlay {
+      display : block ;
+      z-index: 14;
+    }
+</style>
+<div
+  class="location-track-section sec-{{ id }}{% unless section.settings.full_width %} page-width-wrapper{% endunless %}"
+  style="
+    --section-margin-top: {{ section.settings.margin_top }}px;
+    --section-margin-bottom: {{ section.settings.margin_bottom }}px;
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+    --section-margin-top-mobile: {{ section.settings.margin_top_m }}px;
+    --section-margin-bottom-mobile: {{ section.settings.margin_bottom_m }}px;
+    --section-padding-top-mobile: {{ section.settings.padding_top_m }}px;
+    --section-padding-bottom-mobile: {{ section.settings.padding_bottom_m }}px;
+  "
+>
+  <div class="location-track{% unless section.settings.full_width %} page-width{% endunless %}">
+    <h2 class="location-track__heading">
+      B.Draddy<span class="icon">{% render 'icon_draddy_start' %}</span>
+      <p>is a</p>
+      rich tapestry woven
+      <p>from the</p>
+      threads
+      <p>of</p>
+      family legacy, exploration,
+      <p>and</p>
+      timeless allure
+      <p>of</p>
+      coastal landscapes.
+    </h2>
+    <div class="wrapper-{{ id }}">
+      {% assign location_handle_index = 0 %}
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'location_handle' %}
+            {% assign location_handle_index = location_handle_index | plus: 1 %}
+            <div class="lh__block" data-key="{{ block.settings.group_key | downcase }}">
+              <div class="index__">
+                {% if location_handle_index < 10 %}0{% endif -%}
+                {{- location_handle_index }}
+              </div>
+              <h3 class="lh__title__">{{ block.settings.title }}</h3>
+              <div class="visually-hidden" data-lat>{{ block.settings.lat }}</div>
+              <div class="visually-hidden" data-lon>{{ block.settings.lon }}</div>
+            </div>
+        {% endcase %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Drawer -->
+  <div class="location-track__drawer" id="location-drawer">
+    <div class="lt-icon__close">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M17 7L7 17M7 7L17 17" stroke="black" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="location-track__drawer-header">
+      <h3 id="drawer-title">Distance from My Location</h3>
+      <p id="drawer-description">
+        You are <span id="distance__from_my_location">200.18 Miles</span> away from
+        <span id="location_title__">location title</span>
+      </p>
+    </div>
+    <div class="location-track__drawer-content">
+      <div class="swiper-container">
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+            {% if block.type == 'location_image' %}
+              {% for i in (1..20) %}
+                {% assign image_key = 'image_' | append: i %}
+                {% assign image = block.settings[image_key] %}
+                {% unless image == blank %}
+                  <div
+                    class="location-image swiper-slide"
+                    data-key="{{ block.settings.group_key | downcase }}"
+                    style="display: ;"
+                  >
+                    {{ image | image_url: width: image.width | image_tag }}
+                    {% comment %} <img src="{{ image | img_url: 'medium' }}" alt="{{ image.alt | escape }}"> {% endcomment %}
+                  </div>
+                {% endunless %}
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </div>
+        <div class="swiper-scrollbar-{{ section.id }} swiper-scrollbar"></div>
+        <div class="swiper-prev-{{ section.id }} --nav-icon ">
+          {%- render 'header-icons', name: 'left' -%}
+        </div>
+        <div class="swiper-next-{{ section.id }} --nav-icon ">
+          {%- render 'header-icons', name: 'right' -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const locationHandles = document.querySelectorAll('.lh__block');
+    const closeButtonLt = document.querySelector('.lt-icon__close'); 
+    const drawerLt = document.getElementById('location-drawer');
+    const title_ = document.getElementById('location_title__');
+    closeButtonLt.addEventListener("click", () => {
+      closeLtDrawer();
+    });
+
+    locationHandles.forEach(function(handle) {
+
+      handle.addEventListener('click', function(event) {
+        const groupKey = handle.getAttribute('data-key');
+        locationHandles.forEach(function(block) {
+          block.classList.remove('active');
+        });
+        handle.classList.add('active');
+        openDrawer(groupKey);        
+      });
+    });
+    function openDrawer(groupKey) {
+      const description = document.getElementById('drawer-description');
+      const images = document.querySelectorAll('.location-image');
+
+      const locationTitle = document.querySelector(`.lh__block[data-key='${groupKey}'] .lh__title__`);
+      const locationLat = parseFloat(document.querySelector(`.lh__block[data-key='${groupKey}'] [data-lat]`).innerText);
+      const locationLon = parseFloat(document.querySelector(`.lh__block[data-key='${groupKey}'] [data-lon]`).innerText);
+
+      title_.innerHTML = locationTitle ? locationTitle.innerText : ''; 
+      calculateDistance(locationLat, locationLon);
+      images.forEach(function(image) {
+        if (image.getAttribute('data-key') === groupKey) {
+          image.style.display = 'block';
+        } else {
+          image.style.display = 'none';
+        }
+      });
+
+      drawerLt.classList.add('open'); 
+      document.body.classList.add('ip_drawer_open');
+      document.querySelector('.pda__drawer__overlay')?.addEventListener('click', (e) => {
+        closeLtDrawer();
+      });
+      var swiper = new Swiper('.swiper-container', {
+        slidesPerView: 1.5,
+        spaceBetween: 16,
+        breakpoints: {
+          200: {
+            slidesPerView: 1.2,
+            spaceBetween: 20,
+          },
+          768: {
+            slidesPerView: 1.5,
+            spaceBetween: 20,
+          },
+          1024: {
+            slidesPerView: 1.5,
+            spaceBetween: 25,
+          },
+          1200: {
+            slidesPerView: 1.5,
+            spaceBetween: 30,
+          },
+          1400: {
+            slidesPerView: 1.7,
+            spaceBetween: 40,
+          },
+          1600: {
+            slidesPerView: 2.2,
+            spaceBetween: 40,
+          },
+          2000: {
+            slidesPerView: 2.5,
+            spaceBetween: 40,
+          },
+        },
+        navigation: {
+          nextEl: '.swiper-next-{{ section.id }}',
+          prevEl: '.swiper-prev-{{ section.id }}',
+        },
+        scrollbar: {
+          el: '.swiper-scrollbar-{{ section.id }}.swiper-scrollbar',
+          draggable: true,
+          hide: false,
+        },
+      });
+    }
+    function closeLtDrawer() {
+      drawerLt.classList.remove('open');
+      document.body.classList.remove('ip_drawer_open');      
+    }
+
+    drawerLt.addEventListener('click', function(event) {
+      event.stopPropagation();
+    });
+  });
+
+  function calculateDistance(lat, long) {
+    const DEST = {
+      lat: lat,
+      lon: long,
+    };
+
+    const distanceEl = document.getElementById('distance__from_my_location');
+    
+    function toRad(deg) {
+      return (deg * Math.PI) / 180;
+    }
+
+    function distanceKm(lat1, lon1, lat2, lon2) {
+      const R = 6371; 
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+
+      const a =
+        Math.sin(dLat / 2) ** 2 +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c; 
+    }
+
+    if (!navigator.geolocation) {
+      distanceEl.textContent = 'Location unavailable';
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+
+        const km = distanceKm(latitude, longitude, DEST.lat, DEST.lon);
+        const miles = km * 0.621371; 
+
+        distanceEl.textContent = `${miles.toFixed(2)} Miles`;
+      },
+      () => {
+        distanceEl.textContent = 'Permission denied';
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 30000,
+      }
+    );
+  }
+
+
+</script>
+
+{% schema %}
+{
+  "name": "Location Track",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width",
+      "default": false
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "header",
+      "content": "Spacing Deksktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top Mobile",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom Mobile",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top Mobile",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom Mobile",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "location_handle",
+      "name": "Loction Handle",
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Tilte"
+        },
+        {
+          "type": "text",
+          "id": "lat",
+          "label": "Latitude"
+        },
+        {
+          "type": "text",
+          "id": "lon",
+          "label": "Longitude"
+        },
+        {
+          "type": "text",
+          "id": "group_key",
+          "label": "Group Key",
+          "info": "Should match the key with (Location Image)"
+        }
+      ]
+    },
+    {
+      "type": "location_image",
+      "name": "Location Image",
+      "settings": [
+        {
+          "type": "text",
+          "id": "latitude",
+          "label": "Latitude"
+        },
+        {
+          "type": "text",
+          "id": "longitude",
+          "label": "Longitude"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Image 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Image 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Image 3"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_4",
+          "label": "Image 4"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_5",
+          "label": "Image 5"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_6",
+          "label": "Image 6"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_7",
+          "label": "Image 7"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_8",
+          "label": "Image 8"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_9",
+          "label": "Image 9"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_10",
+          "label": "Image 10"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_11",
+          "label": "Image 11"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_12",
+          "label": "Image 12"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_13",
+          "label": "Image 13"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_14",
+          "label": "Image 14"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_15",
+          "label": "Image 15"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_16",
+          "label": "Image 16"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_17",
+          "label": "Image 17"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_18",
+          "label": "Image 18"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_19",
+          "label": "Image 19"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_20",
+          "label": "Image 20"
+        },
+        {
+          "type": "text",
+          "id": "group_key",
+          "label": "Group key",
+          "info": "Should be same as the Location Handle key"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Location Track",
+      "blocks": [
+        {
+          "type": "location_handle",
+          "settings": {
+            "title": "Location A",
+            "group_key": "a"
+          }
+        },
+        {
+          "type": "location_image",
+          "settings": {
+            "group_key": "a"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

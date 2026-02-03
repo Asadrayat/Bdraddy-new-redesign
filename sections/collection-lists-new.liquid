@@ -1,0 +1,342 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  #shopify-section-{{id}} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+    overflow: hidden;
+  }
+
+  @media(max-width: 768px) {
+    #shopify-section-{{id}} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+  {% if section.settings.content_style == 'aside' %}
+    .wrapper-{{ id }}{
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+  {% elsif section.settings.content_style == 'vertical' %}
+    .texts-{{ id }}{
+      margin-bottom: 40px;
+      text-align: center;
+      {% if section.settings.width != blank %}
+        max-width: {{ section.settings.width | append: 'px' }};
+        margin-inline: auto;
+      {% endif %}
+    }
+  {% endif %}
+  .texts-{{ id }} h2{
+    font-size: 48px;
+    line-height: 56px;
+    margin: 0 0 24px;
+  }
+  .texts-{{ id }} p{
+    font-size: 18px;
+    line-height: 26px;
+    color: #1F2937;
+    margin: 0;
+  }
+  .media-item-{{ id }} {
+    position: relative;
+  }
+  .media-item-image-{{ id }} img{
+    display: block;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 0.8;
+  }
+  .media-item-{{ id }} p{
+    font-size: 14px;
+    line-height: 20px;
+    color: #1F2937;
+    margin: 16px 0 0;
+  }
+  .media-item-{{ id }} a{
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  @media screen and (min-width: 990px){
+    .medias-wrapper-{{ id }}{
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      grid-gap: 16px;
+    }
+    .medias-sm{
+      display: none !important;
+    }
+  }
+  @media screen and (max-width: 989px){
+    .medias-lg{
+      display: none !important;
+    }
+    {% if section.settings.content_style == 'aside' %}
+      .wrapper-{{ id }}{
+        flex-direction: column;
+        justify-content: center;
+        gap: 32px;
+      }
+    {% elsif section.settings.content_style == 'vertical' %}
+      .texts-{{ id }}{
+        margin: 0 0 32px;
+      }
+    {% endif %}
+    .texts-{{ id }}{
+      text-align: center;
+    }
+    .texts-{{ id }} h2{
+      font-size: 30px;
+      line-height: 36px;
+    }
+    .texts-{{ id }} p{
+      font-size: 16px;
+      line-height: 24px;
+    }
+    .medias-{{ id }}{
+      width: 100%;
+      overflow: hidden;
+    }
+    .media-item-{{ id }} p{
+      font-size: 14px;
+    }
+  }
+</style>
+
+
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      <div class="texts-{{ id }}">
+        {% if section.settings.title != blank %}
+          <h2>{{ section.settings.title }}</h2>
+        {% else %}
+          <h2>{{ collection.title }}</h2>
+        {% endif %}
+        {% if section.settings.text != blank %}
+          <p>{{ section.settings.text }}</p>
+        {% elsif collection.description != blank %}
+          <p>{{ collection.description }}</p>
+        {% endif %}
+      </div>
+      <div class="medias-{{ id }} medias-lg">
+        <div class="medias-wrapper-{{ id }}">
+          {% for block in section.blocks %}
+            <div class="media-item-{{ id }}">
+              <div class="media-item-image-{{ id }}">
+                {{ block.settings.image | image_url: width: block.settings.image.width | image_tag }}
+              </div>
+              <p>{{ block.settings.collection.title }}</p>
+              <a href="{{ block.settings.collection.url }}"></a>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="medias-{{ id }} medias-sm">
+        <div class="medias-wrapper-{{ id }}">
+          <div class="swiper">
+            <div class="swiper-wrapper">
+              {% for block in section.blocks %}
+                <div class="swiper-slide">
+                 <div class="media-item-{{ id }}">
+                    <div class="media-item-image-{{ id }}">
+                      {{ block.settings.image | image_url: width: block.settings.image.width | image_tag }}
+                    </div>
+                    <p>{{ block.settings.collection.title }}</p>
+                    <a href="{{ block.settings.collection.url }}"></a>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var swiper = new Swiper('.medias-wrapper-{{ id }} .swiper', {
+      loop: true,
+      slidesPerView: 1.2,
+      spaceBetween: 20,
+    });
+  });
+</script>
+  
+{% schema %}
+  {
+    "name": "Collection Lists New",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "full_width",
+        "label": "Full Width Section",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      },
+      {
+        "type": "textarea",
+        "id": "text",
+        "label": "Text"
+      },
+      {
+        "type": "text",
+        "id": "width",
+        "label": "Text Content Width",
+        "info": "Input 500 which will be 500px"
+      },
+      {
+        "type": "select",
+        "id": "content_style",
+        "label": "Content Style(Desktop)",
+        "options": [
+          {
+            "value": "aside",
+            "label": "Text & Medias Aside"
+          },
+          {
+            "value": "vertical",
+            "label": "Text & Medias Vertical"
+          }
+        ],
+        "default": "aside"
+      },
+      {
+        "type": "header",
+        "content": "Section Spacing Desktop"
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Top",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Bottom",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Top",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Bottom",
+        "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Section Spacing Mobile"
+      },
+      {
+        "type": "range",
+        "id": "margin_top_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Top",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Margin Bottom",
+        "default": 24
+      },
+      {
+        "type": "range",
+        "id": "padding_top_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Top",
+        "default": 0
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom_m",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Padding Bottom",
+        "default": 0
+      }
+    ],
+    "blocks": [
+      {
+        "type": "collection",
+        "name": "Collection",
+        "settings": [
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Collection Lists New"
+      }
+    ]
+  }
+{% endschema %}

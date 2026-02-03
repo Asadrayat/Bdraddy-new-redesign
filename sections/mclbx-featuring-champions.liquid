@@ -1,0 +1,366 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+         .sec-{{ id }} {
+           box-sizing: border-box;
+           margin-top: {{section.settings.margin_top | append: 'px'}};
+           margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+           padding-top: {{section.settings.padding_top | append: 'px'}};
+           padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+
+         }
+
+         @media(max-width: 600px) {
+           .sec-{{ id }} {
+             margin-top: {{section.settings.margin_top_m | append: 'px'}};
+             margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+             padding-top: {{section.settings.padding_top_m | append: 'px'}};
+             padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+           }
+         }
+  .--parallax {
+       background-image: url('{{ section.settings.bg_image | image_url }}');  /* Replace with your background image */
+       background-attachment: fixed;  /* This is what creates the parallax effect */
+       background-position: top;
+       background-repeat: no-repeat;
+       background-size: cover;
+       /* height: 40vh;  /* You can adjust the height to fit your design */ */
+       /* display: flex;
+       justify-content: center;
+       align-items: center;
+       color: white;
+       text-align: center; */
+     }
+       .sec-{{ id }} {
+
+     .--top-block {
+         max-width: 880px;
+         margin: auto;
+         text-align: center;
+        padding-top: 80px;
+       @media(max-width: 768px){
+         padding-top: 32px;
+       }
+     }
+         h2.--section-title {
+           margin-block: 0 var(--Spacing-Container-xs, 12px);
+         color: var(--Content-Inverted-main, #F3F4F6);
+         font-weight: 400;
+         letter-spacing: -0.96px;
+     }
+     .--section-content {
+         color: var(--Content-Inverted-main, #F3F4F6);
+         text-align: center;
+         font-family: var(--font-family-Body, "Sainte Colombe");
+         font-size: var(--Font-Size-Paragraph-Regular, 16px);
+         font-style: normal;
+         font-weight: 400;
+         line-height: var(--Line-Height-Paragraph-Regular, 24px);
+     }
+
+
+
+
+
+       .--image-blocks {
+         padding: var(--Spacing-Section-Section-Vertical-Padding, 80px) var(--Spacing-Section-Section-Horizontal-Padding, 80px) ;
+         background: linear-gradient(to top, {{ section.settings.bg-color }} 50%, transparent 50%);
+         position: relative;
+         @media(max-width: 768px){
+           padding-inline: 0;
+         }
+       }
+         .--single-card {
+           /* background: #FCFAF8; */
+   }
+         h5.--content-title {
+          color: {{ section.settings.content-color }} ;
+          font-family: var(--font-family-Title, "Sainte Colombe");
+          font-size: var(--Font-Size-Heading-H5, 20px);
+          font-style: normal;
+          font-weight: 400;
+          line-height: var(--Line-Height-Heading-H5, 24px);
+          letter-spacing: -0.4px;
+          margin-block: 0 var(--Spacing-Container-xxs, 8px);
+      }
+    
+     .--content-wrapper {
+         color: {{ section.settings.content-color }} ;
+         font-family: var(--font-family-Body, "Sainte Colombe");
+         font-size: var(--Font-Size-Paragraph-Medium, 18px);
+         font-style: normal;
+         font-weight: 400;
+         line-height: var(--Line-Height-Paragraph-Medium, 26px);
+         margin-top: var(--Spacing-Container-sm, 16px);
+     }
+ .--image-blocks img {
+   @media(max-width: 768px){
+     aspect-ratio: 3/5;
+    object-fit: cover;
+    max-width: calc(100% - 32px);
+    margin: auto;
+   }
+    
+}
+.--text-wrapper {
+        position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.--text-content {
+    text-align: center;
+}
+.--text-content h3 {
+    color: var(--Content-Inverted-main, #F3F4F6);
+    /* text-align: center; */
+    /* font-family: var(--font-family-Title, "Sainte Colombe"); */
+    /* font-size: var(--Font-Size-Heading-H3, 32px); */
+    /* font-style: normal; */
+    font-weight: 400;
+    /* line-height: var(--Line-Height-Heading-H3, 40px); */
+    letter-spacing: -0.64px;
+    margin-block: 0 var(--Spacing-Container-sm, 16px);
+}
+         
+{% comment %}
+.--text-content a {
+    color: var(--Content-Inverted-main, #F3F4F6);
+    /* text-align: center; */
+    font-family: var(--font-family-Control, "Archivo Expanded");
+    font-size: var(--Font-Size-UI-Controls-Control-Button-Small, 16px);
+    /* font-style: normal; */
+    /* font-weight: 400; */
+    line-height: var(--Line-Height-UI-Controls-Control-Button-Small, 16px);
+    text-decoration-line: underline;
+    /* text-decoration-style: solid; */
+    /* text-decoration-skip-ink: none; */
+    /* text-decoration-thickness: auto; */
+    /* text-underline-offset: auto; */
+    /* text-underline-position: from-font; */
+    text-transform: uppercase;
+}  
+{% endcomment %}
+
+  .video-wrap video {
+    width: 100%;
+    object-fit: cover;
+    display: block;
+    height: auto;
+  }
+
+         
+       }
+</style>
+
+<div class="sec-{{ id }} --parallax">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %} ">
+    <div class="wrapper-{{ id }}">
+      <div class="--top-block ">
+        <h2 class="--section-title">{{ section.settings.title }}</h2>
+        <div class="--section-content">{{ section.settings.content }}</div>
+      </div>
+
+      <div class="--image-blocks">
+        {% if section.settings.video != blank %}
+          <div class="video-wrap {{ section.settings.banner_height }}">
+            {{
+              section.settings.video
+              | video_tag:
+                image_size: '700x',
+                autoplay: true,
+                loop: true,
+                muted: true,
+                controls: false,
+                playsinline: true
+            }}
+          </div>
+        {% else %}
+          <div class="--image-wrapper">
+            {% if section.settings.foreground_image != blank %}
+            {{
+              section.settings.foreground_image
+              | image_url: width: section.settings.foreground_image.width
+              | image_tag
+            }}
+          {% else %}
+            {{ 'hero-apparel-1' | placeholder_svg_tag }}
+          {% endif %}
+          </div>
+        {% endif %}
+        <div class="--text-wrapper">
+          <div class="--text-content">
+            {{ section.settings.foreground_content }}
+            <a class="button" href="{{ section.settings.btn_url }}">{{ section.settings.btn_text }}</a>
+          </div>
+          
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% schema %}
+{
+  "name": "Featuring Champions",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "bg-color",
+      "label": "Background Color",
+      "default": "#FCFAF8"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video"
+    },   
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Champion of the Future"
+    },
+    {
+      "type": "textarea",
+      "id": "content",
+      "label": "Content",
+      "default": "B. Draddy, or the Brothers Draddy, blends classic inspiration with modern design. What began as a polo shirt has evolved into a collection of luxe essentials for the course and clubhouse. Using premium materials like organic Peruvian Pima cotton and Italian merino, B. Draddy offers comfort and versatility."
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "foreground_image",
+      "label": "Foreground Image"
+    },
+    {
+      "type": "richtext",
+      "id": "foreground_content",
+      "label": "Foreground Content"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Label"
+    },
+    {
+      "type": "url",
+      "id": "btn_url",
+      "label": "Button Link"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Featuring Champions",
+    }
+  ]
+}
+{% endschema %}

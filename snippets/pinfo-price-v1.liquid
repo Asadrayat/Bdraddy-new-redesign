@@ -1,0 +1,128 @@
+{% liquid
+  for currency in shop.enabled_currencies
+    if currency.iso_code == shop.currency
+      assign symbol = currency.symbol
+      break
+    endif
+  endfor
+%}
+<div class="pinfo-price-wrapper {{ class }} {% if block.settings.enable_mb %}mb{% endif %}">
+  {% comment %}
+       <div class="pinfo-review">
+      <div
+        class="ruk_rating_snippet"
+        data-sku="{{ product.handle }};{{ product.variants | map: 'sku' | join: ';' }};{{ product.variants | map: 'id' | join: ';' }}"
+      ></div>
+    </div>
+  {% endcomment %}
+
+  <div class="pinfo-price">
+    {% if product.selected_or_first_available_variant.price
+        < product.selected_or_first_available_variant.compare_at_price
+    %}
+      <p class="pinfo-regular-price">
+        {% comment %} <span>{{ shop.money_format | split: '{{' | first }}</span> {% endcomment %}
+        {{- product.selected_or_first_available_variant.price | money_without_trailing_zeros   }}
+        {% comment %} {{- product.selected_or_first_available_variant.price | money_without_currency }} {% endcomment %}
+      </p>
+      <p class="pinfo-compare-price">
+        <s
+          >{% comment %} <span>{{ shop.money_format | split: '{{' | first }}</span> {% endcomment %}
+          {{- product.selected_or_first_available_variant.compare_at_price | money_without_trailing_zeros -}}
+          {% comment %} {{- product.selected_or_first_available_variant.compare_at_price | money_without_currency -}} {% endcomment %}
+        </s>
+      </p>
+    {% elsif settings.enable_custom_price == true and product.metafields.custom.exclude_from_custom_pricing != true %}
+      {% assign discounted_percentage = 100 | minus: settings.discount_percentage %}
+      {% assign discounted_price = product.selected_or_first_available_variant.price
+        | times: discounted_percentage
+        | divided_by: 100.0
+      %}
+      <p class="pinfo-regular-price">
+        {% comment %} <span>{{ shop.money_format | split: '{{' | first }}</span> {% endcomment %}
+        {% comment %} {{- discounted_price | money_without_currency }} {% endcomment %}
+        {{- discounted_price | money_without_trailing_zeros }}
+      </p>
+      <p class="pinfo-compare-price">
+        <s
+          >{% comment %} <span>{{ shop.money_format | split: '{{' | first }}</span> {% endcomment %}
+          {% comment %} {{- product.selected_or_first_available_variant.price | money_without_currency -}} {% endcomment %}
+          {{- product.selected_or_first_available_variant.price | money_without_trailing_zeros -}}
+        </s>
+      </p>
+    {% else %}
+      <p class="pinfo-regular-price okkk">
+        {% comment %} <span>{{ shop.money_format | split: '{{' | first }}</span> {% endcomment %} 
+        {{- product.selected_or_first_available_variant.price | money_without_trailing_zeros }}
+        {% comment %} {{- product.selected_or_first_available_variant.price | money_without_currency }} {% endcomment %}
+      </p>
+    {% endif %}
+    {% if product.selected_or_first_available_variant.price
+        < product.selected_or_first_available_variant.compare_at_price
+    %}
+      <div class="saved__money">
+        {% assign cap = product.selected_or_first_available_variant.compare_at_price %}
+        {% assign saved_money = cap | minus: product.selected_or_first_available_variant.price %}
+        {% assign saved = saved_money | times: 100 %}
+        {% assign saved_percentage = saved | divided_by: cap %}
+        {% comment %} {% assign saved_percentage = product.compare_at_price %} {% endcomment %}
+        Save {{ saved_percentage | append: '%' }}
+      </div>
+    {% elsif settings.enable_custom_price == true and product.metafields.custom.exclude_from_custom_pricing != true %}
+      <div class="saved__money">Save {{ settings.discount_percentage | append: '%' }} With Code</div>
+    {% endif %}
+  </div>
+  {% liquid
+    assign is_sale = false
+    for collection in product.collections
+      if collection.metafields.custom.is_sale_collection
+        assign is_sale = true
+        break
+      endif
+    endfor
+  %}
+  <div class="hidden">
+    {% assign is_archive_collection = false %}
+    {% for product_collection in product.collections %}
+      {% if product_collection.id == 458595369210 %}
+        {% assign is_archive_collection = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% if block.settings.enable_discount_text == true %}
+  
+  {% if is_archive_collection == true %}
+    {% assign saved_percentage = 0 %}
+    {% if product.selected_or_first_available_variant.price
+        < product.selected_or_first_available_variant.compare_at_price
+    %}
+      {% assign cap = product.selected_or_first_available_variant.compare_at_price %}
+      {% assign saved_money = cap | minus: product.selected_or_first_available_variant.price %}
+      {% assign saved = saved_money | times: 100 %}
+      {% assign saved_percentage = saved | divided_by: cap %}
+
+    {% elsif settings.enable_custom_price == true and product.metafields.custom.exclude_from_custom_pricing != true %}
+      {% assign saved_percentage = settings.discount_percentage %}
+    {% endif %}
+    <div class="sale__discount-variant">
+      {% comment %} Archive Products {% endcomment %}
+      <p>Get {{ saved_percentage | append: '%' }} Off.</p>
+    </div>
+  {% elsif product.selected_or_first_available_variant.compare_at_price
+      > product.selected_or_first_available_variant.price
+    and is_sale
+  %}
+    <div class="sale__discount-variant">
+      {% comment %} <p>SALE PRICE INCLUDES DISCOUNT</p> {% endcomment %}
+      <p>Extra 35% off with code CYBER35.</p>
+    </div>
+
+  {% else %}
+    {% comment %} Regular variant {% endcomment %}
+    <div class="sale__discount-variant">
+      <p>Apply code CYBER35 to unlock displayed price.</p>
+    </div>
+  {% endif %}
+   {% endif %}
+</div>

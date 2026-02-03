@@ -1,0 +1,5 @@
+<div class="pinfo-bundle-wrapper">
+  {% for p in product.metafields.custom.bundle.value %}
+    {% render 'product-card-new', product: p %}
+  {% endfor %}
+</div>

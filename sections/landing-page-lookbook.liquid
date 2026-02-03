@@ -1,0 +1,638 @@
+{% liquid
+  assign id = section.id
+%}
+{% assign lookbook_object = page.metafields.custom.landing_page_data.value.landing_page_lookbook.value %}
+{% comment %} {{ lookbook_object | json }} {% endcomment %}
+{% assign content_color_theme = lookbook_object.content_color | strip %}
+
+{% comment %}
+  <div>
+    {% for i in (1..4) %}
+      <div>
+        <h5>{{ i }}</h5>
+        {%- capture text_value -%}
+          item_{{i}}_text
+        {%- endcapture -%}
+        {%- capture pos_x -%}
+          item_{{i}}_position_x_axis
+        {%- endcapture -%}
+        {%- capture pos_y -%}
+          item_{{i}}_position_y_axis
+        {%- endcapture -%}
+        <p>
+          text_value {{ text_value }}
+          {{ lookbook_object[text_value] }}
+        </p>
+        <p>pos_x {{ pos_x }}. {{ lookbook_object[pos_x] }}</p>
+        <p>
+          pos_y {{ pos_y }}
+          {{ lookbook_object[pos_y] }}
+        </p>
+      </div>
+    {% endfor %}
+  </div>
+{% endcomment %}
+
+<style>
+   #shopify-section-{{id}} {
+     box-sizing: border-box;
+     margin-top: {{section.settings.margin_top | append: 'px'}};
+     margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+     padding-top: {{section.settings.padding_top | append: 'px'}};
+     padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+     {% if lookbook_object == blank %}
+      display: none;
+      {% endif %}
+   }
+
+   @media(max-width: 989px) {
+     #shopify-section-{{id}} {
+       margin-top: {{section.settings.margin_top_m | append: 'px'}};
+       margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+       padding-top: {{section.settings.padding_top_m | append: 'px'}};
+       padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+     }
+   }
+
+   {% if section.settings.bg_image %}
+     .lookbook-lg--{{ id }}{
+         background-image: url("{{ section.settings.bg_image | image_url }}");
+         background-size: cover;
+         background-repeat: no-repeat;
+         background-position: center center;
+         min-height: 700px;
+     }
+   {% endif %}
+   .lookbook-wrapper-{{ id }}{
+     display: grid;
+     grid-template-columns: 1fr 600px;
+     justify-content: space-between;
+     height: 100%;
+     color: #1F2937;
+
+      {% if content_color_theme == 'Light' %}
+        color: #fff;
+      {% endif %}
+   }
+   .header-{{ id }}{
+     margin: 0 0 48px;
+   }
+   .header-{{ id }} h2{
+     font-size: 40px;
+     line-height: 40px;
+     color: inherit;
+     {% comment %} color: var(--Content-Base-main, #1F2937); {% endcomment %}
+     text-transform: uppercase;
+     margin: 0;
+   }
+   .info-{{ id }}{
+     max-width: 628px;
+     display: flex;
+     align-items: center;
+   }
+   .infos-{{ id }} .lookbook-info-point:not(:last-child){
+     margin: 0 0 32px;
+   }
+   .lookbook-info-point{
+     display: flex;
+     align-items: center;
+     gap: 24px;
+     cursor: pointer;
+     opacity: 0.5;
+     transition: all 0.3s;
+   }
+   .lookbook-info-point.is-active{
+     opacity: 1;
+   }
+   .texts-{{ id }} h4{
+     color: inherit;
+     {% comment %} color: var(--Content-Base-main, #1F2937); {% endcomment %}
+     font-size: 20px;
+     line-height: 24px;
+     text-transform: uppercase;
+     margin: 0;
+   }
+
+   .lookbook-info-point span{
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     cursor: pointer;
+     width: 48px;
+     height: 48px;
+     min-width: 48px;
+     min-height: 48px;
+     {% comment %} color: inherit; {% endcomment %}
+     color: #1F2937;
+     text-align: center;
+     font-size: 24px;
+     line-height: 28px;
+     border-radius: 32px;
+     border: 1px solid #000;
+     background: #FFF;
+   }
+   .media-{{ id }}{
+     position: relative;
+   }
+   .media-{{ id }} img{
+     display: block;
+     width: 100%;
+     height: 100%;
+     {% comment %} aspect-ratio: 0.73; {% endcomment %}
+   }
+  .lookbook-point{
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     cursor: pointer;
+     width: 44px;
+     height: 44px;
+     position: absolute;
+     color: #000;
+     text-align: center;
+     font-size: 16px;
+     line-height: 24px;
+     border-radius: 32px;
+     border: 1px solid #000;
+     opacity: 0.5;
+     background: #FFF;
+     transition: all 0.3s;
+     @media screen and (max-width: 989px){
+     width: 32px;
+     height: 32px;
+    }
+   }
+   .lookbook-point.is-active{
+     opacity: 1;
+   }
+
+   @media screen and (min-width: 990px){
+     .lookbook-sm--{{ id }}{
+       display: none;
+     }
+   }
+   @media screen and (max-width: 989px){
+     .lookbook-lg--{{ id }}{
+       display: none;
+     }
+     .header-{{ id }}{
+       text-align: center;
+       margin: 0 0 24px;
+     }
+     .header-{{ id }} h2{
+       font-size: 28px;
+       line-height: 32px;
+     }
+     .items-{{ id }} .swiper-slide h4{
+       {% comment %} font-family: var(--font-family-Body); {% endcomment %}
+       font-family: 'Gotham Bold';
+       font-size: 15px;
+       line-height: 20px;
+       {% comment %} color: inherit; {% endcomment %}
+       color: var(--Content-Base-main, #1F2937);
+       font-weight: 700;
+       {% comment %} text-align: center; {% endcomment %}
+       text-align: left;
+       text-transform: uppercase;
+       margin: 0;
+       padding: 0 0 32px;
+       padding-inline: 16px;
+     }
+     .pagination-{{ id }}{
+       padding: 16px 0;
+     }
+     .pagination-{{ id }} .swiper-pagination{
+        position: static;
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+     }
+     .pagination-{{ id }} .swiper-pagination .swiper-pagination-bullet{
+       width: 12px;
+       height: 2px;
+       border-radius: 7px;
+       margin: 0;
+     }
+     .pagination-{{ id }} .swiper-pagination .swiper-pagination-bullet.swiper-pagination-bullet-active{
+       width: 44px;
+       background: #000;
+     }
+   }
+</style>
+
+<div class="sec-{{ id }}">
+  <div class="">
+    <div class="wrapper-{{ id }}">
+      <div class="lookbook-lg--{{ id }}">
+        <div class="lookbook-wrapper-{{ id }} {% unless section.settings.full_width %}page-width{% endunless %}">
+          <div class="info-{{ id }}">
+            <div class="info-wrapper-{{ id }}">
+              {% if section.settings.title != blank %}
+                <div class="header-{{ id }}">
+                  <h2>{{ section.settings.title }}</h2>
+                </div>
+              {% endif %}
+
+              <div class="infos-{{ id }}">
+                {% for i in (1..4) %}
+                  {%- capture text_value -%}
+                    item_{{i}}_text
+                    {%- endcapture -%}
+                  {%- capture pos_x -%}
+                    item_{{i}}_position_x_axis
+                    {%- endcapture -%}
+                  {%- capture pos_y -%}
+                    item_{{i}}_position_y_axis
+                  {%- endcapture -%}
+                  {% if lookbook_object[text_value] != blank %}
+                    <div data-index="{{ forloop.index }}" class="lookbook-info-point info-{{ id }}">
+                      <span>
+                        {{ forloop.index }}
+                      </span>
+                      <div class="texts-{{ id }}">
+                        <h4>{{ lookbook_object[text_value] }}</h4>
+                      </div>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+
+              {% comment %}
+                {% if section.blocks.size > 0 %}
+                  <div class="infos-{{ id }}">
+                    {% for block in section.blocks %}
+                      <div data-index="{{ forloop.index }}" class="lookbook-info-point info-{{ id }}">
+                        <span>
+                          {{ forloop.index }}
+                        </span>
+                        <div class="texts-{{ id }}">
+                          {% if block.settings.text != blank %}
+                            <h4>{{ block.settings.text }}</h4>
+                          {% endif %}
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              {% endcomment %}
+            </div>
+          </div>
+          <div class="media-{{ id }}">
+            {% if section.settings.image %}
+              {{ section.settings.image | image_url: width: section.settings.image.width | image_tag }}
+            {% endif %}
+            {% for i in (1..4) %}
+              {%- capture text_value -%}
+                item_{{i}}_text
+                {%- endcapture -%}
+              {%- capture pos_x -%}
+                item_{{i}}_position_x_axis
+                {%- endcapture -%}
+              {%- capture pos_y -%}
+                item_{{i}}_position_y_axis
+              {%- endcapture -%}
+              {% if lookbook_object[text_value] != blank %}
+                <div
+                  data-index="{{ forloop.index }}"
+                  class="lookbook-point point-{{ id }}"
+                  style="left: {{ lookbook_object[pos_x] | append: '%' }}; top: {{ lookbook_object[pos_y] | append: '%' }};"
+                >
+                  {{ forloop.index }}
+                </div>
+              {% endif %}
+            {% endfor %}
+            {% comment %}
+              {% if section.blocks.size > 0 %}
+                {% for block in section.blocks %}
+                  <div
+                    data-index="{{ forloop.index }}"
+                    class="lookbook-point point-{{ id }}"
+                    style="left: {{ block.settings.pos_x | append: '%' }}; top: {{ block.settings.pos_y | append: '%' }};"
+                  >
+                    {{ forloop.index }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endcomment %}
+          </div>
+        </div>
+      </div>
+      <div class="lookbook-sm--{{ id }} {% unless section.settings.full_width %}page-width{% endunless %}">
+        <div class="lookbook-wrapper-sm--{{ id }}">
+          {% if section.settings.title != blank %}
+            <div class="header-{{ id }}">
+              <h2>{{ section.settings.title }}</h2>
+            </div>
+          {% endif %}
+          <div class="media-{{ id }}">
+            {% if section.settings.image %}
+              {{ section.settings.image | image_url: width: section.settings.image.width | image_tag }}
+            {% endif %}
+
+            {% for i in (1..4) %}
+              {%- capture text_value -%}
+                item_{{i}}_text
+                {%- endcapture -%}
+              {%- capture pos_x -%}
+                item_{{i}}_position_x_axis
+                {%- endcapture -%}
+              {%- capture pos_y -%}
+                item_{{i}}_position_y_axis
+              {%- endcapture -%}
+              {% if lookbook_object[text_value] != blank %}
+                <div
+                  data-index="{{ forloop.index }}"
+                  class="lookbook-point lookbook-point-sm point-{{ id }}"
+                  style="left: {{ lookbook_object[pos_x] | append: '%' }}; top: {{ lookbook_object[pos_y] | append: '%' }};"
+                >
+                  {{ forloop.index }}
+                </div>
+              {% endif %}
+            {% endfor %}
+
+            {% comment %}
+              {% if section.blocks.size > 0 %}
+                {% for block in section.blocks %}
+                  <div
+                    data-index="{{ forloop.index }}"
+                    class="lookbook-point lookbook-point-sm point-{{ id }}"
+                    style="left: {{ block.settings.pos_x | append: '%' }}; top: {{ block.settings.pos_y | append: '%' }};"
+                  >
+                    {{ forloop.index }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endcomment %}
+          </div>
+        </div>
+        {% comment %} {% if section.blocks.size > 0 %} {% endcomment %}
+        <div class="items-{{ id }}">
+          <div class="pagination-{{ id }}">
+            <div class="swiper-pagination"></div>
+          </div>
+          <div class="swiper">
+            <div class="swiper-wrapper">
+              {% for i in (1..4) %}
+                {%- capture text_value -%}
+                    item_{{i}}_text
+                    {%- endcapture -%}
+                {%- capture pos_x -%}
+                    item_{{i}}_position_x_axis
+                    {%- endcapture -%}
+                {%- capture pos_y -%}
+                    item_{{i}}_position_y_axis
+                  {%- endcapture -%}
+                {% if lookbook_object[text_value] != blank %}
+                  <div data-index="{{ forloop.index }}" class="swiper-slide">
+                    {% if lookbook_object[text_value] != blank %}
+                      <h4>{{ lookbook_object[text_value] }}</h4>
+                    {% endif %}
+                  </div>
+                {% endif %}
+              {% endfor %}
+
+              {% comment %}
+                {% for block in section.blocks %}
+                  <div data-index="{{ forloop.index }}" class="swiper-slide">
+                    {% if block.settings.text != blank %}
+                      <h4>{{ block.settings.text }}</h4>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              {% endcomment %}
+            </div>
+          </div>
+        </div>
+        {% comment %} {% endif %} {% endcomment %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.initLookbook = function () {
+    const container = document.querySelector('.sec-{{ id }}');
+    if (!container) return;
+
+    const active = 'is-active';
+
+    const setupDesktop = () => {
+      const scope = container.querySelector('.lookbook-lg--{{ id }}');
+      if (!scope) return;
+
+      const pointSel = '.lookbook-point:not(.lookbook-point-sm)';
+      const infoSel = '.lookbook-info-point';
+      const both = `${pointSel}, ${infoSel}`;
+
+      const byIndex = (selector, idx) =>
+        Array.from(scope.querySelectorAll(selector)).filter((el) => el.dataset.index === String(idx));
+
+      const clear = () => scope.querySelectorAll(both).forEach((el) => el.classList.remove(active));
+
+      const setActive = (idx) => {
+        clear();
+        byIndex(pointSel, idx).forEach((el) => el.classList.add(active));
+        byIndex(infoSel, idx).forEach((el) => el.classList.add(active));
+      };
+
+      const first = scope.querySelector(both);
+      if (first && first.dataset.index) setActive(first.dataset.index);
+
+      const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+      if (canHover) {
+        scope.addEventListener('pointerover', (e) => {
+          const target = e.target.closest(both);
+          if (!target || !scope.contains(target)) return;
+          if (e.pointerType === 'mouse') setActive(target.dataset.index);
+        });
+      } else {
+        scope.addEventListener('click', (e) => {
+          const target = e.target.closest(both);
+          if (!target || !scope.contains(target)) return;
+          setActive(target.dataset.index);
+        });
+      }
+    };
+
+    const setupMobile = () => {
+      const scope = container.querySelector('.lookbook-sm--{{ id }}');
+      if (!scope) return;
+
+      const pointSel = '.lookbook-point-sm';
+      const slideSel = '.swiper-slide';
+
+      const points = () => Array.from(scope.querySelectorAll(pointSel));
+      const slides = () => Array.from(scope.querySelectorAll(slideSel));
+
+      const clearPoints = () => points().forEach((el) => el.classList.remove(active));
+      const setActivePoint = (idx) => {
+        clearPoints();
+        points()
+          .filter((el) => el.dataset.index === String(idx))
+          .forEach((el) => el.classList.add(active));
+      };
+      const slideIndexFor = (idx) => slides().findIndex((s) => s.dataset.index === String(idx));
+
+      const swiperEl = scope.querySelector('.swiper');
+      const paginationEl = scope.querySelector('.swiper-pagination');
+      let swiper = null;
+
+      if (swiperEl && paginationEl && typeof Swiper !== 'undefined') {
+        swiper = new Swiper(swiperEl, {
+          slidesPerView: 1,
+          spaceBetween: 0,
+          speed: 300,
+          pagination: { el: paginationEl, clickable: true },
+          on: {
+            init() {
+              const s = this.slides[this.activeIndex];
+              if (s && s.dataset.index) setActivePoint(s.dataset.index);
+            },
+            slideChange() {
+              const s = this.slides[this.activeIndex];
+              if (s && s.dataset.index) setActivePoint(s.dataset.index);
+            },
+          },
+        });
+      }
+
+      scope.addEventListener('click', (e) => {
+        const p = e.target.closest(pointSel);
+        if (!p || !scope.contains(p)) return;
+        const idx = p.dataset.index;
+        const to = slideIndexFor(idx);
+        if (swiper && to > -1) swiper.slideTo(to);
+        setActivePoint(idx);
+      });
+    };
+
+    setupDesktop();
+    setupMobile();
+  };
+
+  document.addEventListener('DOMContentLoaded', window.initLookbook);
+</script>
+
+{% schema %}
+{
+  "name": "Landing Page Lookbook",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Product Image"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Landing Page Lookbook"
+    }
+  ]
+}
+{% endschema %}

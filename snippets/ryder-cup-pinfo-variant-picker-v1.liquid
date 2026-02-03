@@ -1,0 +1,209 @@
+<pinfo-variant-picker class="{% if block.settings.enable_mb %}mb{% endif %}">
+  {% assign is_sale_color_available = false %}
+
+
+{% liquid
+  capture header
+    echo content_for_header
+  endcapture
+
+  assign url = header | split: '"pageurl":"' | last | split: '"' | first | replace: '\/', '/' | replace: '\u0026', '&'
+
+  assign has_variant_param = false
+  if url contains 'variant='
+    assign has_variant_param = true
+  endif
+%}
+
+  
+  {% for option in product.options_with_values %}
+    {% assign option_name = option.name | downcase %}
+    {% assign is_size_option = false %}
+    {% if option.name == 'Size' or option.name == 'size' %}
+      {% assign is_size_option = true %}
+    {% endif %}
+    
+    <div class="pinfo-variants-options {% if option.name == 'Color' or option.name == 'color' or option.name == 'COlOR' or option_name == 'color' %}color-variant hidden{% else %}others-variant{% endif %}">
+      <div class="pinfo-option-label-wrapper {% if option.name == 'Size' or option.name == 'size' %}size___wrap{% endif %}">
+        <p class="pinfo-filter-label">
+          {% if option.name == 'Size' or option.name == 'size' -%}
+            <span>
+              {{- option.name }}:
+              <span class="pinfo-selected-size" data-dynamic-size-label>{{ option.selected_value }}</span></span
+            >
+          {%- endif %}
+          {% if option.name == 'Color' or option.name == 'color' or option.name == 'COlOR' or option_name == 'color' %}
+            <span>
+              {{- option.name }}:
+              <span class="pinfo-selected-color">
+                {{- option.selected_value }}
+                {% unless product.selected_or_first_available_variant.metafields.custom.parent_color.value == blank -%}
+                  <span>
+                    (
+                    {%- for part in product.selected_or_first_available_variant.metafields.custom.parent_color.value %}
+                      {% unless forloop.last %}
+                        {{ part | append: ' /' }}
+                      {% else %}
+                        {{ part }}
+                      {% endunless %}
+                    {% endfor -%}
+                    )</span
+                  >
+                {%- endunless -%}
+              </span>
+            </span>
+          {% elsif option.name == 'Size' or option.name == 'size' %}
+            {% render 'inventory-status', product: product, block: block, section: section %}
+            <span class="pinfo-size-guide openPopup">
+              <svg xmlns="http://www.w3.org/2000/svg" width="8" height="14" viewBox="0 0 8 14" fill="none">
+                <path d="M7.04687 14L6.46156 13.7371L0.95427 7.00191L0.952715 7L0.95427 6.9981L6.46156 0.262928L7.04688 0L3.94193 6.9981L3.9413 6.99969V7.00031L3.94193 7.00191L7.04687 14Z" fill="black"/>
+              </svg>
+              <span>Size Guide</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="8" height="14" viewBox="0 0 8 14" fill="none">
+                <path d="M0.953125 0L1.53844 0.262928L7.04573 6.99809L7.04729 7L7.04573 7.0019L1.53844 13.7371L0.953125 14L4.05807 7.0019L4.0587 7.00031V6.99969L4.05807 6.99809L0.953125 0Z" fill="black"/>
+              </svg>
+            </span>
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="pinfo-options-values-wrapper {% if option.name == 'Color' or option.name == 'color' or option_name == 'color' %}color-options --regular-color-variants-wrapper{% else %}others-options{% endif %}">
+        {%- for value in option.values -%}
+          
+            <div
+              class="
+                {% if value.variant.id == blank %}hidden{% endif %}
+                pinfo-option-value {% unless value.available %}
+                  disabled-option
+                {% endunless -%}
+                 {% if option_name == 'color' and value.variant.compare_at_price > value.variant.price %}hidden {% endif %}
+              "
+            >
+              <input
+                {% comment %} {% if is_size_option %}
+                  {% if has_variant_param and value.selected %}checked{% endif %}
+                {% else %}
+                  {% if value.selected %}checked{% endif %}
+                {% endif %} {% endcomment %}
+
+                {% if value.selected %}
+                  checked
+                {% endif %}
+
+                {% unless value.available %}
+                  disabled-
+                {% endunless %}
+                
+                class="hidden"
+                id="{{ option.position }}-{{ value.id }}-{{ forloop.index }}"
+                type="radio"
+                name="{{ option.name }}"
+                data-variant-url="{{ value.variant.url }}"
+                value="{{ value.name }}"
+              >
+              {%- if option.name == 'Color'
+                or option.name == 'color'
+                or option.name == 'COlOR'
+                or option_name == 'color'
+              -%}
+                {% liquid
+                  assign color_img = value.name | downcase | strip | replace: ' ', '-' | replace: '/', '-' | append: '.png'
+                %}
+                <label
+                  title="{{ value.name }}"
+                  class="
+                    {% if option.name == 'Color' or option.name == 'color' or option.name == 'COlOR' or option_name == 'color' %}pinfo-color-label{% endif %}
+                    {% unless value.available %}disabled{% endunless %}
+                  "
+                  for="{{ option.position }}-{{ value.id }}-{{ forloop.index }}"
+                >
+                  <span
+                    style="background-image: url('{{ color_img | file_img_url: "200x" }}'); background-color: {{ value.name | downcase }}"
+                  ></span>
+                </label>
+                {% if value.variant.compare_at_price > value.variant.price %}
+                  <span class="--sale-variant hidden">Sale</span>
+                {% endif %}
+              {%- else -%}
+                <label
+                  title="{{ value.name }}"
+                  class="{% unless  value.available %}disabled{% endunless %}"
+                  for="{{ option.position }}-{{ value.id }}-{{ forloop.index }}"
+                >
+                  {% if value.available %}
+                    {{ value.name }}
+                  {% else %}
+                    <s>{{ value.name }}</s>
+                  {% endif %}
+                </label>
+              {%- endif -%}
+            </div>
+          
+        {%- endfor -%}
+      </div>
+      {% if option.name == 'Color' or option.name == 'color' or option_name == 'color' %}
+        {% for value in option.values %}
+          {% if value.variant.compare_at_price > value.variant.price and value.variant.available %}
+            <h4 class="--sale-colors-title">Sale</h4>
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      {%- if option.name == 'Color' or option.name == 'color' or option_name == 'color' -%}
+        <div class="pinfo-options-values-wrapper color-options --sale-color-variants-wrapper">
+          {% for value in option.values %}
+            {% if value.variant.compare_at_price > value.variant.price %}
+              <div
+                class="
+                  {% if value.variant.id == blank %}hidden{% endif %}
+                  pinfo-option-value {% unless value.available %}
+                    disabled-option
+                  {% endunless -%}
+                "
+              >
+                <input
+                  {% if value.selected %}
+                    checked
+                  {% endif %}
+                  {% unless value.available %}
+                    disabled-
+                  {% endunless %}
+                  class="hidden"
+                  id="{{ option.position }}-{{ value.id }}-{{ forloop.index }}"
+                  type="radio"
+                  name="{{ option.name }}"
+                  data-variant-url="{{ value.variant.url }}"
+                  value="{{ value.name }}"
+                >
+                {% if option.name == 'Color'
+                  or option.name == 'color'
+                  or option.name == 'COlOR'
+                  or option_name == 'color'
+                %}
+                  {% liquid
+                    assign color_img = value.name | downcase | strip | replace: ' ', '-' | replace: '/', '-' | append: '.png'
+                  %}
+                  <label
+                    title="{{ value.name }}"
+                    class="
+                      {% if option.name == 'Color' or option.name == 'color' or option.name == 'COlOR' or option_name == 'color' %}pinfo-color-label{% endif %}
+                      {% unless value.available %}disabled{% endunless %}
+                    "
+                    for="{{ option.position }}-{{ value.id }}-{{ forloop.index }}"
+                  >
+                    <span
+                      style="background-image: url('{{ color_img | file_img_url: "200x" }}'); background-color: {{ value.name | downcase }}"
+                    ></span>
+                  </label>
+                  {% if value.variant.compare_at_price > value.variant.price %}
+                    <span class="--sale-variant hidden">Sale</span>
+                  {% endif %}
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {%- endif -%}
+    </div>
+  {% endfor %}
+</pinfo-variant-picker>

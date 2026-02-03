@@ -1,0 +1,405 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  .sec-{{ id }} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+    /* display: none; */
+  }
+  .info__wrap--{{ id }} {
+    max-width: 640px;
+    margin: auto;
+  }
+  {% if section.settings.image or collection.image %}
+    .img__no-image{
+      position: relative;
+    }
+    .img__no-image:after{
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.4);
+      z-index: 1;
+    }
+    .contents__no-image{
+       z-index: 2;
+    }
+  {% endif %}
+  @media(max-width: 768px) {
+    #shopify-section-{{id}} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+    }
+  }
+  .wrapper-{{ id }}{
+    position: relative;
+  }
+  .img-wrapper-{{ id }} img{
+    display: block;
+    width: 100%;
+    height: 100%;
+    height: 480px;
+    object-fit: cover;
+  }
+  .contents__no-image.contents-{{ id }}{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translatex(-50%);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    padding: 40px;
+    color: #fff;
+    @media screen and (max-width: 768px){
+      padding: 20px;
+    }
+    .contents-wrapper-{{ id }}{
+      max-width: 700px;
+      h2{
+        color: inherit;
+      }
+      p{
+        color: inherit;
+      }
+      .items-{{ id }}{
+        &.sticky__nav{
+          color: #1F2937;
+        }
+        a{
+          color: inherit;
+          border-color: inherit;
+          &.active{
+            color: #fff;
+          }
+        }
+      }
+
+    }
+  }
+  .contents-{{ id }}:not(.contents__no-image){
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .contents-wrapper-{{ id }}{
+      text-align: center;
+      .items-{{ id }}{
+
+      }
+    }
+  }
+  .contents-wrapper-{{ id }}{
+    max-width: 100%;
+    width: 100%;
+    h2{
+      color: var(--Content-Base-main);
+      font-family: var(--font-family-Title);
+      font-size: var(--Font-Size-Heading-H2);
+      line-height: var(--Line-Height-Heading-H2); /* 116.667% */
+      letter-spacing: -0.96px;
+      text-transform: capitalize;
+      margin: 0 0 24px;
+    }
+    p{
+      color: var(--Content-Base-main);
+      font-family: var(--font-family-Body);
+      font-size: var(--Font-Size-Paragraph-Medium);
+      line-height: var(--Line-Height-Paragraph-Medium); /* 144.444% */
+      margin: 0 0 24px;
+    }
+    .items-{{ id }}{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow-x: auto;
+      gap: 16px;
+      padding: 8px 16px;
+      border-top: 1px solid #D1D5DB;
+      border-bottom: 1px solid #D1D5DB;
+      @media screen and (max-width: 989px){
+        justify-content: flex-start;
+      }
+      &.sticky__nav{
+        /* position: fixed;
+        top: 0;
+        width: 100%;
+        background: #fff;
+        z-index: 1;
+        left: 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 10px 16px; */
+      }
+      a {
+        text-align: center;
+        display: inline-block;
+        color: var(--Content-Base-main);
+        font-family: var(--font-family-Control);
+        font-size: var(--Font-Size-Paragraph-Small);
+        line-height: var(--Line-Height-Paragraph-Small);
+        padding: 8px 16px;
+        min-width: max-content;
+        text-decoration: none;
+
+        &.active {
+          color: #fff;
+          border-color: #1F2937;
+          background: #1F2937;
+        }
+
+        span {
+          position: relative;
+
+          &::after {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: {% if section.settings.image or collection.image %} #FFF {% else %}#1F2937{% endif %};
+            transition: width 0.3s ease;
+          }
+        }
+
+        &:hover span::after {
+          width: 100%;
+        }
+      }
+    }
+  }
+</style>
+
+<div class="sec-{{ id }} --collection-banner">
+  <div class="{% unless section.settings.image or collection.image %}page-width-{% endunless %}">
+    <div class="wrapper-{{ id }}">
+      {% comment %}
+        {% if section.settings.image or collection.image %}
+          <div class="img-wrapper-{{ id }} {% if section.settings.image or collection.image %}img__no-image{% endif %}">
+            {% if collection.image %}
+              {{ collection.image | image_url: width: collection.image.width | image_tag }}
+            {% elsif section.settings.image %}
+              {{ section.settings.image.width | image_url: width: section.settings.image.width.width | image_tag }}
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endcomment %}
+
+      <div class="contents-{{ id }} {% if section.settings.image or collection.image %}contents__no-image_{% endif %} page-width">
+        <div class="contents-wrapper-{{ id }}">
+          <div class="info__wrap--{{ id }}">
+            <h2>{{ collection.title | downcase }}</h2>
+            {% if collection.description != blank %}
+              <p>{{ collection.description }}</p>
+            {% endif %}
+          </div>
+
+          {% if collection.metafields.custom.related_collection.value != blank %}
+            <div class="items-{{ id }}">
+              {% for xcollection in collection.metafields.custom.related_collection.value %}
+                <a
+                  class="{% if xcollection.url == collection.url %}active{% endif %}"
+                  href="{{ xcollection.url }}"
+                >
+                  <span>{{ xcollection.title }}</span>
+                </a>
+              {% endfor %}
+            </div>
+          {% else %}
+            {% if section.blocks.size > 0 %}
+              <div class="items-{{ id }}">
+                {% for block in section.blocks %}
+                  {% assign collection_url = block.settings.collection.url %}
+                  {% assign current_url = request.path %}
+                  <a
+                    class="{% if current_url == collection_url %}active{% endif %}"
+                    href="{{ block.settings.collection.url }}"
+                  >
+                    <span>{{- block.settings.collection.title -}}</span>
+                  </a>
+                {% endfor %}
+              </div>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  {% comment %}
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+      const collectionsLists = document.querySelectorAll(".items-{{ id }}");
+
+      if (collectionsLists.length === 0) return;
+      /*
+      collectionsLists.forEach((collectionsList) => {
+        const initialOffsetTop = collectionsList.offsetTop;
+        let isSticky = false;
+
+        window.addEventListener("scroll", function () {
+          const scrollPosition = window.scrollY;
+
+          if (scrollPosition >= initialOffsetTop && !isSticky) {
+            collectionsList.classList.add("sticky__nav");
+            isSticky = true;
+          } else if (scrollPosition < initialOffsetTop && isSticky) {
+            collectionsList.classList.remove("sticky__nav");
+            isSticky = false;
+          }
+        });
+      });
+      */
+
+
+      if (collectionsLists.length > 0) {
+        collectionsLists.forEach((container) => {
+          const activeLink = container.querySelector("a.active");
+
+          if (activeLink) {
+            const scrollPosition =
+              activeLink.offsetLeft -
+              container.offsetWidth / 2 +
+              activeLink.offsetWidth / 2;
+
+            container.scrollTo({ left: scrollPosition, behavior: "smooth" });
+          }
+        });
+      }
+  });
+  {% endcomment %}
+</script>
+
+{% schema %}
+{
+  "name": "Collection Banner New",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Banner Image"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Banner New"
+    }
+  ]
+}
+{% endschema %}

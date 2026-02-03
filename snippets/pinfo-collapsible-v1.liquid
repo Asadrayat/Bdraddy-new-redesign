@@ -1,0 +1,66 @@
+<style>
+  
+  /* .acr-content ul {
+  list-style-image: url("{{ 'Right.svg' | asset_url }}");
+} */
+.acr-content{
+  p{
+    margin-block: 10px;
+  }
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+li {
+  position: relative;
+  padding-left: 16px; /* Space for bullet */
+}
+
+li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 5px;
+  /* transform: translateY(-50%); */
+  width: 10px;
+  height: 10px;
+  background-image: url("{{ 'Right.svg' | asset_url }}");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+  
+}
+.acr-content * {
+  @media(max-width: 768px){
+    font-size: var(--Font-Size-Paragraph-Small);
+    line-height: var(--Line-Height-Paragraph-Small);
+}
+  
+}
+  
+
+</style>
+<accordion-element >
+  <div class="accordion-wrapper accordion-wrapper-pinfo accordion-wrapper-{{ section.id }}">
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'collapsible' %}
+          <div class="accordion">
+            <div class="acr-title">
+              <h4 class="--tab-title">{{ block.settings.title }}</h4>
+              <div class="__tab-icons">
+                {% render 'header-icons', name: 'down' , class: 'down' %}
+                {% render 'tab-icons', name: 'plus', class: 'plus-icon' %}
+                {% render 'tab-icons', name: 'minus', class: 'minus-icon' %}
+              </div>
+            </div>
+            <div class="acr-content">
+              {{ block.settings.content }}
+            </div>
+          </div>
+      {% endcase %}
+    {% endfor %}
+  </div>
+</accordion-element>

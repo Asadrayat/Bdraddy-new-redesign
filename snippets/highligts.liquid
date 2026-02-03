@@ -1,0 +1,13 @@
+{% if section.blocks.size > 0 %}
+  <div class="collections__list">
+    {% for block in section.blocks %}
+      {% if block.settings.collection %}
+        {% assign collection_url = block.settings.collection.url %}
+        {% assign current_url = request.path %}
+        <a href="{{ collection_url }}" class="{% if current_url == collection_url %}active{% endif %}">
+          {{ block.settings.collection.title }}
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}

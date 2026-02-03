@@ -1,0 +1,326 @@
+{% liquid
+  assign id = section.id
+%}
+
+<style>
+  #shopify-section-{{id}} {
+    box-sizing: border-box;
+    margin-top: {{section.settings.margin_top | append: 'px'}};
+    margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+    padding-top: {{section.settings.padding_top | append: 'px'}};
+    padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+    .button {
+      width: 100%;
+    }
+    .arrow_btn::after, .arrow_btn::before{
+       top: 50%;
+       transform: translateY(-50%);
+    }
+  }
+  .wrapper-{{ id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--Spacing-Container-xl);
+    @media(max-width: 768px) {
+      grid-template-columns: 1fr;
+
+    }
+    .hero__image {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+    h3 {
+    color: var(--Content-Base-main, #1F2937);
+    font-family: var(--font-family-Heading, Gotham);
+    font-size: var(--Font-Size-Heading-H3, 20px);
+    font-style: normal;
+    font-weight: 700;
+    line-height: var(--Line-Height-Heading-H3, 24px);
+    text-transform: uppercase;
+    margin: 24px 0 var(--Spacing-Container-md);
+        @media(max-width: 768px) {
+
+        }
+    }
+    p.pretitle {
+        margin: 0;
+    }
+    .card__rte {
+        margin-bottom: var(--Spacing-Container-xl);
+    }
+    .card__rte * {
+      color: #1C2F5B;
+      letter-spacing: 0;
+      margin: 0;
+    }
+    .card__rte *:not(:last-child) {
+        margin: 0 0 16px 0;
+    }
+
+    .card__rte {
+      p,li,ul,span, em {
+        /* Paragraph/Small */
+        font-family: var(--font-family-Body, Gotham);
+        font-size: var(--Font-Size-Paragraph-Small, 12px);
+        font-style: normal;
+        font-weight: 400;
+        line-height: var(--Line-Height-Paragraph-Small, 16px); /* 133.333% */
+      }
+    }
+  }
+  @media(max-width: 768px) {
+    #shopify-section-{{id}} {
+      margin-top: {{section.settings.margin_top_m | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+      padding-top: {{section.settings.padding_top_m | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+      .button {
+        width: 100%;
+      }
+    }
+  }
+
+
+
+.container-{{ section.id }} {
+    display: flex;
+    gap: var(--Spacing-Container-xxl, 48px);
+    flex-direction: column;
+
+.--top-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--Spacing-Container-lg, 24px);
+    max-width: 840px;
+}
+h2.--section-title {
+    color: var(--Content-Base-main, #1F2937);
+    letter-spacing: -1.2px;
+    margin: 0;
+    @media(max-width: 768px){
+      letter-spacing: -0.84px;
+
+    }
+}
+.--text-content-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--Spacing-Container-xxl, 48px);
+    /* align-self: stretch; */
+    @media(max-width: 768px){
+     gap: var(--Spacing-Container-lg, 24px);
+     flex-direction: column;
+    }
+    
+}
+.--content-box {
+    color: var(--Content-Base-main, #1F2937);
+    font-family: var(--font-family-Body, Gotham);
+    font-size: var(--Font-Size-Paragraph-Medium, 14px);
+    line-height: var(--Line-Height-Paragraph-Medium, 22px);
+    flex: 1;
+}
+
+}
+
+</style>
+
+<div class="sec-{{ id }}">
+  <div class="{% unless section.settings.full_width %}page-width{% endunless %} container-{{ section.id }}">
+    <div class="--top-block">
+      <h2 class="--section-title">{{ section.settings.title }}</h2>
+      <div class="--text-content-wrapper">
+        {% if section.settings.content_1 != blank %}
+          <div class="--content-box">{{ section.settings.content_1 }}</div>
+        {% endif %}
+        {% if section.settings.content_2 != blank %}
+          <div class="--content-box">{{ section.settings.content_2 }}</div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="wrapper-{{ id }}">
+      {% for block in section.blocks %}
+        <div class="large__card">
+          {% if block.settings.image %}
+            {{ block.settings.image | image_url: width: 1000 | image_tag: class: 'hero__image' }}
+          {% endif %}
+          {% if block.settings.image_bg %}
+            {{ block.settings.image_bg | image_url: width: 1000 | image_tag: class: 'bg__image' }}
+          {% endif %}
+          <div class="card__info">
+            <h3>{{ block.settings.title }}</h3>
+            {% if block.settings.rte != blank %}
+              <div class="card__rte">{{ block.settings.rte }}</div>
+            {% endif %}
+            {% if block.settings.label != blank -%}
+              <a class="arrow_btn" href="{{ block.settings.url }}">{{ block.settings.label }}</a>
+            {%- endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Large Card",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "textarea",
+      "id": "content_1",
+      "label": "Text Content 1"
+    },
+    {
+      "type": "textarea",
+      "id": "content_2",
+      "label": "Text Content 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 48
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_bg",
+          "label": "Image Background"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "title",
+          "label": "Title",
+          "default": "DRADDY SPORT COLLECTION"
+        },
+        {
+          "type": "richtext",
+          "id": "rte",
+          "label": "Contents"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "view collection"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Url"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Large Card"
+    }
+  ]
+}
+{% endschema %}

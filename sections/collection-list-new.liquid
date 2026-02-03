@@ -1,0 +1,689 @@
+{% liquid
+  assign product_cards = product.metafields.custom.product_card.value
+  assign product_images = product.metafields.custom.product_image.value
+%}
+{% assign section_visibility = false %}
+{% for image in product_images %}
+  {% if forloop.last and forloop.index == product_cards.size %}
+    {% assign section_visibility = true %}
+  {% endif %}
+{% endfor %}
+{% unless product_cards == blank %}
+  {% style %}
+      #shopify-section-{{section.id}} {
+        box-sizing: border-box;
+        padding-block: {{section.settings.padding_block_desktop}};
+
+        {% if section.settings.dark_mode %}
+          background-color: #000;
+        {% endif %}
+        .title-{{ section.id }}{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          em {
+            margin: 0 12px;
+          }
+        }
+        h2.--section-title {
+        letter-spacing: 0;
+        text-align: center;
+        color: #1F2937;
+
+        /* Headings/H1 */
+        font-family: var(--font-family-Heading, Gotham);
+        font-size: var(--Font-Size-Heading-H1, 64px);
+        font-style: normal;
+        font-weight: 700;
+        line-height: var(--Line-Height-Heading-H1, 64px); /* 100% */
+        text-transform: uppercase;
+        {% if section.settings.dark_mode %}
+          color: #fff;
+        {% endif %}
+        position: relative;
+        /* width: max-content; */
+        margin: 0 auto var(--Spacing-Container-xxl, 40px);
+    }
+
+    .new-cl-wrapper--{{ section.id }} {
+      position: relative;
+    }
+      .wrapper__content {
+        position: relative;
+        box-sizing: border-box;
+      }
+      .wrapper__content::before {
+        /* content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: linear-gradient(to right, rgba(48, 50, 127, 1), rgba(48, 50, 127, 0.2));
+        width: 100%;
+        height: 100%; */
+      }
+      .new-cl-body {
+          /* position: absolute;
+          top: 0;
+          left: 0; */
+          width: 100%;
+          height: 100%;
+          display: flex;
+          {% if product_images != blank or section.settings.image != blank %}
+             justify-content: flex-start;
+            {% else %}
+               justify-content: flex-start;
+           {% endif %} 
+         
+          align-items: flex-start;
+          padding: var(--Spacing-Container-md) 0 0 0;
+        @media(max-width: 768px) {
+
+        }
+      }
+      .meta_img_not__visible_new_cl_body.new-cl-body {
+        align-items: center;
+        * {
+          text-align: center !important;
+        }
+      }  
+      .hero_slider__nav_icon svg{
+         width: 25px;
+          height: auto;
+      }
+      .hero_slider__nav_icon:after {
+        content: none!important;
+      }
+    .hero_slider__nav_icon.swiper-button-disabled {
+        display: none!important;
+    }
+       .new-cl-view-all_ {
+         width: max-content;
+       }
+        .new-cl-media:hover img {
+          /* scale: 1.05; */
+        }
+        .new-cl-media{
+          display: flex;
+          /* margin-bottom: 16px; */
+          overflow: hidden;
+          @media(max-width: 768px) {
+            /* margin-bottom: 24px; */
+          }
+        }
+        .new-cl-media svg{
+          width: 100%;
+          height: auto;
+          aspect-ratio: 3/2;
+          object-fit: cover;
+        }
+        .new-cl-media img{
+          width: 100%;
+          height: auto;
+          aspect-ratio: 3/2;
+          transition: all 0.4s ease-in-out;
+          object-fit: cover;
+        }
+        .next-{{ section.id }} {
+          right: 0
+        }
+
+        @media(max-width: 768px) {
+          padding-block: {{section.settings.padding_block_mobile}};
+        }
+
+      }
+      .swiper-scrollbar-{{ section.id }} {
+        position: relative !important;
+        left: 0 !important;
+        bottom: 0 !important;
+        margin: var(--Spacing-Container-xl) 0 0 0;
+        height: 1px !important;
+        opacity: 1 !important;
+        width: 100% !important;
+        @media(max-width: 768px) {
+              margin: 0;
+        }
+        .swiper-scrollbar-drag {
+          background: #00094b;
+          display: block !important;
+          height: 1px;
+        }
+      }
+      .swiper-scrollbar-{{ section.id }}::before {
+        position: absolute;
+        content: "";
+      }
+  {% endstyle %}
+
+  <style>
+            .sec-{{ section.id }}.meta_img_not__visible {
+                .new-cl-media img{
+                  {% comment %} aspect-ratio: 1 !important; {% endcomment %}
+                }
+            }
+            .sec-{{ section.id }}.meta_img_not__visible .new-cl-body {
+              {% if section.settings.image != blank %}
+                position: absolute;
+                top: 0;
+                left: 0;
+              {% else %}
+                 background: inherit;
+                {% endif %}
+                
+               
+                width: 100%;
+                height: 100%;
+                display: flex  !important;
+                {% comment %} justify-content: center  !important; {% endcomment %}
+                {% comment %} align-items: center !important; {% endcomment %}
+                padding: var(--Spacing-Container-xxl) !important;
+                gap: var(--Spacing-Container-md);
+                color: #1f2937;
+              @media(max-width: 768px) {
+
+              }
+
+            }
+            .--section-title-pp{
+              position: relative;
+            }
+            .--section-title-pp:after{
+              content: "";
+              position: absolute;
+              left: 0;
+              bottom: -5px;
+              width: 100%;
+              height: 4px;
+              background: #009d4a;
+            }
+
+            #shopify-section-{{section.id}}  .swiper-button-disabled {
+            opacity: .5;
+        }
+        #shopify-section-{{section.id}}  .--nav-icon.swiper-button-lock {
+            display: none;
+        }
+        #shopify-section-{{section.id}}  .--nav-icon {
+            display: flex;
+            width: 36px;
+            height: 36px;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            {% comment %} border: 1px solid var(--Border-Base-dense, #4B5563); {% endcomment %}
+            background: #FFF;
+            position: absolute;
+            top: 40%;
+            z-index: 1;
+            cursor: pointer;
+            transition: 0.5s ease;
+              svg path{
+              transition: 0.5s ease;
+              }
+              @media(max-width: 768px){
+              {% comment %} display: none; {% endcomment %}
+               border: 1px solid var(--Border-Base-dense, #4B5563);
+            }
+        }
+         @media(min-width: 769px){
+          #shopify-section-{{section.id}}  .--nav-icon:hover{
+            background: #1F2937;
+            svg path{
+              fill: #fff;
+            }
+          }
+          .sec-{{ section.id }} .swiper-slide .meta_img_not__visible_new_cl_body.new-cl-body {
+            border-right: 1px solid #1f2937;
+          }  
+          .sec-{{ section.id }} .swiper-slide.last__index___ .new-cl-body {
+            border-right: none;
+          }  
+        }
+      .--nav-button-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        @media(max-width: 768px) {
+          padding: 16px 0;
+        }
+    }
+
+      .sec-{{ section.id }} .swiper-button-disabled {
+          opacity: .5;
+      }
+      .sec-{{ section.id }} .--nav-icon.swiper-button-lock {
+          display: none;
+      }
+      .sec-{{ section.id }} .--nav-icon {
+          display: flex;
+          min-width: 36px;
+          width: 36px;
+          height: 36px;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+          {% comment %} border: 1px solid var(--Border-Base-dense, #4B5563); {% endcomment %}
+          background: #FFF;
+          position: absolute;
+          top: 40%;
+          z-index: 1;
+          cursor: pointer;
+          transition: 0.5s ease;
+            svg path{
+            transition: 0.5s ease;
+            }
+            @media(max-width: 768px){
+            /* display: none; */
+            position: relative !important;
+            
+          }
+      }
+       @media(min-width: 769px){
+        .sec-{{ section.id }} .--nav-icon:hover{
+          background: #1F2937;
+          svg path{
+            fill: #fff;
+          }
+        }
+
+        }
+
+      .swiper-prev-{{section.id }}.--desktop-nav {
+          left: -40px;
+          @media(max-width: 768px){
+            display: none !important;
+          }
+      }
+      .swiper-next-{{section.id }}.--desktop-nav {
+          right: -40px;
+           @media(max-width: 768px){
+            display: none !important;
+          }
+
+      }
+      .swiper-prev-{{section.id }}.--mobile-nav ,
+      .swiper-next-{{section.id }}.--mobile-nav {
+        @media(min-width: 768px){
+            display: none !important;
+        }
+      }
+    .new-cl-body.cl-.meta_img_visible_new_cl_body {
+        padding: var(--Spacing-Container-md) var(--Spacing-Container-md) 0 0 !important;
+    }
+  </style>
+  <div
+    id="{{ section.settings.nav_id }}"
+    class="{% if section.settings.full_width_section %}full-width{% else %}page-width{% endif %}  {% if section_visibility == false %}meta_img_not__visible{% endif %} sec-{{ section.id }} section-{{section.id }}"
+  >
+    {% comment %}
+      <div class="test">
+        {% assign section_visibility = false %}
+        {% for image in product_images %}
+          {% if forloop.last and forloop.index == product_cards.size %}
+            {% assign section_visibility = true %}
+          {% endif %}
+        {% endfor %}
+
+        {% if section_visibility == true %}
+          <p>Show me the section</p>
+          {% for text in product_cards %}
+            <div>
+              {% assign image_index = forloop.index %}
+
+              {% for image in product_images %}
+                <div>
+                  {% if image_index == forloop.index %}
+                    <h5>Text Value: {{ text }}</h5>
+                    {{- image | image_url: width: 100 | image_tag }}
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        {% else %}
+          <p>Hide me</p>
+        {% endif %}
+      </div>
+    {% endcomment %}
+
+    {% assign keywords = 'sport,performance,cool' | split: ',' %}
+    {% assign premium_performance = false %}
+
+    {% if keywords %}
+      {% for keyword in keywords %}
+        {% if product.title contains keyword %}
+          {% assign premium_performance = true %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {% if product.collections.size > 0 %}
+      {% for collection in product.collections %}
+        {% if collection.title contains 'sport'
+          or collection.title contains 'performance'
+          or collection.title contains 'cool'
+        %}
+          {% assign premium_performance = true %}
+        {% elsif collection.handle contains 'sport'
+          or collection.handle contains 'performance'
+          or collection.handle contains 'cool'
+        %}
+          {% assign premium_performance = true %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    {% assign women_product = product.metafields.custom.shop_for.value | downcase | strip | handleize %}
+    <div class="title-{{ section.id }}">
+      {% if women_product == 'women'
+      %}
+        <h2 class="--section-title"><em>LIVED-IN</em> LUXURY</h2>
+      {% else %}
+        {% if premium_performance %}
+          <h2 class="--section-title --section-title-pp">Premium performance</h2>
+        {% else %}
+          <h2 class="--section-title">{{ section.settings.title }}</h2>
+        {% endif %}
+      {% endif %}
+    </div>
+    <div class="new-cl-wrapper new-cl-wrapper--{{ section.id }}">
+      <div class="swiper swiper-{{ section.id }}">
+        <div class="swiper-wrapper">
+          {% for block in product_cards %}
+            {% if product_cards[forloop.index0] != blank %}
+              {% assign card_title = product_cards[forloop.index0] | split: '#' | first %}
+              {% assign card_content = product_cards[forloop.index0] | split: '#' | last %}
+            {% endif %}
+            <div class="swiper-slide {% if forloop.last %}last__index___{% endif %}">
+              <div class="wrapper__content">
+                <div class="new-cl-media">
+                  {% if section_visibility == true %}
+                    {% assign image_index = forloop.index %}
+                    {% for image in product_images %}
+                      <div>
+                        {% if image_index == forloop.index %}
+                          {{- image | image_url: width: image.width | image_tag }}
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    {% unless section.settings.image == blank %}
+                      {{ section.settings.image | image_url: width: section.settings.image.width | image_tag }}
+                    {% endunless %}
+                  {% endif %}
+                  {% comment %}
+                  {% endcomment %}
+                </div>
+
+                <div class="new-cl-body cl-{{ block.id }} {% if section_visibility == false %}meta_img_not__visible_new_cl_body{%else%}meta_img_visible_new_cl_body{% endif %}">
+                  <h3 class="new-cl-title">{{ card_title }}</h3>
+                  <p class="new-cl-description">{{ card_content }}</p>
+                </div>
+              </div>
+            </div>
+
+            <style>
+              .new-cl-body {
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                @media(max-width: 768px) {
+                  {% comment %} gap: 16px; {% endcomment %}
+                }
+
+                .new-cl-title {
+                  color: {{block.settings.title_color}};
+                  {% if section.settings.dark_mode %}
+                    color: #fff;
+                  {% endif %}
+                  color: inherit;
+                  font-size: {{block.settings.title_font_size_desktop | append: 'px' }};
+                  text-transform: {{block.settings.title_text_transform}};
+                  margin: 0 0 8px;
+                  /* Headings/H2 */
+                  font-family: var(--font-family-Heading, Gotham);
+                  font-size: var(--Font-Size-Heading-H3, 40px);
+                  font-style: normal;
+                  font-weight: 700;
+                  line-height: var(--Line-Height-Heading-H3, 40px); /* 100% */
+                  letter-spacing: 0px;
+                  text-transform: uppercase;
+                  position: relative;
+                }
+                .new-cl-description{
+                  color: #1F2937;
+                  {% if section.settings.dark_mode %}
+                    color: #fff;
+                  {% endif %}
+                  {% comment %} color: var(--Content-Base-main, #1F2937); {% endcomment %}
+                  font-family: var(--font-family-Body, Gotham);
+                  font-size: var(--Font-Size-Paragraph-Large, 16px);
+                  font-style: normal;
+                  font-weight: 400;
+                  line-height: 180%;
+                  text-align: left;
+                  margin: 0;
+                  @media(width < 768px) {
+                    {% comment %} font-size: 12px; {% endcomment %}
+                  }
+                }
+                @media(max-width: 768px) {
+                  .new-cl-title {
+                    font-size: {{block.settings.title_font_size_mobile | append: 'px' }};
+                  }
+                  .new-cl-description{
+                    font-size: {{block.settings.text_font_size_mobile | append: 'px' }};
+                  }
+                  .new-cl-view-all{
+                    font-size: {{block.settings.button_font_size_mobile | append: 'px' }};
+                  }
+                }
+              }
+              .meta_img_not__visible_new_cl_body h3, .meta_img_not__visible_new_cl_body p{
+                {% comment %} text-align: center !important;
+                color: #fff !important                ; {% endcomment %}
+                text-align: left !important;
+                color: inherit !important                ;
+              }
+            </style>
+          {% endfor %}
+        </div>
+        {% comment %}
+          <div class="prev-{{ section.id }} hero_slider__nav_icon swiper-button-prev">
+            {% render 'all-icons', name: 'left_arrow' %}
+          </div>
+          <div class="next-{{ section.id }} hero_slider__nav_icon swiper-button-next">
+            {% render 'all-icons', name: 'right_arrow' %}
+          </div>
+        {% endcomment %}
+
+        <div class="--nav-button-wrapper">
+          <div class="swiper-scrollbar-{{ section.id }} swiper-scrollbar"></div>
+          <div class="swiper-prev-{{ section.id }} --nav-icon --mobile-nav">
+            {%- render 'header-icons', name: 'left' -%}
+          </div>
+          <div class="swiper-next-{{ section.id }} --nav-icon --mobile-nav">
+            {%- render 'header-icons', name: 'right' -%}
+          </div>
+        </div>
+      </div>
+      <div class="swiper-scrollbar-{{ section.id }} swiper-scrollbar"></div>
+      <div class="swiper-prev-{{ section.id }} --nav-icon --desktop-nav">
+        {%- render 'header-icons', name: 'left' -%}
+      </div>
+      <div class="swiper-next-{{ section.id }} --nav-icon --desktop-nav">
+        {%- render 'header-icons', name: 'right' -%}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", e => {
+    swiperSlider['{{ section.id }}'] = {};
+
+    if (window.innerWidth < 768) {
+      swiperSlider['{{ section.id }}'].swiper = new Swiper('.swiper-{{ section.id }}', {
+        slidesPerView: 3,
+        spaceBetween: 1,
+        navigation: {
+          nextEl: '.swiper-next-{{ section.id }}.--mobile-nav',
+          prevEl: '.swiper-prev-{{ section.id }}.--mobile-nav',
+        },
+        scrollbar: {
+          el: '.swiper-scrollbar-{{ section.id }}.swiper-scrollbar',
+          // hide: true,
+          draggable: true,
+        },
+        breakpoints: {
+          200: {
+            slidesPerView: 1.2,
+            spaceBetween: 1,
+          },
+          350: {
+            slidesPerView: 1,
+            spaceBetween: 1,
+          },
+          768: {
+            slidesPerView: 2,
+            spaceBetween: 1,
+          },
+          1024: {
+            slidesPerView: 2,
+            spaceBetween: 1,
+          },
+          1200: {
+            slidesPerView: 2.2,
+            spaceBetween: 1,
+          },
+          1400: {
+            slidesPerView: 2.5,
+            spaceBetween: 1,
+          },
+          1500: {
+            slidesPerView: 3,
+            spaceBetween: 1,
+          },
+        },
+      });
+    } else {
+      swiperSlider['{{ section.id }}'].swiper = new Swiper('.swiper-{{ section.id }}', {
+        slidesPerView: 3,
+        spaceBetween: 1,
+        navigation: {
+          nextEl: '.swiper-next-{{ section.id }}.--desktop-nav',
+          prevEl: '.swiper-prev-{{ section.id }}.--desktop-nav',
+        },
+        scrollbar: {
+          el: '.swiper-scrollbar-{{ section.id }}.swiper-scrollbar',
+          // hide: true,
+          draggable: true,
+        },
+        breakpoints: {
+          200: {
+            slidesPerView: 1.2,
+            spaceBetween: 1,
+          },
+          350: {
+            slidesPerView: 1,
+            spaceBetween: 1,
+          },
+          768: {
+            slidesPerView: 2,
+            spaceBetween: 1,
+          },
+          1024: {
+            slidesPerView: 2,
+            spaceBetween: 1,
+          },
+          1200: {
+            slidesPerView: 2.2,
+            spaceBetween: 1,
+          },
+          1400: {
+            slidesPerView: 2.5,
+            spaceBetween: 1,
+          },
+          1500: {
+            slidesPerView: 3,
+            spaceBetween: 1,
+          },
+        },
+      });
+    }
+
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      {% comment %} setEqualHeightv2('.sec-{{ section.id }}', '.new-cl-description'); {% endcomment %}
+      setEqualHeightv2('.sec-{{ section.id }}', '.new-cl-body');
+    });
+  </script>
+{% endunless %}
+{% schema %}
+{
+  "name": "Collection List New",
+  "presets": [
+    {
+      "name": "Collection List New"
+    }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "nav_id",
+      "label": "Navigation ID"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width_section",
+      "label": "Full Width Section",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrow",
+      "label": "Show Slider Arrow",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "dark_mode",
+      "label": "Dark Mode",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Frame Image"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "title",
+      "label": "Section Title"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "text",
+      "id": "padding_block_desktop",
+      "label": "Padding Block",
+      "default": "40px 80px",
+      "info": "0px 0px; means top 0px and bottom 0px"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing (Mobile)"
+    },
+    {
+      "type": "text",
+      "id": "padding_block_mobile",
+      "label": "Padding Block",
+      "default": "24px 24px",
+      "info": "0px 0px; means top 0px and bottom 0px"
+    }
+  ]
+}
+{% endschema %}

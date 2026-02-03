@@ -1,0 +1,304 @@
+<style>
+    {% comment %} Notify Me styling Start {% endcomment %}
+     input#notification-email {
+          {% comment %} color: #FFF; {% endcomment %}
+          text-align: left;
+          font-family: var(--font-body-family);
+          font-size: 13px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 100%;
+          {% comment %} text-transform: uppercase; {% endcomment %}
+          box-sizing: border-box;
+          border: 0;
+          width: 100%;
+          cursor: pointer;
+          border-radius: var(--rounded-none, 0px);
+          /* background: linear-gradient(90deg, #010D05 0%, #132D1B 100%); */
+          display: flex;
+          padding: var(--Spacing-Container-sm, 12px);
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+          align-self: stretch;
+          border: 1px solid #004027;
+          {% comment %} margin-block: var(--Spacing-Container-xs, 8px); {% endcomment %}
+          transition: all 0.4s;
+      }
+
+      button.--inline-notify-stock-button{
+        color: #FFF;
+        text-align: center;
+        {% comment %} font-family: var(--font-body-family); {% endcomment %}
+        font-family: var(--font-family-Heading, Gotham);
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 100%;
+        text-transform: uppercase;
+        box-sizing: border-box;
+        border: 0;
+        width: 100%;
+        cursor: pointer;
+        margin-block: var(--Spacing-Container-xs, 8px);
+        border-radius: var(--rounded-none, 0px);
+        background: #212b36;
+        display: flex;
+        {% comment %} padding: var(--Spacing-Container-sm, 12px) var(--Spacing-Container-lg, 32px); {% endcomment %}
+        padding: 20px var(--Spacing-Container-sm, 16px);
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        align-self: stretch;
+        border: 1px solid #004027;
+        transition: all 0.4s;
+        height: 48px;
+        @media(max-width: 768px){
+            font-size: 14px;
+            line-height: 14px;
+            padding: 12px var(--Spacing-Container-sm, 16px);
+        }
+
+      }
+      button.--inline-notify-stock-button:hover {
+          border-radius: var(--rounded-none, 0px);
+          background: #fff;
+          color: #212b36;
+      }
+      button.notify-stock-button-x {
+          margin: 0 0 8px;
+            @media screen and (max-width: 1249px){
+                margin: 0;
+            }
+      }
+      .success-msg.grey-box {
+        opacity: 0;
+        transition: all 0.4s;
+      }
+      .success-msg.grey-box {
+            opacity: 1;
+            text-align: center;
+            font-size: 13px;
+            font-style: normal;
+            line-height: 1.2em;
+            box-sizing: border-box;
+            width: 100%;
+            margin-block: var(--Spacing-Container-xs, 8px);
+            display: block;
+            padding: var(--Spacing-Container-sm, 12px) var(--Spacing-Container-lg, 32px);
+            transition: all 0.4s;
+            background-color: #f2f3f5;
+      }
+
+  .--notify_me_disclaimer_message   p {
+      color: var(--Content-Base-base, #4B5563);
+      font-family: var(--font-body-family);
+      font-size: var(--Font-Size-Paragraph-Tiny, 12px);
+      font-style: normal;
+      font-weight: 400;
+      line-height: var(--Line-Height-Paragraph-Tiny, 16px);
+      {% comment %} padding-block: 10px; {% endcomment %}
+      @media(max-width: 600px){
+        background: #fcfaf6;
+        padding: 10px;
+      }
+  }
+  .--notify_me_disclaimer_message  a{
+    color: #004027;
+  }
+    {% comment %} Notify Me styling End {% endcomment %}
+
+
+
+    .p-info-btn-buy-now{
+      margin: 0;
+      display: flex;
+      padding: 16px var(--Spacing-Container-sm, 16px);
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      align-self: stretch;
+      border-radius: var(--rounded-none, 0px);
+      border: 1px solid var(--Brand-Primary, #212B36);
+      font-size: 12px;
+      font-family: var(--font-family-Control, "Archivo Expanded");
+      @media(max-width: 768px) {
+        padding: 12px var(--Spacing-Container-sm, 16px);
+      }
+    }
+    .p-info-btn-buy-now p{
+      color: var(--Content-Base-main, #1F2937);
+      text-align: center;
+      margin: 0;
+      font-size: 12px;
+      font-family: var(--font-family-Control, "Archivo Expanded");
+      line-height: var(
+        --Line-Height-UI-Controls-Control-Button-Main,
+        10px
+      ); /* 100% */
+      font-style: normal;
+      font-weight: 400;
+      line-height: var(--Line-Height-UI-Controls-Control-Button-Small, 20px);
+      text-transform: uppercase;
+      @media(max-width: 768px){
+        font-size: 10px;
+      }
+    }
+    .payment_terms {
+        color: var(--Content-Base-main, #1F2937);
+        text-align: center;
+        font-family: var(--font-family-Body, Gotham);
+        font-size: var(--Font-Size-Paragraph-Medium, 14px);
+        font-style: normal;
+        font-weight: 400;
+        line-height: var(--Line-Height-Paragraph-Medium, 22px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        @media(max-width: 768px) {
+          font-size: 12px;
+        }
+    }
+</style>
+
+{% liquid
+  for option in product.options_with_values
+    if option.name == 'Size' or option.name == 'size'
+      for value in option.values
+        if value.selected
+          assign selected_size = value
+        endif
+      endfor
+    endif
+  endfor
+%}
+
+<div class="pinfo-form-container {% unless  product.selected_or_first_available_variant.available %}pinfo-form-one-way{% endunless %} {% if block.settings.enable_mb %}mb{% endif %}">
+  {% for bl in section.blocks %}
+    {% if bl.type == "quantity" %}
+      <div class="quantity-selector-wrapper {% if block.settings.enable_mb %}mb_{% endif %} {% unless  product.selected_or_first_available_variant.available %}hidden{% endunless %}">
+        {% comment %} <h4>QTY: </h4> {% endcomment %}
+        <div class="quantity-selector" data-quantity-selector>
+          <button type="button" class="qty-btn decrease" aria-label="Decrease quantity">−</button>
+          <input type="number" class="qty-input" name="quantity" value="1" min="1" step="1">
+          <button type="button" class="qty-btn increase" aria-label="Increase quantity">+</button>
+        </div>
+      </div>
+    {% endif %} 
+   {% endfor %}
+  <div class="pinfo-form-wrapper">
+    {% if product.tags contains 'EMBROIDER' or product.tags contains 'embroider' or product.tags contains 'Ryder Cup 2025' %}
+      {% if product.selected_or_first_available_variant.available %}
+      <div class="--embroider-button-messsage hidden">
+        {{ settings.embroidery_message_collection_page }}
+      </div>
+      {% endif %}
+    {% endif %}
+
+    {% comment %}
+      {% unless product.selected_or_first_available_variant.available %}
+        <button
+          class="notify-stock-button-x  button"
+          type=""
+        >
+          Notify Me
+        </button>
+      {% endunless %}
+    {% endcomment %}
+    {% unless product.selected_or_first_available_variant.available %}
+      <div
+        class="--notfify-form-wrapper"
+        data-company-id="{{ section.settings.company_id }}"
+        data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+      >
+        <input type="email" name="notification_email" id="notification-email" placeholder="Enter your email" required>
+        <small class="error-msg"></small>
+        <small class="success-msg"></small>
+        {% if block.settings.notify_me_disclaimer_message != blank %}
+          <div class="--notify_me_disclaimer_message">{{ block.settings.notify_me_disclaimer_message }}</div>
+        {% endif %}
+        <button
+          class="--inline-notify-stock-button custom__atc-global-btn"
+          type=""
+        >
+          Notify Me
+        </button>
+        <button
+          class="notify-stock-button-x hidden custom__atc-global-btn"
+          type=""
+        >
+          Notify Me
+        </button>
+      </div>
+    {% endunless %}
+
+{% liquid
+  capture header
+    echo content_for_header
+  endcapture
+
+  assign url = header | split: '"pageurl":"' | last | split: '"' | first | replace: '\/', '/' | replace: '\u0026', '&'
+
+  assign has_variant_param = false
+  if url contains 'variant='
+    assign has_variant_param = true
+  endif
+%}
+
+  {% form 'product', product %}
+    <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+    {% if product.tags contains 'EMBROIDER' and product.selected_or_first_available_variant.available %}
+      <input type="hidden" name="properties[_Embroidery Status]" value="Embroidered Product">
+    {% endif %}
+
+    <button
+      {% unless product.selected_or_first_available_variant.available %}
+        disabled
+      {% endunless %}
+      {% if has_variant_param == false %}
+        disabled--
+      {% endif %}
+      class="custom__atc-global-btn pinfo-add-to-cart button {% unless product.selected_or_first_available_variant.available %} hidden  {% endunless %} {% if has_variant_param == false %}disabled--{% endif %}"
+      type="submit"
+    >
+      {% if product.selected_or_first_available_variant.available %}
+        Add to cart
+      {% else %}
+        Sold Out
+      {% endif %}
+      {% unless product.template_suffix == 'gift-card' %}
+        - {{ product.selected_or_first_available_variant.price | money }}
+      {% endunless %}
+    </button>
+    {% if block.settings.dynamic_checkout_button %}
+      <a
+        href="{{ shop.url }}/cart/{{ product.selected_or_first_available_variant.id }}:1?payment=shop_pay"
+        class="p-info-btn-buy-now {% if has_variant_param == false %}disabled-buy-now--{% endif %}"
+        {% comment %} {% if has_variant_param == false %}style="pointer-events: none; opacity: 0.5;"{% endif %} {% endcomment %}
+      >
+        <p>{{ block.settings.dynamic_checkout_button_text }}</p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="39" height="16" viewBox="0 0 39 16" fill="none">
+          <g clip-path="url(#clip0_11437_7897)">
+            <path d="M7.12604 2.05521C6.66895 2.59366 5.93762 3.01836 5.20628 2.95768C5.11487 2.22964 5.47292 1.45609 5.89191 0.978311C6.34899 0.424693 7.14889 0.0303352 7.79643 0C7.87261 0.758381 7.5755 1.50159 7.12604 2.05521ZM7.78881 3.10178C6.7299 3.04111 5.82335 3.7009 5.32056 3.7009C4.81015 3.7009 4.04072 3.13211 3.20273 3.14728C2.11335 3.16245 1.10015 3.77674 0.544032 4.75505C-0.598677 6.71167 0.246928 9.60868 1.35155 11.2013C1.89243 11.99 2.53996 12.8546 3.39319 12.8242C4.2007 12.7939 4.52066 12.3009 5.49577 12.3009C6.4785 12.3009 6.76037 12.8242 7.61359 12.8091C8.49729 12.7939 9.05341 12.0203 9.59429 11.2316C10.2114 10.3367 10.4627 9.46459 10.478 9.41909C10.4627 9.40392 8.77154 8.7593 8.7563 6.81784C8.74106 5.19491 10.0895 4.42136 10.1504 4.37586C9.3886 3.25345 8.20018 3.13211 7.78881 3.10178ZM13.9061 0.902473V12.7256H15.7497V8.68346H18.3017C20.6329 8.68346 22.2707 7.09086 22.2707 4.78538C22.2707 2.47991 20.6633 0.902473 18.3627 0.902473H13.9061ZM15.7497 2.44957H17.8751C19.4749 2.44957 20.3891 3.29896 20.3891 4.79297C20.3891 6.28698 19.4749 7.14395 17.8675 7.14395H15.7497V2.44957ZM25.6379 12.8166C26.7959 12.8166 27.87 12.2327 28.3576 11.3075H28.3957V12.7256H30.1021V6.84059C30.1021 5.13424 28.7309 4.03459 26.6207 4.03459C24.6628 4.03459 23.2154 5.14941 23.1621 6.68133H24.8228C24.9599 5.95329 25.6379 5.47551 26.5673 5.47551C27.6948 5.47551 28.3271 5.99879 28.3271 6.96194V7.61414L26.0264 7.75065C23.8858 7.87958 22.7278 8.75171 22.7278 10.2685C22.7278 11.8004 23.9239 12.8166 25.6379 12.8166ZM26.1331 11.4136C25.1504 11.4136 24.5257 10.9434 24.5257 10.223C24.5257 9.47976 25.1275 9.04748 26.2778 8.97923L28.3271 8.8503V9.51768C28.3271 10.6249 27.3825 11.4136 26.1331 11.4136ZM32.3799 15.9412C34.1778 15.9412 35.0234 15.2586 35.7623 13.1882L39 4.14834H37.126L34.9548 11.133H34.9167L32.7456 4.14834H30.8182L33.9416 12.756L33.774 13.2792C33.4921 14.1666 33.0351 14.5078 32.2199 14.5078C32.0752 14.5078 31.7933 14.4927 31.679 14.4775V15.8957C31.7857 15.926 32.2428 15.9412 32.3799 15.9412Z" fill="black"/>
+          </g>
+          <defs>
+            <clipPath id="clip0_11437_7897">
+              <rect width="39" height="16" fill="white"/>
+            </clipPath>
+          </defs>
+        </svg>
+      </a>
+    {% endif %}
+    {% if block.settings.show_terms and product.selected_or_first_available_variant.available %}
+      <div class="payment_terms hidden">
+        Pay in 4 interest-free installments with ShopPay. {% render 'all-icons', name: 'exclaim' %}
+      </div>
+    {% endif %}
+  {% endform %}
+  </div>
+<div class="product__details">
+  <a href="{{ product.url }}">FULL DETAILS</a>
+</div>
+</div>

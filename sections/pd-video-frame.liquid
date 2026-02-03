@@ -1,0 +1,458 @@
+{% liquid
+  assign id = section.id
+%}
+{% unless product.metafields.custom.featured_video_metaobject.value == blank %}
+  <style>
+    #shopify-section-{{id}} {
+      box-sizing: border-box;
+      margin-top: {{section.settings.margin_top | append: 'px'}};
+      margin-bottom: {{section.settings.margin_bottom | append: 'px'}};
+      padding-top: {{section.settings.padding_top | append: 'px'}};
+      padding-bottom: {{section.settings.padding_bottom | append: 'px'}};
+    }
+
+    @media(max-width: 768px) {
+      #shopify-section-{{id}} {
+        margin-top: {{section.settings.margin_top_m | append: 'px'}};
+        margin-bottom: {{section.settings.margin_bottom_m | append: 'px'}};
+        padding-top: {{section.settings.padding_top_m | append: 'px'}};
+        padding-bottom: {{section.settings.padding_bottom_m | append: 'px'}};
+      }
+    }
+
+    .sec-{{ id }} .page-width__none{
+      margin-inline: 20px;
+    }
+    .wrapper-{{ id }} .video-wrap video {
+      width: 100%;
+      object-fit: cover;
+      display: block;
+      height: auto;
+      aspect-ratio: 2/1;
+      /* object-fit: fill; */
+      @media(min-width: 1600px) {
+        max-height: calc(100vh - 350px);
+        {% comment %} height: 100vh; {% endcomment %}
+      }
+      @media(max-width: 600px) {
+         {% comment %} aspect-ratio: 9/16; {% endcomment %}
+          aspect-ratio: unset;
+      }
+    }
+    .wrapper-{{ id }} .video-wrap.active {
+      z-index: 2;
+      position: relative;
+      cursor: pointer;
+    }
+    .wrapper-{{ id }} .section__wrapper {
+    position: relative;
+    width: 100%;
+    margin: auto;
+    padding: 48px 48px 84px 48px;
+    border-radius: 0;
+    cursor: pointer;
+    background: linear-gradient(0deg, rgb(255 232 232 / 24%), rgb(255 232 232 / 25%)), url(https://cdn.shopify.com/s/files/1/0031/4920/1526/files/bd_video_frame.png?v=1756724586) center / cover no-repeat;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+          @media(max-width: 1600px) {
+                width: 100%;
+          }
+          @media(max-width: 768px) {
+              width: 100%;
+              padding: 52px 16px 84px;
+          }
+      }
+    .wrapper-{{ id }} .section__wrapper.active {
+      cursor: unset;
+    }
+
+    .wrapper-{{ id }} .content__wrapper  {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      {% comment %} padding: var(--Spacing-Container-xs); {% endcomment %}
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      box-sizing: border-box;
+      @media(max-width: 600px) {
+        {% comment %} padding: var(--Spacing-Container-sm); {% endcomment %}
+      }
+    }
+    .wrapper-{{ id }} .content {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    .wrapper-{{ id }} .icon__img {
+      width: auto;
+      height: 56px;
+      line-height: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      img {
+          width: auto;
+          height: 100%;
+      }      
+      @media(max-width: 768px) {
+        height: 40px;
+      }
+    }
+    .wrapper-{{ id }} .content__info {
+      display: flex;
+      padding-block: 16px;
+      justify-content: space-between;
+      align-items: center;
+      @media(max-width: 768px) {
+          flex-direction: column-reverse;
+          height: 100%;
+                  padding-block: 16px 25px;
+
+      }
+    }
+    .mute__btn {
+      align-items: center;
+      /* background-color: #e5e5e5; */
+      background-color: transparent;
+      {% comment %} border-radius: 999px; {% endcomment %}
+      bottom: 7em;
+      display: flex;
+      height: 64px;
+      justify-content: center;
+      line-height: 1;
+      position: absolute;
+      right: 5em;
+      width: 64px;
+      @media(max-width: 600px) {
+        right: 2.4em;
+    width: 32px;
+    height: 32px;
+      }
+    }
+    .__play__btn {
+        align-items: center;
+        /* background-color: #e5e5e5; */
+        background-color: transparent;
+        left: 50%;
+        display: flex;
+        height: 64px;
+        justify-content: center;
+        line-height: 1;
+        position: absolute;
+        top: 50%;
+        width: 64px;
+        z-index: 3;
+        transform: translate(-50%, -50%);
+        svg {
+          width: 64px;
+          height: 64px;
+        }
+    }
+    .video-wrap.active ~ .__play__btn {
+      z-index: 1;
+    }
+    .wrapper-{{ id }} .content__info h4{
+      margin: 0;
+      text-transform: uppercase;
+    }
+  </style>
+
+  <div class="sec-{{ id }}">
+    <div class="{% unless section.settings.full_width %}page-width{% endunless %} page-width page-width__none_">
+      <div class="wrapper-{{ id }}">
+        <div class="section__wrapper section__wrapper-{{ id }}" data-video-frame>
+          {% assign video = section.settings.video %}
+          {% assign video_mobile = section.settings.video_m %}
+          {% comment %}
+            <div class="video-wrap {{ section.settings.banner_height }} ">
+              <video
+                autoplay
+                loop
+                muted
+                playsinline
+                class="responsive-video"
+              >
+                <!-- Desktop sources (loaded first, higher priority) -->
+                <source src="{{ video }}" type="video/mp4" media="(min-width: 769px)">
+                <source src="{{ video }}" type="video/webm" media="(min-width: 769px)">
+
+                <!-- Mobile sources (fallback for smaller screens) -->
+                <source src="{{ video_mobile }}" type="video/mp4" media="(max-width: 768px)">
+                <source src="{{ video_mobile }}" type="video/webm" media="(max-width: 768px)">
+
+                <!-- Universal fallback (no media query) -->
+                <source src="{{ video }}" type="video/mp4">
+
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          {% endcomment %}
+          {% if video != blank %}
+            <div class="video-wrap {{ section.settings.banner_height }} {% if video_mobile != blank %}small-hide{% endif %}">
+              {{ video | video_tag: image_size: '500x', playsinline: true, loop: true, autoplay: true }}
+            </div>
+          {% endif %}
+          {% if video_mobile != blank %}
+            <div class="video-wrap  {{ section.settings.banner_height }} large-up-hide medium-hide">
+              {{ video_mobile | video_tag: image_size: '500x', playsinline: true, loop: true, autoplay: true }}
+            </div>
+          {% endif %}
+          <div class="content__wrapper {% if section.settings.show_pagination %}pagination__padding{% endif %}">
+            <div class="content page-width {{ section.settings.content_position }} mobile-{{ section.settings.content_position_m }}">
+              <div class="content__info">
+                <h4 class="desktop__only">{{ section.settings.text1 }}</h4>
+                {% unless section.settings.icon_img == blank %}
+                  <div class="icon__img">
+                    {{ section.settings.icon_img | image_url: width: section.settings.icon_img.width | image_tag }}
+                  </div>
+                {% endunless %}
+                {% comment %} {% render 'all-icons', name: 'draddy_large' %} {% endcomment %}
+                <h4 class="desktop__only">{{ section.settings.text2 }}</h4>
+                <h4 class="mobile__only ">{{ section.settings.text1 }}</h4>
+              </div>
+            </div>
+          </div>
+          <div class="__play__btn ">{% render 'all-icons', name: 'play-btn' %}</div>
+          <div class="mute__btn hidden">{% render 'all-icons', name: 'mute_btn' %}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const videoFrame = document.querySelector('[data-video-frame]');
+      if (!videoFrame) return;
+      const vfVideos = videoFrame.querySelectorAll('video');
+      vfVideos.forEach((vfVideo) => {
+        vfVideo.muted = true;
+        vfVideo.volume = 1;
+      });
+      const muteBtns = videoFrame.querySelectorAll('.mute__btn');
+      const playBtns = videoFrame.querySelectorAll('.__play__btn');
+
+      function updatePlayButtonVisibility(video) {
+        if (video.paused) {
+          playBtns.forEach((playBtn) => {
+            playBtn.classList.remove('hidden');
+          });
+        } else {
+          playBtns.forEach((playBtn) => {
+            playBtn.classList.add('hidden');
+          });
+        }
+      }
+
+      videoFrame.addEventListener('click', (e) => {
+        videoFrame.classList.add('active');
+        muteBtns.forEach((mutedBtn) => {
+          mutedBtn.classList.add('hidden');
+        });
+
+        vfVideos.forEach((vfVideo) => {
+          vfVideo.controls = true;
+          vfVideo.muted = false;
+          vfVideo.removeAttribute('muted');
+          vfVideo.volume = 1;
+          vfVideo.parentElement.classList.add('active');
+
+          updatePlayButtonVisibility(vfVideo);
+
+          vfVideo.addEventListener('play', () => {
+            updatePlayButtonVisibility(vfVideo);
+          });
+
+          vfVideo.addEventListener('pause', () => {
+            updatePlayButtonVisibility(vfVideo);
+          });
+        });
+      });
+    });
+  </script>
+
+  {% comment %}
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const videoFrame = document.querySelector('[data-video-frame]');
+        if (!videoFrame) return;
+        const vfVideos = videoFrame.querySelectorAll('video');
+        vfVideos.forEach((vfVideo) => {
+          vfVideo.muted = true;
+          vfVideo.volume = 1;
+        });
+        const muteBtns = videoFrame.querySelectorAll('.mute__btn');
+        const playBtns = videoFrame.querySelectorAll('.__play__btn');
+
+        videoFrame.addEventListener('click', (e) => {
+          videoFrame.classList.add('active');
+          muteBtns.forEach((mutedBtn) => {
+            mutedBtn.classList.add('hidden');
+          });
+          vfVideos.forEach((vfVideo) => {
+            vfVideo.controls = true;
+            vfVideo.muted = false;
+            vfVideo.removeAttribute('muted');
+            vfVideo.volume = 1;
+            vfVideo.parentElement.classList.add('active');
+            playBtns.forEach((playBtn) => {
+              if (!playBtn.classList.contains("hidden")) {
+                playBtn.classList.add("hidden");
+              }
+            });
+            if (vfVideo.paused){
+            playBtns.forEach((playBtn) => {
+              if (!playBtn.classList.contains("hidden")) {
+                playBtn.classList.add("hidden");
+              }
+            });
+            }else {
+              playBtns.forEach((playBtn) => {
+                playBtn.classList.remove("hidden")
+              })
+            }
+          });
+        });
+      });
+    </script>
+  {% endcomment %}
+{% endunless %}
+
+{% schema %}
+{
+  "name": "Video Frame",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full Width Section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "text1",
+      "label": "Text 1",
+      "default": "U.S. Open week"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_img",
+      "label": "Icon Image"
+    },
+    {
+      "type": "text",
+      "id": "text2",
+      "label": "Text 2",
+      "default": "The oakmont championship"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video"
+    },
+    {
+      "type": "video",
+      "id": "video_m",
+      "label": "Video(Mobile)"
+    },
+    {
+      "type": "header",
+      "content": "Content Positions"
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Desktop"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing Mobile"
+    },
+    {
+      "type": "range",
+      "id": "margin_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding_top_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_m",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Frame"
+    }
+  ]
+}
+{% endschema %}
